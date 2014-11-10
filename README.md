@@ -13,4 +13,4 @@ Installation
 
 Wiki
 -------
-Check out the Digilent Wiki [here][https://reference.digilentinc.com/vivado:library].
+Check out the Digilent Wiki too [here](https://reference.digilentinc.com/vivado:library "Wiki").

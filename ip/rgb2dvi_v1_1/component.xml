@@ -190,7 +190,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>79c3dceb</spirit:value>
+            <spirit:value>401e7d8c</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -206,7 +206,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>3cde2c50</spirit:value>
+            <spirit:value>b720e82f</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -234,7 +234,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>82909ac2</spirit:value>
+            <spirit:value>80863b09</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -319,7 +319,7 @@
           <xilinx:portInfo>
             <xilinx:enablement>
               <xilinx:presence>optional</xilinx:presence>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kRstActiveHigh">false</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kRstActiveHigh">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -343,7 +343,7 @@
           <xilinx:portInfo>
             <xilinx:enablement>
               <xilinx:presence>optional</xilinx:presence>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="()()not ($kRstActiveHigh)">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="()()not ($kRstActiveHigh)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -470,7 +470,7 @@
           <xilinx:portInfo>
             <xilinx:enablement>
               <xilinx:presence>optional</xilinx:presence>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="()()not ($kGenerateSerialClk)">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="()()not ($kGenerateSerialClk)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -480,7 +480,7 @@
       <spirit:modelParameter xsi:type="spirit:nameValueTypeType" spirit:dataType="boolean">
         <spirit:name>kGenerateSerialClk</spirit:name>
         <spirit:displayName>Kgenerateserialclk</spirit:displayName>
-        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kGenerateSerialClk">false</spirit:value>
+        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kGenerateSerialClk">true</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="string">
         <spirit:name>kClkPrimitive</spirit:name>
@@ -490,7 +490,7 @@
       <spirit:modelParameter spirit:dataType="boolean">
         <spirit:name>kRstActiveHigh</spirit:name>
         <spirit:displayName>Resets active high</spirit:displayName>
-        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kRstActiveHigh">false</spirit:value>
+        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kRstActiveHigh">true</spirit:value>
       </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
@@ -585,7 +585,7 @@
         <spirit:name>src/rgb2dvi.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
-        <spirit:userFileType>CHECKSUM_5dbe4fff</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_81a0adae</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -635,7 +635,7 @@
     <spirit:fileSet>
       <spirit:name>xilinx_productguide_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>docs/rgb2dvi_v1_0.pdf</spirit:name>
+        <spirit:name>docs/rgb2dvi_v1_1.pdf</spirit:name>
         <spirit:userFileType>pdf</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -650,7 +650,7 @@
     <spirit:parameter>
       <spirit:name>kRstActiveHigh</spirit:name>
       <spirit:displayName>Reset active high</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kRstActiveHigh" spirit:order="1100" spirit:configGroups="0 UnGrouped checkBox">false</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kRstActiveHigh" spirit:order="1100" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kClkPrimitive</spirit:name>
@@ -660,7 +660,7 @@
         <xilinx:parameterInfo>
           <xilinx:enablement>
             <xilinx:presence>optional</xilinx:presence>
-            <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kGenerateSerialClk">false</xilinx:isEnabled>
+            <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kGenerateSerialClk">true</xilinx:isEnabled>
           </xilinx:enablement>
         </xilinx:parameterInfo>
       </spirit:vendorExtensions>
@@ -668,7 +668,7 @@
     <spirit:parameter>
       <spirit:name>kGenerateSerialClk</spirit:name>
       <spirit:displayName>Generate SerialClk internally from pixel clock.</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kGenerateSerialClk" spirit:order="1200" spirit:configGroups="0 UnGrouped checkBox">false</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kGenerateSerialClk" spirit:order="1200" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
@@ -684,8 +684,8 @@
       <xilinx:displayName>RGB to DVI Video Encoder (Source)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>34</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2014-11-10T10:55:43Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>35</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2014-11-11T09:03:03Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="xilinx.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
@@ -695,10 +695,10 @@
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2014.3.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7c915995"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="79ffae48"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="8ee68596"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="773942a8"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="88efca77"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="af291dd6"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="7bc86363"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="b228e123"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="93064326"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

@@ -1,3 +1,7 @@
+
+# Loading additional proc with user specified bodies to compute parameter values.
+source [file join [file dirname [file dirname [info script]]] gui/dvi2rgb_v1_0.gtcl]
+
 # Definitional proc to organize widgets for parameters.
 proc init_gui { IPINST } {
   set Component_Name  [  ipgui::add_param $IPINST -name "Component_Name" -display_name {Component Name}]
@@ -51,5 +55,17 @@ proc update_MODELPARAM_VALUE.kEmulateDDC { MODELPARAM_VALUE.kEmulateDDC PARAM_VA
 proc update_MODELPARAM_VALUE.kRstActiveHigh { MODELPARAM_VALUE.kRstActiveHigh PARAM_VALUE.kRstActiveHigh } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.kRstActiveHigh}] ${MODELPARAM_VALUE.kRstActiveHigh}
+}
+
+proc update_MODELPARAM_VALUE.kIDLY_TapValuePs { MODELPARAM_VALUE.kIDLY_TapValuePs } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	# WARNING: There is no corresponding user parameter named "kIDLY_TapValuePs". Setting updated value from the model parameter.
+set_property value 78 ${MODELPARAM_VALUE.kIDLY_TapValuePs}
+}
+
+proc update_MODELPARAM_VALUE.kIDLY_TapWidth { MODELPARAM_VALUE.kIDLY_TapWidth } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	# WARNING: There is no corresponding user parameter named "kIDLY_TapWidth". Setting updated value from the model parameter.
+set_property value 5 ${MODELPARAM_VALUE.kIDLY_TapWidth}
 }
 

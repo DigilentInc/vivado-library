@@ -65,6 +65,7 @@ entity dvi2rgb is
    Generic (
       kEmulateDDC : boolean := true; --will emulate a DDC EEPROM with basic EDID, if set to yes 
       kRstActiveHigh : boolean := true; --true, if active-high; false, if active-low
+      kClkRange : natural := 1;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)
       -- 7-series specific
       kIDLY_TapValuePs : natural := 78; --delay in ps per tap
       kIDLY_TapWidth : natural := 5); --number of bits for IDELAYE2 tap counter   
@@ -80,14 +81,13 @@ entity dvi2rgb is
       aRst : in std_logic; --asynchronous reset; must be reset when RefClk is not within spec
       aRst_n : in std_logic; --asynchronous reset; must be reset when RefClk is not within spec
       
-      -- RGB out
-      RGB_pRed : out std_logic_vector(7 downto 0);
-      RGB_pGreen : out std_logic_vector(7 downto 0);
-      RGB_pBlue : out std_logic_vector(7 downto 0);
-      RGB_pHSync : out std_logic;
-      RGB_pVSync : out std_logic;
-      RGB_pVDE : out std_logic; -- video data enable
-      RGB_PixelClk : out std_logic; --pixel-clock recovered from the DVI interface
+      -- Video out
+      vid_pData : out std_logic_vector(23 downto 0);
+      vid_pVDE : out std_logic;
+      vid_pHSync : out std_logic;
+      vid_pVSync : out std_logic;
+      
+      PixelClk : out std_logic; --pixel-clock recovered from the DVI interface
       
       SerialClk : out std_logic; -- advanced use only; 5x PixelClk
       aPixelClkLckd : out std_logic; -- advanced use only; PixelClk and SerialClk stable
@@ -130,7 +130,7 @@ end generate ResetActiveHigh;
 -- Clocking infrastructure to obtain a usable fast serial clock and a slow parallel clock
 TMDS_ClockingX: entity work.TMDS_Clocking
    generic map (
-      kClkRange => 1)
+      kClkRange => kClkRange)
    port map (
       aRst       => aRst_int, 
       RefClk     => RefClk,
@@ -187,15 +187,16 @@ end generate DataDecoders;
 
 -- RGB Output conform DVI 1.0
 -- except that it sends blank pixel during blanking
-RGB_pRed <= pDataIn(2); -- red is channel 2
-RGB_pGreen <= pDataIn(1); -- green is channel 1
-RGB_pBlue <= pDataIn(0); -- blue is channel 0
-RGB_pHSync <= pC0(0); -- channel 0 carries control signals too
-RGB_pVSync <= pC1(0); -- channel 0 carries control signals too
-RGB_pVDE <= pDE(0); -- since channels are aligned, all of them are either active or blanking at once
+-- for some reason video_data uses RBG packing
+vid_pData(23 downto 16) <= pDataIn(2); -- red is channel 2
+vid_pData(7 downto 0) <= pDataIn(1); -- green is channel 1
+vid_pData(15 downto 8) <= pDataIn(0); -- blue is channel 0
+vid_pHSync <= pC0(0); -- channel 0 carries control signals too
+vid_pVSync <= pC1(0); -- channel 0 carries control signals too
+vid_pVDE <= pDE(0); -- since channels are aligned, all of them are either active or blanking at once
 
 -- Clock outputs
-RGB_PixelClk <= PixelClk_int; -- pixel clock sourced from DVI link
+PixelClk <= PixelClk_int; -- pixel clock sourced from DVI link
 SerialClk <= SerialClk_int; -- fast 5x pixel clock for advanced use only
 aPixelClkLckd <= aLocked;
 

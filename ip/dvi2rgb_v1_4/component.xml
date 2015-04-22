@@ -5,7 +5,7 @@
 	<spirit:vendor>digilentinc.com</spirit:vendor>
 	<spirit:library>ip</spirit:library>
 	<spirit:name>dvi2rgb</spirit:name>
-	<spirit:version>1.3</spirit:version>
+	<spirit:version>1.4</spirit:version>
 	<spirit:busInterfaces>
 		<spirit:busInterface>
 			<spirit:name>TMDS</spirit:name>
@@ -324,13 +324,61 @@
 		</spirit:busInterface>
 		<spirit:busInterface>
 			<spirit:name>RGB</spirit:name>
-			<spirit:busType spirit:vendor="digilentinc.com"
+			<spirit:displayName>RGB Video Output</spirit:displayName>
+			<spirit:busType spirit:vendor="xilinx.com"
 					spirit:library="interface"
-					spirit:name="rgb"
+					spirit:name="vid_io"
 					spirit:version="1.0"/>
-			<spirit:abstractionType spirit:vendor="digilentinc.com"
+			<spirit:abstractionType spirit:vendor="xilinx.com"
 					spirit:library="interface"
-					spirit:name="rgb_rtl"
+					spirit:name="vid_io_rtl"
+					spirit:version="1.0"/>
+			<spirit:master/>
+			<spirit:portMaps>
+				<spirit:portMap>
+					<spirit:logicalPort>
+						<spirit:name>DATA</spirit:name>
+					</spirit:logicalPort>
+					<spirit:physicalPort>
+						<spirit:name>vid_pData</spirit:name>
+					</spirit:physicalPort>
+				</spirit:portMap>
+				<spirit:portMap>
+					<spirit:logicalPort>
+						<spirit:name>HSYNC</spirit:name>
+					</spirit:logicalPort>
+					<spirit:physicalPort>
+						<spirit:name>vid_pHSync</spirit:name>
+					</spirit:physicalPort>
+				</spirit:portMap>
+				<spirit:portMap>
+					<spirit:logicalPort>
+						<spirit:name>VSYNC</spirit:name>
+					</spirit:logicalPort>
+					<spirit:physicalPort>
+						<spirit:name>vid_pVSync</spirit:name>
+					</spirit:physicalPort>
+				</spirit:portMap>
+				<spirit:portMap>
+					<spirit:logicalPort>
+						<spirit:name>ACTIVE_VIDEO</spirit:name>
+					</spirit:logicalPort>
+					<spirit:physicalPort>
+						<spirit:name>vid_pVDE</spirit:name>
+					</spirit:physicalPort>
+				</spirit:portMap>
+			</spirit:portMaps>
+		</spirit:busInterface>
+		<spirit:busInterface>
+			<spirit:name>PixelClk</spirit:name>
+			<spirit:displayName>Pixel clock for RGB video output</spirit:displayName>
+			<spirit:busType spirit:vendor="xilinx.com"
+					spirit:library="signal"
+					spirit:name="clock"
+					spirit:version="1.0"/>
+			<spirit:abstractionType spirit:vendor="xilinx.com"
+					spirit:library="signal"
+					spirit:name="clock_rtl"
 					spirit:version="1.0"/>
 			<spirit:master/>
 			<spirit:portMaps>
@@ -339,55 +387,7 @@
 						<spirit:name>CLK</spirit:name>
 					</spirit:logicalPort>
 					<spirit:physicalPort>
-						<spirit:name>RGB_PixelClk</spirit:name>
-					</spirit:physicalPort>
-				</spirit:portMap>
-				<spirit:portMap>
-					<spirit:logicalPort>
-						<spirit:name>RED</spirit:name>
-					</spirit:logicalPort>
-					<spirit:physicalPort>
-						<spirit:name>RGB_pRed</spirit:name>
-					</spirit:physicalPort>
-				</spirit:portMap>
-				<spirit:portMap>
-					<spirit:logicalPort>
-						<spirit:name>GREEN</spirit:name>
-					</spirit:logicalPort>
-					<spirit:physicalPort>
-						<spirit:name>RGB_pGreen</spirit:name>
-					</spirit:physicalPort>
-				</spirit:portMap>
-				<spirit:portMap>
-					<spirit:logicalPort>
-						<spirit:name>BLUE</spirit:name>
-					</spirit:logicalPort>
-					<spirit:physicalPort>
-						<spirit:name>RGB_pBlue</spirit:name>
-					</spirit:physicalPort>
-				</spirit:portMap>
-				<spirit:portMap>
-					<spirit:logicalPort>
-						<spirit:name>HSYNC</spirit:name>
-					</spirit:logicalPort>
-					<spirit:physicalPort>
-						<spirit:name>RGB_pHSync</spirit:name>
-					</spirit:physicalPort>
-				</spirit:portMap>
-				<spirit:portMap>
-					<spirit:logicalPort>
-						<spirit:name>VSYNC</spirit:name>
-					</spirit:logicalPort>
-					<spirit:physicalPort>
-						<spirit:name>RGB_pVSync</spirit:name>
-					</spirit:physicalPort>
-				</spirit:portMap>
-				<spirit:portMap>
-					<spirit:logicalPort>
-						<spirit:name>DE</spirit:name>
-					</spirit:logicalPort>
-					<spirit:physicalPort>
-						<spirit:name>RGB_pVDE</spirit:name>
+						<spirit:name>PixelClk</spirit:name>
 					</spirit:physicalPort>
 				</spirit:portMap>
 			</spirit:portMaps>
@@ -407,7 +407,7 @@
 				<spirit:parameters>
 					<spirit:parameter>
 						<spirit:name>viewChecksum</spirit:name>
-						<spirit:value>0cabd1e2</spirit:value>
+						<spirit:value>9b236341</spirit:value>
 					</spirit:parameter>
 				</spirit:parameters>
 			</spirit:view>
@@ -423,7 +423,7 @@
 				<spirit:parameters>
 					<spirit:parameter>
 						<spirit:name>viewChecksum</spirit:name>
-						<spirit:value>41dc6402</spirit:value>
+						<spirit:value>5b8a6f83</spirit:value>
 					</spirit:parameter>
 				</spirit:parameters>
 			</spirit:view>
@@ -437,7 +437,7 @@
 				<spirit:parameters>
 					<spirit:parameter>
 						<spirit:name>viewChecksum</spirit:name>
-						<spirit:value>6f6639e4</spirit:value>
+						<spirit:value>19a31205</spirit:value>
 					</spirit:parameter>
 				</spirit:parameters>
 			</spirit:view>
@@ -451,7 +451,7 @@
 				<spirit:parameters>
 					<spirit:parameter>
 						<spirit:name>viewChecksum</spirit:name>
-						<spirit:value>7d955d71</spirit:value>
+						<spirit:value>27b31c8b</spirit:value>
 					</spirit:parameter>
 				</spirit:parameters>
 			</spirit:view>
@@ -465,7 +465,7 @@
 				<spirit:parameters>
 					<spirit:parameter>
 						<spirit:name>viewChecksum</spirit:name>
-						<spirit:value>eb880a26</spirit:value>
+						<spirit:value>9f7f2bc7</spirit:value>
 					</spirit:parameter>
 				</spirit:parameters>
 			</spirit:view>
@@ -593,18 +593,18 @@
 						<xilinx:enablement>
 							<xilinx:presence>optional</xilinx:presence>
 							<xilinx:isEnabled xilinx:resolve="dependent"
-									xilinx:dependency="not ($kRstActiveHigh)">false</xilinx:isEnabled>
+									xilinx:dependency="()not ($kRstActiveHigh)">false</xilinx:isEnabled>
 						</xilinx:enablement>
 					</xilinx:portInfo>
 				</spirit:vendorExtensions>
 			</spirit:port>
 			<spirit:port>
-				<spirit:name>RGB_pRed</spirit:name>
+				<spirit:name>vid_pData</spirit:name>
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:vector>
 						<spirit:left spirit:format="long"
-								spirit:resolve="immediate">7</spirit:left>
+								spirit:resolve="immediate">23</spirit:left>
 						<spirit:right spirit:format="long"
 								spirit:resolve="immediate">0</spirit:right>
 					</spirit:vector>
@@ -618,45 +618,7 @@
 				</spirit:wire>
 			</spirit:port>
 			<spirit:port>
-				<spirit:name>RGB_pGreen</spirit:name>
-				<spirit:wire>
-					<spirit:direction>out</spirit:direction>
-					<spirit:vector>
-						<spirit:left spirit:format="long"
-								spirit:resolve="immediate">7</spirit:left>
-						<spirit:right spirit:format="long"
-								spirit:resolve="immediate">0</spirit:right>
-					</spirit:vector>
-					<spirit:wireTypeDefs>
-						<spirit:wireTypeDef>
-							<spirit:typeName>std_logic_vector</spirit:typeName>
-							<spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-							<spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
-						</spirit:wireTypeDef>
-					</spirit:wireTypeDefs>
-				</spirit:wire>
-			</spirit:port>
-			<spirit:port>
-				<spirit:name>RGB_pBlue</spirit:name>
-				<spirit:wire>
-					<spirit:direction>out</spirit:direction>
-					<spirit:vector>
-						<spirit:left spirit:format="long"
-								spirit:resolve="immediate">7</spirit:left>
-						<spirit:right spirit:format="long"
-								spirit:resolve="immediate">0</spirit:right>
-					</spirit:vector>
-					<spirit:wireTypeDefs>
-						<spirit:wireTypeDef>
-							<spirit:typeName>std_logic_vector</spirit:typeName>
-							<spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-							<spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
-						</spirit:wireTypeDef>
-					</spirit:wireTypeDefs>
-				</spirit:wire>
-			</spirit:port>
-			<spirit:port>
-				<spirit:name>RGB_pHSync</spirit:name>
+				<spirit:name>vid_pVDE</spirit:name>
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:wireTypeDefs>
@@ -669,7 +631,7 @@
 				</spirit:wire>
 			</spirit:port>
 			<spirit:port>
-				<spirit:name>RGB_pVSync</spirit:name>
+				<spirit:name>vid_pHSync</spirit:name>
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:wireTypeDefs>
@@ -682,7 +644,7 @@
 				</spirit:wire>
 			</spirit:port>
 			<spirit:port>
-				<spirit:name>RGB_pVDE</spirit:name>
+				<spirit:name>vid_pVSync</spirit:name>
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:wireTypeDefs>
@@ -695,7 +657,7 @@
 				</spirit:wire>
 			</spirit:port>
 			<spirit:port>
-				<spirit:name>RGB_PixelClk</spirit:name>
+				<spirit:name>PixelClk</spirit:name>
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:wireTypeDefs>
@@ -856,7 +818,7 @@
 						<xilinx:enablement>
 							<xilinx:presence>optional</xilinx:presence>
 							<xilinx:isEnabled xilinx:resolve="dependent"
-									xilinx:dependency="not ($kRstActiveHigh)">false</xilinx:isEnabled>
+									xilinx:dependency="()not ($kRstActiveHigh)">false</xilinx:isEnabled>
 						</xilinx:enablement>
 					</xilinx:portInfo>
 				</spirit:vendorExtensions>
@@ -873,16 +835,24 @@
 			</spirit:modelParameter>
 			<spirit:modelParameter spirit:dataType="boolean">
 				<spirit:name>kRstActiveHigh</spirit:name>
-				<spirit:displayName>Krstactivehigh</spirit:displayName>
+				<spirit:displayName>Resets active high</spirit:displayName>
 				<spirit:value spirit:format="bool"
 						spirit:resolve="generated"
 						spirit:id="MODELPARAM_VALUE.kRstActiveHigh">true</spirit:value>
 			</spirit:modelParameter>
 			<spirit:modelParameter spirit:dataType="integer">
+				<spirit:name>kClkRange</spirit:name>
+				<spirit:displayName>Kclkrange</spirit:displayName>
+				<spirit:value spirit:format="long"
+						spirit:resolve="generated"
+						spirit:id="MODELPARAM_VALUE.kClkRange"
+						spirit:minimum="0">1</spirit:value>
+			</spirit:modelParameter>
+			<spirit:modelParameter spirit:dataType="integer">
 				<spirit:name>kIDLY_TapValuePs</spirit:name>
 				<spirit:displayName>Kidly Tapvalueps</spirit:displayName>
 				<spirit:value spirit:format="long"
-						spirit:resolve="immediate"
+						spirit:resolve="generated"
 						spirit:id="MODELPARAM_VALUE.kIDLY_TapValuePs"
 						spirit:minimum="0">78</spirit:value>
 			</spirit:modelParameter>
@@ -890,7 +860,7 @@
 				<spirit:name>kIDLY_TapWidth</spirit:name>
 				<spirit:displayName>Kidly Tapwidth</spirit:displayName>
 				<spirit:value spirit:format="long"
-						spirit:resolve="immediate"
+						spirit:resolve="generated"
 						spirit:id="MODELPARAM_VALUE.kIDLY_TapWidth"
 						spirit:minimum="0">5</spirit:value>
 			</spirit:modelParameter>
@@ -922,10 +892,30 @@
 			<spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
 			<spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
 		</spirit:choice>
+		<spirit:choice>
+			<spirit:name>choices_5</spirit:name>
+			<spirit:enumeration>1</spirit:enumeration>
+			<spirit:enumeration>2</spirit:enumeration>
+		</spirit:choice>
+		<spirit:choice>
+			<spirit:name>choices_6</spirit:name>
+			<spirit:enumeration spirit:text=">=120 MHz (1080p for example)">1</spirit:enumeration>
+			<spirit:enumeration spirit:text="&lt;120 MHz (720p for example)">2</spirit:enumeration>
+		</spirit:choice>
+		<spirit:choice>
+			<spirit:name>choices_7</spirit:name>
+			<spirit:enumeration spirit:text=">=120 MHz (1080p)">1</spirit:enumeration>
+			<spirit:enumeration spirit:text="&lt; 120 MHz (720p)">2</spirit:enumeration>
+		</spirit:choice>
 	</spirit:choices>
 	<spirit:fileSets>
 		<spirit:fileSet>
 			<spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
+			<spirit:file>
+				<spirit:name>src/dgl_dvi_edid.txt</spirit:name>
+				<spirit:userFileType>text</spirit:userFileType>
+				<spirit:logicalName/>
+			</spirit:file>
 			<spirit:file>
 				<spirit:name>src/dvi2rgb.xdc</spirit:name>
 				<spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
@@ -939,11 +929,6 @@
 				<spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
 				<spirit:userFileType>USED_IN_implementation</spirit:userFileType>
 				<spirit:userFileType>USED_IN_out_of_context</spirit:userFileType>
-				<spirit:logicalName/>
-			</spirit:file>
-			<spirit:file>
-				<spirit:name>src/dgl_dvi_edid.txt</spirit:name>
-				<spirit:userFileType>text</spirit:userFileType>
 				<spirit:logicalName/>
 			</spirit:file>
 			<spirit:file>
@@ -999,15 +984,11 @@
 			<spirit:file>
 				<spirit:name>src/dvi2rgb.vhd</spirit:name>
 				<spirit:fileType>vhdlSource</spirit:fileType>
-				<spirit:userFileType>CHECKSUM_34355130</spirit:userFileType>
+				<spirit:userFileType>CHECKSUM_56640a91</spirit:userFileType>
 			</spirit:file>
 		</spirit:fileSet>
 		<spirit:fileSet>
 			<spirit:name>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:name>
-			<spirit:file>
-				<spirit:name>src/dgl_dvi_edid.txt</spirit:name>
-				<spirit:userFileType>text</spirit:userFileType>
-			</spirit:file>
 			<spirit:file>
 				<spirit:name>src/SyncBase.vhd</spirit:name>
 				<spirit:fileType>vhdlSource</spirit:fileType>
@@ -1064,16 +1045,16 @@
 		<spirit:fileSet>
 			<spirit:name>xilinx_xpgui_view_fileset</spirit:name>
 			<spirit:file>
-				<spirit:name>xgui/dvi2rgb_v1_3.tcl</spirit:name>
+				<spirit:name>xgui/dvi2rgb_v1_4.tcl</spirit:name>
 				<spirit:fileType>tclSource</spirit:fileType>
 				<spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
-				<spirit:userFileType>CHECKSUM_a6ae4234</spirit:userFileType>
+				<spirit:userFileType>CHECKSUM_6f5deeb2</spirit:userFileType>
 			</spirit:file>
 		</spirit:fileSet>
 		<spirit:fileSet>
 			<spirit:name>xilinx_productguide_view_fileset</spirit:name>
 			<spirit:file>
-				<spirit:name>docs/dvi2rgb_v1_3.pdf</spirit:name>
+				<spirit:name>docs/dvi2rgb_v1_4.pdf</spirit:name>
 				<spirit:userFileType>pdf</spirit:userFileType>
 			</spirit:file>
 		</spirit:fileSet>
@@ -1085,7 +1066,7 @@
 			</spirit:file>
 		</spirit:fileSet>
 	</spirit:fileSets>
-	<spirit:description>Decodes DVI 1.0 spec video stream to a parallel 24-bit RGB pixel interface.</spirit:description>
+	<spirit:description>Decodes DVI 1.0 spec video stream to a parallel 24-bit RGB video output.</spirit:description>
 	<spirit:parameters>
 		<spirit:parameter>
 			<spirit:name>Component_Name</spirit:name>
@@ -1101,7 +1082,7 @@
 					spirit:resolve="user"
 					spirit:id="PARAM_VALUE.kEmulateDDC"
 					spirit:order="1400"
-					spirit:configGroups="0 UnGrouped checkBox">false</spirit:value>
+					spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
 		</spirit:parameter>
 		<spirit:parameter>
 			<spirit:name>kEnableSerialClkOutput</spirit:name>
@@ -1120,6 +1101,15 @@
 					spirit:order="1300"
 					spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
 		</spirit:parameter>
+		<spirit:parameter>
+			<spirit:name>kClkRange</spirit:name>
+			<spirit:displayName>TMDS clock range</spirit:displayName>
+			<spirit:value spirit:format="long"
+					spirit:resolve="user"
+					spirit:id="PARAM_VALUE.kClkRange"
+					spirit:choiceRef="choices_7"
+					spirit:configGroups="0 UnGrouped radioGroup">1</spirit:value>
+		</spirit:parameter>
 	</spirit:parameters>
 	<spirit:vendorExtensions>
 		<xilinx:coreExtensions>
@@ -1134,26 +1124,30 @@
 			<xilinx:displayName>DVI to RGB Video Decoder (Sink)</xilinx:displayName>
 			<xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
 			<xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-			<xilinx:coreRevision>3</xilinx:coreRevision>
-			<xilinx:coreCreationDateTime>2014-11-10T10:20:35Z</xilinx:coreCreationDateTime>
+			<xilinx:coreRevision>4</xilinx:coreRevision>
+			<xilinx:upgrades>
+				<xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.3</xilinx:canUpgradeFrom>
+			</xilinx:upgrades>
+			<xilinx:coreCreationDateTime>2015-04-22T16:21:05Z</xilinx:coreCreationDateTime>
 			<xilinx:tags>
 				<xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/dvi2rgb_v1_0</xilinx:tag>
 				<xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.1_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
 				<xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.3_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
+				<xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.4_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
 			</xilinx:tags>
 		</xilinx:coreExtensions>
 		<xilinx:packagingInfo>
-			<xilinx:xilinxVersion>2014.3.1</xilinx:xilinxVersion>
+			<xilinx:xilinxVersion>2014.4</xilinx:xilinxVersion>
 			<xilinx:checksum xilinx:scope="busInterfaces"
-					xilinx:value="3a2dafad"/>
+					xilinx:value="875945cb"/>
 			<xilinx:checksum xilinx:scope="fileGroups"
-					xilinx:value="2707c672"/>
+					xilinx:value="3ab5c8c7"/>
 			<xilinx:checksum xilinx:scope="ports"
-					xilinx:value="6b9b51fd"/>
+					xilinx:value="a6d0d612"/>
 			<xilinx:checksum xilinx:scope="hdlParameters"
-					xilinx:value="fe531fcb"/>
+					xilinx:value="63be60d8"/>
 			<xilinx:checksum xilinx:scope="parameters"
-					xilinx:value="e6a65329"/>
+					xilinx:value="8c16c14f"/>
 		</xilinx:packagingInfo>
 	</spirit:vendorExtensions>
 </spirit:component>

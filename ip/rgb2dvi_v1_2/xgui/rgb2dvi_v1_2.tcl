@@ -7,7 +7,17 @@ proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "kGenerateSerialClk" -parent ${Page_0}
   ipgui::add_param $IPINST -name "kClkPrimitive" -parent ${Page_0}
 
+  ipgui::add_param $IPINST -name "kClkRange" -layout horizontal
 
+}
+
+proc update_PARAM_VALUE.kClkRange { PARAM_VALUE.kClkRange } {
+	# Procedure called to update kClkRange when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.kClkRange { PARAM_VALUE.kClkRange } {
+	# Procedure called to validate kClkRange
+	return true
 }
 
 proc update_PARAM_VALUE.kClkPrimitive { PARAM_VALUE.kClkPrimitive } {
@@ -51,5 +61,10 @@ proc update_MODELPARAM_VALUE.kClkPrimitive { MODELPARAM_VALUE.kClkPrimitive PARA
 proc update_MODELPARAM_VALUE.kRstActiveHigh { MODELPARAM_VALUE.kRstActiveHigh PARAM_VALUE.kRstActiveHigh } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.kRstActiveHigh}] ${MODELPARAM_VALUE.kRstActiveHigh}
+}
+
+proc update_MODELPARAM_VALUE.kClkRange { MODELPARAM_VALUE.kClkRange PARAM_VALUE.kClkRange } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.kClkRange}] ${MODELPARAM_VALUE.kClkRange}
 }
 

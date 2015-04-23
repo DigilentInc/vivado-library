@@ -214,7 +214,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>3c60b3f1</spirit:value>
+            <spirit:value>95704add</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -452,6 +452,11 @@
         <spirit:displayName>Resets active high</spirit:displayName>
         <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kRstActiveHigh">true</spirit:value>
       </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>kClkRange</spirit:name>
+        <spirit:displayName>Kclkrange</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kClkRange" spirit:minimum="0">1</spirit:value>
+      </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
   <spirit:choices>
@@ -479,6 +484,11 @@
       <spirit:name>choices_4</spirit:name>
       <spirit:enumeration>MMCM</spirit:enumeration>
       <spirit:enumeration>PLL</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
+      <spirit:name>choices_7</spirit:name>
+      <spirit:enumeration spirit:text=">=120 MHz (1080p)">1</spirit:enumeration>
+      <spirit:enumeration spirit:text="&lt; 120 MHz (720p)">2</spirit:enumeration>
     </spirit:choice>
   </spirit:choices>
   <spirit:fileSets>
@@ -589,7 +599,7 @@
         <spirit:name>xgui/rgb2dvi_v1_2.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
-        <spirit:userFileType>CHECKSUM_c2dcc8f7</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_c85f233a</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -630,6 +640,11 @@
       <spirit:displayName>Generate SerialClk internally from pixel clock.</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kGenerateSerialClk" spirit:order="1200" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
     </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>kClkRange</spirit:name>
+      <spirit:displayName>TMDS clock range</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choices_7" spirit:configGroups="0 UnGrouped radioGroup">1</spirit:value>
+    </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
     <xilinx:coreExtensions>
@@ -646,11 +661,11 @@
       <xilinx:displayName>RGB to DVI Video Encoder (Source)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.1</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2015-04-23T08:17:16Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2015-04-23T10:19:02Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="xilinx.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
@@ -661,10 +676,10 @@
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2014.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="6d33c469"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="a1b08fec"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="562106cc"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="8f54593c"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="b228e123"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="93064326"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="51521899"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="6469a587"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

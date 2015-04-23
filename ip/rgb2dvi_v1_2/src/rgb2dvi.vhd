@@ -62,6 +62,7 @@ entity rgb2dvi is
    Generic (
       kGenerateSerialClk : boolean := true;
       kClkPrimitive : string := "MMCM"; -- "MMCM" or "PLL" to instantiate, if kGenerateSerialClk true
+      kClkRange : natural := 1;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)      
       kRstActiveHigh : boolean := true); --true, if active-high; false, if active-low
    Port (
       -- DVI 1.0 TMDS video interface
@@ -107,7 +108,7 @@ end generate ResetActiveHigh;
 ClockGenInternal: if kGenerateSerialClk generate
    ClockGenX: entity work.ClockGen
       Generic map (
-         kClkRange => 1,  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3, >=30MHz=4, >=25MHz=5
+         kClkRange => kClkRange,  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3, >=30MHz=4, >=25MHz=5
          kClkPrimitive => kClkPrimitive) -- "MMCM" or "PLL" to instantiate, if kGenerateSerialClk true
       Port map (
          PixelClkIn => PixelClk,

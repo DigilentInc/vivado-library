@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spirit:component xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <spirit:vendor>digilentinc.com</spirit:vendor>
-  <spirit:library>user</spirit:library>
+  <spirit:library>ip</spirit:library>
   <spirit:name>rgb2dpvid</spirit:name>
   <spirit:version>1.0</spirit:version>
   <spirit:busInterfaces>
@@ -344,18 +344,13 @@
         <xilinx:family xilinx:lifeCycle="Production">artix7</xilinx:family>
       </xilinx:supportedFamilies>
       <xilinx:taxonomies>
-        <xilinx:taxonomy>/BaseIP</xilinx:taxonomy>
+        <xilinx:taxonomy>/Video_&amp;_Image_Processing</xilinx:taxonomy>
       </xilinx:taxonomies>
-      <xilinx:displayName>rgb2dpvid_v1_0</xilinx:displayName>
+      <xilinx:displayName>RGB to DPVID</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
       <xilinx:coreRevision>4</xilinx:coreRevision>
       <xilinx:coreCreationDateTime>2014-11-21T13:38:42Z</xilinx:coreCreationDateTime>
-      <xilinx:tags>
-        <xilinx:tag xilinx:name="xilinx.com:ip:rgb2dpvid:1.0_ARCHIVE_LOCATION">C:/Users/nagy/Desktop/managed_ip_project/new/rgb2dpvid</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dpvid:1.0_ARCHIVE_LOCATION">C:/Users/nagy/Desktop/managed_ip_project/new/rgb2dpvid</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:user:rgb2dpvid:1.0_ARCHIVE_LOCATION">C:/Users/nagy/Work/Atlys2/atlys2bist</xilinx:tag>
-      </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2014.3.1</xilinx:xilinxVersion>

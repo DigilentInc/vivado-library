@@ -3,7 +3,7 @@
   <spirit:vendor>digilentinc.com</spirit:vendor>
   <spirit:library>ip</spirit:library>
   <spirit:name>dvi2rgb</spirit:name>
-  <spirit:version>1.4</spirit:version>
+  <spirit:version>1.5</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>TMDS</spirit:name>
@@ -329,7 +329,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>9b236341</spirit:value>
+            <spirit:value>6d0441d9</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -345,7 +345,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>5b8a6f83</spirit:value>
+            <spirit:value>4f7f432a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -359,7 +359,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>19a31205</spirit:value>
+            <spirit:value>140b4b30</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -373,7 +373,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>27b31c8b</spirit:value>
+            <spirit:value>07efa316</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -762,6 +762,11 @@
         <spirit:displayName>Kidly Tapwidth</spirit:displayName>
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kIDLY_TapWidth" spirit:minimum="0">5</spirit:value>
       </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="boolean">
+        <spirit:name>kAddBUFG</spirit:name>
+        <spirit:displayName>Kaddbufg</spirit:displayName>
+        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kAddBUFG">true</spirit:value>
+      </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
   <spirit:choices>
@@ -860,6 +865,10 @@
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
+        <spirit:name>src/ResyncToBUFG.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>src/PhaseAlign.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
@@ -882,7 +891,7 @@
       <spirit:file>
         <spirit:name>src/dvi2rgb.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_56640a91</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_6858d120</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -928,6 +937,10 @@
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
+        <spirit:name>src/ResyncToBUFG.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>src/TMDS_Decoder.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
@@ -943,16 +956,16 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/dvi2rgb_v1_4.tcl</spirit:name>
+        <spirit:name>xgui/dvi2rgb_v1_5.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
-        <spirit:userFileType>CHECKSUM_6f5deeb2</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_2c2d9033</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_productguide_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>docs/dvi2rgb_v1_4.pdf</spirit:name>
+        <spirit:name>docs/dvi2rgb_v1_5.pdf</spirit:name>
         <spirit:userFileType>pdf</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -974,22 +987,27 @@
     <spirit:parameter>
       <spirit:name>kEmulateDDC</spirit:name>
       <spirit:displayName>Enable DDC ROM</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kEmulateDDC" spirit:order="1400" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kEmulateDDC" spirit:order="1400">true</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kEnableSerialClkOutput</spirit:name>
       <spirit:displayName>Enable serial clock output</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kEnableSerialClkOutput" spirit:configGroups="0 UnGrouped checkBox">false</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kEnableSerialClkOutput">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kRstActiveHigh</spirit:name>
       <spirit:displayName>Resets active high</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kRstActiveHigh" spirit:order="1300" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kRstActiveHigh" spirit:order="1300">true</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kClkRange</spirit:name>
       <spirit:displayName>TMDS clock range</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choices_7" spirit:configGroups="0 UnGrouped radioGroup">1</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choices_7">1</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>kAddBUFG</spirit:name>
+      <spirit:displayName>Add BUFG to PixelClk</spirit:displayName>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kAddBUFG">true</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
@@ -1005,25 +1023,27 @@
       <xilinx:displayName>DVI to RGB Video Decoder (Sink)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>1</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.3</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.4</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2015-04-23T05:51:59Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2015-07-24T16:28:26Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/dvi2rgb_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.1_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.3_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.4_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.5_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2014.4</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2014.4.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="875945cb"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="3ab5c8c7"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="7642eda1"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="a6d0d612"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="63be60d8"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="8c16c14f"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="60258c9a"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="cb98898f"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

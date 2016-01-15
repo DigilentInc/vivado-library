@@ -69,7 +69,6 @@ entity TMDS_Clocking is
       aRst : in std_logic; --asynchronous reset; must be reset when RefClk is not within spec
       SerialClk : out std_logic;
       PixelClk : out std_logic;
-      debug : out std_logic;
       aLocked : out std_logic);
 end TMDS_Clocking;
 
@@ -88,7 +87,7 @@ signal rMMCM_Reset_q : std_logic_vector(1 downto 0);
 signal rMMCM_Locked_q : std_logic_vector(1 downto 0);
 
 begin
-debug <= rMMCM_Reset_q(0);
+
 -- We need a reset bridge to use the asynchronous aRst signal to reset our circuitry
 -- and decrease the chance of metastability. The signal rLockLostRst can be used as
 -- asynchronous reset for any flip-flop in the RefClk domain, since it will be de-asserted

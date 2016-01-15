@@ -101,6 +101,8 @@ entity dvi2rgb is
       DDC_SCL_O : out std_logic; 
       DDC_SCL_T : out std_logic;
       
+      debug : out std_logic;
+      
       pRst : in std_logic; -- synchronous reset; will restart locking procedure
       pRst_n : in std_logic -- synchronous reset; will restart locking procedure
    );
@@ -143,6 +145,7 @@ TMDS_ClockingX: entity work.TMDS_Clocking
 
       aLocked    => aLocked,  
       PixelClk   => PixelClk_int, -- slow parallel clock
+      debug => debug,
       SerialClk  => SerialClk_int -- fast serial clock
    );
    

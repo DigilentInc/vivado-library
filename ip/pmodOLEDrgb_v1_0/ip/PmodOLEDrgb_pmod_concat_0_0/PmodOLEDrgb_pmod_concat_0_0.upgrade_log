@@ -1,0 +1,61 @@
+Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2015.4 (win64) Build 1412921 Wed Nov 18 09:43:45 MST 2015
+| Date         : Tue Mar 01 14:59:37 2016
+| Host         : WK116 running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7k325tffg900-2
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'PmodOLEDrgb_pmod_concat_0_0'
+
+1. Summary
+----------
+
+CAUTION (success, with warnings) in the upgrade of PmodOLEDrgb_pmod_concat_0_0 (digilentinc.com:ip:pmod_concat:1.0) from (Rev. 6) to (Rev. 7)
+
+After upgrade, an IP may have parameter differences compared to the original customization. Please review the parameters within the IP customization GUI to ensure proper functionality.
+
+2. Customization warnings
+-------------------------
+
+WARNING: Parameter 'PMOD' is no longer present on the upgraded IP 'PmodOLEDrgb_pmod_concat_0_0', and cannot be set to 'Custom'
+
+WARNING: Parameter 'USE_BOARD_FLOW' is no longer present on the upgraded IP 'PmodOLEDrgb_pmod_concat_0_0', and cannot be set to 'false'
+
+
+3. Debug Commands
+-----------------
+
+  The following debug information can be passed to Vivado as Tcl commands,
+in order to validate or debug the output of the upgrade flow.
+  Please consult the warnings from the previous sections, and alter or remove
+the configuration parameter(s) which caused the warning; then execute the Tcl
+commands, and use the IP Customization GUI to verify the IP configuration.
+
+create_ip -vlnv digilentinc.com:ip:pmod_concat:1.0 -user_name PmodOLEDrgb_pmod_concat_0_0
+set_property -dict "\
+  CONFIG.Component_Name PmodOLEDrgb_pmod_concat_0_0 " [get_ips PmodOLEDrgb_pmod_concat_0_0]
+
+
+
+
+
+
+
+Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2015.4 (win64) Build 1412921 Wed Nov 18 09:43:45 MST 2015
+| Date         : Mon Feb 29 17:10:52 2016
+| Host         : WK116 running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7k325tffg900-2
+------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'PmodOLEDrgb_pmod_concat_0_0'
+
+1. Summary
+----------
+
+SUCCESS in the update of PmodOLEDrgb_pmod_concat_0_0 (digilentinc.com:ip:pmod_concat:1.0 (Rev. 6)) to current project options.
+

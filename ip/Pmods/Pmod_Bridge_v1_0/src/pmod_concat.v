@@ -202,7 +202,7 @@ generate
          case (Bottom_Row_Interface)
             "GPIO":begin
                        assign in_bottom_bus_I={out7_I,out6_I,out5_I,out4_I};
-                       assign {out7_O,out6_O,out5_I,out4_O}=in_bottom_bus_O;
+                       assign {out7_O,out6_O,out5_O,out4_O}=in_bottom_bus_O;
                        assign {out7_T,out6_T,out5_T,out4_T}=in_bottom_bus_T;
                      end
             "UART": begin

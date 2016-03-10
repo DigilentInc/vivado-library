@@ -2374,12 +2374,12 @@
       <xilinx:taxonomies>
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
-      <xilinx:displayName>pmod_bridge_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>1</xilinx:coreRevision>
+      <xilinx:displayName>Pmod Bridge</xilinx:displayName>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:pmod_concat:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2016-03-08T23:34:48Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2016-03-10T02:00:29Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:pmod_concat:1.0_ARCHIVE_LOCATION">C:/Tommywork/PMODOLEDRGB/pmodconcat</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:pmod_concat:1.0_ARCHIVE_LOCATION">C:/Tommywork/PMODOLEDRGB/pmodconcat</xilinx:tag>

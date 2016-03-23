@@ -44,7 +44,7 @@ uint8_t ExtractBFromRGB(uint16_t wRGB){return (uint8_t)(wRGB&0x1F);};
 **	Description:
 **		Initialize the OLED display controller and turn the display on.
 */
-void Oledrgb_begin(OLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
+void Oledrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 {
 	InstancePtr->GPIO_addr=GPIO_Address;
 	XSpi_OLEDrgb.BaseAddress=SPI_Address;
@@ -53,7 +53,7 @@ void Oledrgb_begin(OLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 	Oledrgb_DevInit(InstancePtr);
 }
 
-void DrawPixel(OLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor)
+void DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor)
 {
 	uint8_t cmds[6];
 	uint8_t data[2];
@@ -71,10 +71,9 @@ void DrawPixel(OLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor)
 	data[1] = pixelColor;
 
 	WriteSPI2(InstancePtr, cmds, 6, data, 2);
-	Oledrgb_delay(1);
 }
 
-void DrawLine(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor)
+void DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor)
 {
 	uint8_t cmds[8];
 	cmds[0] = CMD_DRAWLINE; 		//draw line
@@ -87,10 +86,9 @@ void DrawLine(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t 
 	cmds[7] = ExtractBFromRGB(lineColor);	//R
 
 	WriteSPI2(InstancePtr, cmds, 8, NULL, 0);
-	Oledrgb_delay(1);
 }
 
-void DrawRectangle(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor)
+void DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor)
 {
 	uint8_t cmds[13];
     cmds[0] = CMD_FILLWINDOW;		//fill window
@@ -113,7 +111,6 @@ void DrawRectangle(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uin
 		cmds[12] = ExtractBFromRGB(fillColor);	//R
 	}
 	WriteSPI2(InstancePtr, cmds, bFill ? 13: 10, NULL, 0);
-	Oledrgb_delay(1);
 }
 
 /* ------------------------------------------------------------ */
@@ -132,7 +129,7 @@ void DrawRectangle(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uin
 **		Clear the display. This clears the memory buffer and then
 **		updates the display.
 */
-void Oledrgb_Clear(OLEDrgb* InstancePtr)
+void Oledrgb_Clear(PmodOLEDrgb* InstancePtr)
 {
 	uint8_t cmds[5];
 	cmds[0] = CMD_CLEARWINDOW; 		// Enter the “clear mode”
@@ -141,10 +138,9 @@ void Oledrgb_Clear(OLEDrgb* InstancePtr)
 	cmds[3] = OLEDRGB_WIDTH - 1;	// Set the finishing column coordinates;
 	cmds[4] = OLEDRGB_HEIGHT - 1;	// Set the finishing row coordinates;
 	WriteSPI2(InstancePtr, cmds, 5, NULL, 0);
-	Oledrgb_delay(1);
 }
 
-void DrawBitmap(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp)
+void DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp)
 {
 	uint8_t cmds[6];
 	//set column start and end
@@ -158,7 +154,6 @@ void DrawBitmap(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_
 	cmds[5] = r2;					// Set the finishing row coordinates
 
 	WriteSPI2(InstancePtr, cmds, 6, pBmp, (((c2 - c1 + 1)  * (r2 - r1 + 1)) << 1));
-	Oledrgb_delay(1);
 }
 
 /* ------------------------------------------------------------ */
@@ -178,14 +173,14 @@ void DrawBitmap(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_
 **		of the OLEDrgb display.
 
 */
-void Oledrgb_HostInit(OLEDrgb* InstancePtr)
+void Oledrgb_HostInit(PmodOLEDrgb* InstancePtr)
 	{
 	Xil_Out32(InstancePtr->GPIO_addr+4, 0x0000);
 	Xil_Out32(InstancePtr->GPIO_addr, 0xA);
 	SPIInit(&InstancePtr->OLEDSpi, 0, 0);
 }
 
-void Oledrgb_DevInit(OLEDrgb* InstancePtr)
+void Oledrgb_DevInit(PmodOLEDrgb* InstancePtr)
 	{
 	/*Bring PmodEn HIGH*/
 	Xil_Out32(InstancePtr->GPIO_addr,0b1010);
@@ -261,7 +256,7 @@ void Oledrgb_DevInit(OLEDrgb* InstancePtr)
 	/* Turn on VCC and wait 100ms*/
 	Xil_Out32(InstancePtr->GPIO_addr,0b1110);
 
-	Oledrgb_delay(100);
+	usleep(100000);
 
 	/* Send Display On command*/
 	WriteSPI(&InstancePtr->OLEDSpi, CMD_DISPLAYON);
@@ -335,7 +330,7 @@ uint8_t WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2)
 	return bRx[0];
 }
 
-uint8_t WriteSPI2(OLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData)
+uint8_t WriteSPI2(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData)
 {
 	XSpi_Transfer(&InstancePtr->OLEDSpi, pCmd, 0, nCmd);
 	if (nData!= 0){
@@ -345,9 +340,5 @@ uint8_t WriteSPI2(OLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData,
 	}
 
 	return 1;
-}
-void Oledrgb_delay(int ms){
-	int i;
-	for(i=0;i<1000*ms;i++);
 }
 

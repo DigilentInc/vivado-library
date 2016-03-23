@@ -136,7 +136,7 @@ typedef struct{
 	u32 GPIO_addr;
 	u32 SPI_addr;
 	XSpi OLEDSpi;
-}OLEDrgb;
+}PmodOLEDrgb;
 
 int SPIInit(XSpi *SpiInstancePtr, u16 SpiDeviceId, u32 mode);
 uint16_t BuildRGB(uint8_t R,uint8_t G,uint8_t B);
@@ -145,19 +145,19 @@ uint8_t ExtractGFromRGB(uint16_t wRGB);
 uint8_t ExtractBFromRGB(uint16_t wRGB);
 
 
-void Oledrgb_begin(OLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
+void Oledrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 void Oledrgb_delay(int ms);
-void DrawPixel(OLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor);
-void DrawLine(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor);
-void DrawRectangle(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor);
-void Oledrgb_Clear(OLEDrgb* InstancePtr);
-void DrawBitmap(OLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp);
+void DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor);
+void DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor);
+void DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor);
+void Oledrgb_Clear(PmodOLEDrgb* InstancePtr);
+void DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp);
 
 void Oledrgb_HostInit();
 void Oledrgb_DevInit();
 uint8_t WriteSPI(XSpi* OLEDSpi, uint8_t bVal);
 uint8_t WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2);
-uint8_t WriteSPI2(OLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData);
+uint8_t WriteSPI2(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData);
 
 
 #endif // PMODOLEDRGB_H

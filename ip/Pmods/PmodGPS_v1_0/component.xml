@@ -869,7 +869,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>facf3da4</spirit:value>
+            <spirit:value>eb1bb981</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -894,7 +894,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>9b3e3449</spirit:value>
+            <spirit:value>b5e6f8ad</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1799,10 +1799,6 @@
         <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>src/PmodGPS.hwdef</spirit:name>
-        <spirit:userFileType>hwdef</spirit:userFileType>
-      </spirit:file>
-      <spirit:file>
         <spirit:name>ip/PmodGPS_axi_uartlite_0_0/PmodGPS_axi_uartlite_0_0.xci</spirit:name>
         <spirit:userFileType>xci</spirit:userFileType>
       </spirit:file>
@@ -1817,7 +1813,7 @@
       <spirit:file>
         <spirit:name>src/PmodGPS.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_9b3e3449</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_b5e6f8ad</spirit:userFileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -2043,11 +2039,9 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodGPS_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>15</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2016-03-10T01:47:20Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>18</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2016-03-23T20:02:01Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
-        <xilinx:tag xilinx:name="natinst.com:user:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:user:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:IP:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/Github/vivado-library/ip/Pmods/PmodGPS_v1_0</xilinx:tag>
       </xilinx:tags>
       <xilinx:configElementInfos>
@@ -2103,7 +2097,7 @@
       <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7fb99358"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="93438fb9"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="ac8e0c3b"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="87565a7f"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="1e0c4264"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="a5b29432"/>
     </xilinx:packagingInfo>

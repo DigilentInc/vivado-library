@@ -102,10 +102,10 @@ int GPS_read3DFpin(PmodGPS* InstancePtr){
 **	  verify the packet starts with $GP, then checks the next three
 **	  to decide which struct to parse the data into.
 */
-NMEA GPS_getData(PmodGPS* InstancePtr)
+bool GPS_getData(PmodGPS* InstancePtr)
 {
-	char recv[MAX_SIZE]={0};
-	int i;
+	char recv[MAX_SIZE*5]={0};
+	int i=0;
 	int count = 0;
 	char checksum[3];
 	NMEA mode= INVALID;
@@ -113,45 +113,44 @@ NMEA GPS_getData(PmodGPS* InstancePtr)
 	u8 StatusRegister = XUartLite_GetStatusReg(InstancePtr->GPSUart.RegBaseAddress);
 
 	if (StatusRegister & XUL_SR_RX_FIFO_VALID_DATA){	//If there is a sentence
-		//Get the sentence
-		//for(i = 0; i < MAX_SIZE; i++){
-			//while(!(GPSUart->ReceiveBuffer.RemainingBytes));//Wait for serial to be ready
-		while(1){
-			//recv[i] = serPort.read();
-			ReceivedCount += XUartLite_Recv(&InstancePtr->GPSUart, recv+ReceivedCount, 1);
-			if(recv[ReceivedCount-1] == '\n' || ReceivedCount == MAX_SIZE){//End of sentence
-				break;
+		do{
+			while(recv[ReceivedCount-1] != '\n'){
+				ReceivedCount += XUartLite_Recv(&InstancePtr->GPSUart, recv+ReceivedCount, MAX_SIZE);
 			}
-		}
-		//}
+			mode=chooseMode(recv+count);
+			count=ReceivedCount;
+			ReceivedCount += XUartLite_Recv(&InstancePtr->GPSUart, recv+ReceivedCount, MAX_SIZE);
+
+		}while (mode!=VTG);
 	}
 	else{
-		return INVALID;
+		return 0;
 	}
-	//Decide what kind of sentence was received
-	mode=chooseMode(recv);
-
-	//Debugging purposes
-	//Serial.print("\n\n Message received: ");Serial.println(recv); //This is the full sentence sent from the PmodGPS
-
 	//Format the sentence into structs
+	XUartLite_ResetFifos(&InstancePtr->GPSUart);
+	while(1){
+		mode=chooseMode(recv+i);
 		switch(mode){
-			case(GGA):formatGGA(InstancePtr,recv);
+			case(GGA):
+					i+=formatGGA(InstancePtr,recv+i);
 				break;
-			case(GSA):formatGSA(InstancePtr,recv);
+			case(GSA):
+					i+=formatGSA(InstancePtr,recv+i);
 				break;
-			case(GSV):formatGSV(InstancePtr,recv);
+			case(GSV):
+					i+=formatGSV(InstancePtr,recv+i);
 				break;
-			case(RMC):formatRMC(InstancePtr,recv);
+			case(RMC):
+					i+=formatRMC(InstancePtr,recv+i);
 				break;
-			case(VTG):formatVTG(InstancePtr,recv);
-					XUartLite_ResetFifos(&InstancePtr->GPSUart);
+			case(VTG):
+					i+=formatVTG(InstancePtr,recv+i);
 				break;
-			case(INVALID):return INVALID;
+			case(INVALID):return 1;
 		}
+	}
 
-
-	return(mode);//Return the type of sentence that was sent
+	return 1;//Return the type of sentence that was sent
 }
 /* ------------------------------------------------------------ */
 /*  isFixed()
@@ -381,7 +380,7 @@ SATELLITE* getSatelliteInfo(PmodGPS* InstancePtr){
 **    Formats a mode's data into elements in a struct.
 **		NOTE: ',' will separate all values
 */
-void formatGGA(PmodGPS* InstancePtr, char* data_array)
+int formatGGA(PmodGPS* InstancePtr, char* data_array)
 {
 	enum cases {UTC, LAT, NS, LONG, EW, PFI, NUMSAT, HDOP, ALT, AUNIT, GSEP, GUNIT, AODC};
 	enum cases datamember= UTC;
@@ -395,8 +394,10 @@ void formatGGA(PmodGPS* InstancePtr, char* data_array)
 	{
 		start_ptr = end_ptr;
 
-		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*')end_ptr++;//Increment ptr until a comma is found
-
+		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*' && *end_ptr!='$')end_ptr++;//Increment ptr until a comma is found
+		if (*end_ptr=='$'){
+			return end_ptr-data_array;
+		}
 		if (*end_ptr==10||*(end_ptr+1)==10||(*end_ptr=='*'&&*(end_ptr-1)==',')){//End reached
 			flag=0;
 			break;
@@ -489,7 +490,7 @@ void formatGGA(PmodGPS* InstancePtr, char* data_array)
 		checksum[1] = *(end_ptr - 2);
 		checksum[2] = 0;
 	memcpy(InstancePtr->GGAdata.CHECKSUM, checksum, 3);
-	return;
+	return end_ptr-data_array+1;
 }
 
 /* ------------------------------------------------------------ */
@@ -508,7 +509,7 @@ void formatGGA(PmodGPS* InstancePtr, char* data_array)
 **  Description:
 **    Formats a mode's data into elements in a struct.
 */
-void formatGSA(PmodGPS* InstancePtr, char* data_array)
+int formatGSA(PmodGPS* InstancePtr, char* data_array)
 {
 	enum cases {MODE1, MODE2, SAT1, SAT2, SAT3, SAT4, SAT5, SAT6, SAT7, SAT8, SAT9, SAT10, SAT11, SAT12, PDOP, HDOP, VDOP, AODC};
 	enum cases datamember=MODE1;
@@ -522,7 +523,10 @@ void formatGSA(PmodGPS* InstancePtr, char* data_array)
 	{
 		start_ptr = end_ptr;
 
-		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*')end_ptr++;//Increment ptr until a comma is found
+		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*' && *end_ptr!='$')end_ptr++;//Increment ptr until a comma is found
+				if (*end_ptr=='$'){
+					return end_ptr-data_array;
+				}
 		if (*end_ptr==10||*(end_ptr+1)==10||(*end_ptr=='*'&&*(end_ptr-1)==',')){//End reached
 			flag=0;
 			break;
@@ -623,7 +627,7 @@ void formatGSA(PmodGPS* InstancePtr, char* data_array)
 		checksum[1] = *(end_ptr - 2);
 		checksum[2] = 0;
 	memcpy(InstancePtr->GSAdata.CHECKSUM, checksum, 3);
-	return;
+	return end_ptr-data_array+1;
 }
 
 /* ------------------------------------------------------------ */
@@ -642,7 +646,7 @@ void formatGSA(PmodGPS* InstancePtr, char* data_array)
 **  Description:
 **    Formats GSV messages into their corresponding structs.
 */
-void formatGSV(PmodGPS* InstancePtr, char* data_array)
+int formatGSV(PmodGPS* InstancePtr, char* data_array)
 {
 enum cases {NUMM, MESNUM, SATVIEW, SATID1, ELV1, AZM1, SNR1, SATID2, ELV2, AZM2, SNR2, SATID3, ELV3, AZM3, SNR3, SATID4, ELV4, AZM4, SNR4};
 	enum cases datamember=NUMM;
@@ -657,8 +661,10 @@ enum cases {NUMM, MESNUM, SATVIEW, SATID1, ELV1, AZM1, SNR1, SATID2, ELV2, AZM2,
 	{
 		start_ptr = end_ptr;
 
-		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *(end_ptr)!='*')end_ptr++;//Increment ptr until a comma is found
-
+		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*' && *end_ptr!='$')end_ptr++;//Increment ptr until a comma is found
+				if (*end_ptr=='$'){
+					return end_ptr-data_array;
+				}
 		if (*end_ptr==10||*(end_ptr+1)==10||(*end_ptr=='*'&&*(end_ptr-1)==',')){//End reached
 			flag=0;
 			break;
@@ -787,7 +793,7 @@ enum cases {NUMM, MESNUM, SATVIEW, SATID1, ELV1, AZM1, SNR1, SATID2, ELV2, AZM2,
 		checksum[1] = *(end_ptr - 2);
 		checksum[2] = 0;
 	memcpy(InstancePtr->GSVdata.CHECKSUM, checksum, 3);
-	return;
+	return end_ptr-data_array+1;
 }
 
 /* ------------------------------------------------------------ */
@@ -806,7 +812,7 @@ enum cases {NUMM, MESNUM, SATVIEW, SATID1, ELV1, AZM1, SNR1, SATID2, ELV2, AZM2,
 **  Description:
 **    Formats a mode's data into elements in a struct.
 */
-void formatRMC(PmodGPS* InstancePtr, char* data_array)
+int formatRMC(PmodGPS* InstancePtr, char* data_array)
 {
 	enum cases {UTC, STAT, LAT, NS, LONG,EW, SOG, COG, DATE, MVAR, MVARDIR, MODE};
 	enum cases datamember= UTC;
@@ -820,8 +826,10 @@ void formatRMC(PmodGPS* InstancePtr, char* data_array)
 	{
 		start_ptr = end_ptr;
 
-		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*')end_ptr++;//Increment ptr until a comma is found
-
+		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*' && *end_ptr!='$')end_ptr++;//Increment ptr until a comma is found
+				if (*end_ptr=='$'){
+					return end_ptr-data_array;
+				}
 		if (*end_ptr==10||*(end_ptr+1)==10||(*end_ptr=='*'&&*(end_ptr-1)==',')){//End reached
 			flag=0;
 			break;
@@ -892,7 +900,7 @@ void formatRMC(PmodGPS* InstancePtr, char* data_array)
 		checksum[1] = *(end_ptr - 2);
 		checksum[2] = 0;
 	memcpy(InstancePtr->RMCdata.CHECKSUM, checksum, 3);
-	return;
+	return end_ptr-data_array+1;
 }
 
 /* ------------------------------------------------------------ */
@@ -911,7 +919,7 @@ void formatRMC(PmodGPS* InstancePtr, char* data_array)
 **  Description:
 **    Formats a mode's data into elements in a struct.
 */
-void formatVTG(PmodGPS* InstancePtr, char* data_array)
+int formatVTG(PmodGPS* InstancePtr, char* data_array)
 {
 	enum cases {COURSE_T, REF_T, COURSE_M, REF_M, SPD_N, UNIT_N, SPD_KM, UNIT_KM, MODE, CHECKSUM};
 	enum cases datamember=COURSE_T;
@@ -924,8 +932,10 @@ void formatVTG(PmodGPS* InstancePtr, char* data_array)
 	{
 		start_ptr = end_ptr;
 
-		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*')end_ptr++;//Increment ptr until a comma is found
-
+		while (*end_ptr!=',' && (*(end_ptr+1)!=10)&& *end_ptr!='*' && *end_ptr!='$')end_ptr++;//Increment ptr until a comma is found
+				if (*end_ptr=='$'){
+					return end_ptr-data_array;
+				}
 		if (*end_ptr==10||*(end_ptr+1)==10||(*end_ptr=='*'&&*(end_ptr-1)==',')){//End reached
 			flag=0;
 			break;
@@ -984,7 +994,7 @@ void formatVTG(PmodGPS* InstancePtr, char* data_array)
 		checksum[1] = *(end_ptr - 2);
 		checksum[2] = 0;
 	memcpy(InstancePtr->VTGdata.CHECKSUM, checksum, 3);
-	return;
+	return end_ptr-data_array+1;
 }
 
 /* ------------------------------------------------------------ */

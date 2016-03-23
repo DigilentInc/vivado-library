@@ -229,11 +229,11 @@ typedef struct PmodGPS{
 	VTG_DATA getVTG(PmodGPS* InstancePtr);
 
 	NMEA chooseMode(char recv[MAX_SIZE]);
-	void formatGGA(PmodGPS* InstancePtr,char* data_array);
-	void formatGSA(PmodGPS* InstancePtr,char* data_array);
-	void formatGSV(PmodGPS* InstancePtr,char* data_array);
-	void formatRMC(PmodGPS* InstancePtr,char* data_array);
-	void formatVTG(PmodGPS* InstancePtr,char* data_array);
+	int formatGGA(PmodGPS* InstancePtr,char* data_array);
+	int formatGSA(PmodGPS* InstancePtr,char* data_array);
+	int formatGSV(PmodGPS* InstancePtr,char* data_array);
+	int formatRMC(PmodGPS* InstancePtr,char* data_array);
+	int formatVTG(PmodGPS* InstancePtr,char* data_array);
 	void formatCOORDS(char* coords);
 
 

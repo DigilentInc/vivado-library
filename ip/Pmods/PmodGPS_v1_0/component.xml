@@ -922,7 +922,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>985eabf9</spirit:value>
+            <spirit:value>168fa3cd</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2039,8 +2039,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodGPS_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>18</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2016-03-23T20:02:01Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>19</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2016-03-28T20:01:53Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="digilentinc.com:IP:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/Github/vivado-library/ip/Pmods/PmodGPS_v1_0</xilinx:tag>
       </xilinx:tags>
@@ -2097,7 +2097,7 @@
       <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7fb99358"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="93438fb9"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="87565a7f"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="df758def"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="1e0c4264"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="a5b29432"/>
     </xilinx:packagingInfo>

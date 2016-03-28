@@ -9,7 +9,6 @@
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CORE_GENERATION_INFO = "pmod_concat,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pmod_concat,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=0,numReposBlks=0,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,synth_mode=Global}" *) (* HW_HANDOFF = "pmod_concat.hwdef" *) 
 module pmod_concat
    (
    
@@ -163,12 +162,12 @@ generate
                     assign in_top_uart_gpio_bus_I={out3_I,out0_I};
                     assign {out3_O,out0_O}=in_top_uart_gpio_bus_O;
                     assign {out3_T,out0_T}=in_top_uart_gpio_bus_T;
-                    assign in1_I=out1_I;
+                    //assign in1_I=out1_I;
                     assign in2_I=out2_I;
                     assign out1_O = in1_O;
-                    assign out2_O = in2_O;
-                    assign out1_T = in1_T;
-                    assign out2_T = in2_T;
+                    //assign out2_O = in2_O;
+                    assign out1_T = 0;
+                    assign out2_T = 1;
                   end
          "I2C": begin
                     assign in_top_i2c_gpio_bus_I={out3_I,out2_I};

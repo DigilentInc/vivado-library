@@ -185,15 +185,17 @@ void Oledrgb_DevInit(PmodOLEDrgb* InstancePtr)
 	/*Bring PmodEn HIGH*/
 	Xil_Out32(InstancePtr->GPIO_addr,0b1010);
 
+	usleep(100000);
 	/* command un-lock*/
 	WriteSPI(&InstancePtr->OLEDSpi,0xFD);
     WriteSPI(&InstancePtr->OLEDSpi,0x12);
 
+    usleep(100000);
 	/* 5. Univision Initialization Steps*/
 
 	// 5a) Set Display Off
 	WriteSPI(&InstancePtr->OLEDSpi, CMD_DISPLAYOFF);
-
+	usleep(100000);
     // 5b) Set Remap and Data Format
 	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETREMAP, 0x72);
 	// 5c) Set Display Start Line

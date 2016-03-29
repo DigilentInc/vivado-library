@@ -107,27 +107,31 @@ bool GPS_getData(PmodGPS* InstancePtr)
 	char recv[MAX_SIZE*5]={0};
 	int i=0;
 	int count = 0;
-	char checksum[3];
 	NMEA mode= INVALID;
 	unsigned int ReceivedCount = 0;
 	u8 StatusRegister = XUartLite_GetStatusReg(InstancePtr->GPSUart.RegBaseAddress);
+	//xil_printf(".\n\r");
 
 	if (StatusRegister & XUL_SR_RX_FIFO_VALID_DATA){	//If there is a sentence
-		do{
-			while(recv[ReceivedCount-1] != '\n'){
-				ReceivedCount += XUartLite_Recv(&InstancePtr->GPSUart, recv+ReceivedCount, MAX_SIZE);
-			}
-			mode=chooseMode(recv+count);
-			count=ReceivedCount;
+		while(1){
+		while((recv[ReceivedCount-1] != '\n')){
 			ReceivedCount += XUartLite_Recv(&InstancePtr->GPSUart, recv+ReceivedCount, MAX_SIZE);
+		}
 
-		}while (mode!=VTG);
+		mode=chooseMode(recv+count);
+		if (mode==VTG){
+			break;
+		}
+		count=ReceivedCount;
+		ReceivedCount += XUartLite_Recv(&InstancePtr->GPSUart, recv+ReceivedCount, MAX_SIZE);
+	}
 	}
 	else{
 		return 0;
 	}
 	//Format the sentence into structs
 	XUartLite_ResetFifos(&InstancePtr->GPSUart);
+	//xil_printf("%s", recv);
 	while(1){
 		mode=chooseMode(recv+i);
 		switch(mode){
@@ -145,8 +149,8 @@ bool GPS_getData(PmodGPS* InstancePtr)
 				break;
 			case(VTG):
 					i+=formatVTG(InstancePtr,recv+i);
+					return 1;
 				break;
-			case(INVALID):return 1;
 		}
 	}
 

@@ -13,7 +13,7 @@
 void DemoInitialize();
 void DemoRun();
 
-OLEDrgb oled;
+PmodOLEDrgb oled;
 
 int main(void)
 {

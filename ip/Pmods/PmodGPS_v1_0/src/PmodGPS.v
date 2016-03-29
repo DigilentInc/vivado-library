@@ -68,6 +68,7 @@ module PmodGPS
     pmod_out_pin9_i,
     pmod_out_pin9_o,
     pmod_out_pin9_t,
+    UART_interrupt,
     s_axi_aclk,
     s_axi_aresetn);
   input [8:0]AXI_LITE_GPIO_araddr;
@@ -130,6 +131,7 @@ module PmodGPS
   output pmod_out_pin9_t;
   input s_axi_aclk;
   input s_axi_aresetn;
+  output wire UART_interrupt;
 
   wire [8:0]S_AXI_1_1_ARADDR;
   wire S_AXI_1_1_ARREADY;
@@ -281,7 +283,8 @@ module PmodGPS
         .s_axi_wstrb(S_AXI_1_1_WSTRB),
         .s_axi_wvalid(S_AXI_1_1_WVALID));
   PmodGPS_axi_uartlite_0_0 axi_uartlite_0
-       (.rx(axi_uartlite_0_UART_RxD),
+       (.interrupt(UART_interrupt),
+        .rx(axi_uartlite_0_UART_RxD),
         .s_axi_aclk(s_axi_aclk_1),
         .s_axi_araddr(S_AXI_1_ARADDR),
         .s_axi_aresetn(s_axi_aresetn_1),

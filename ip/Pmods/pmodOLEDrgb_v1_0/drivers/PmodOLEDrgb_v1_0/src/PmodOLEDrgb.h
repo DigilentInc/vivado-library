@@ -138,26 +138,27 @@ typedef struct{
 	XSpi OLEDSpi;
 }PmodOLEDrgb;
 
-int SPIInit(XSpi *SpiInstancePtr, u16 SpiDeviceId, u32 mode);
-uint16_t BuildRGB(uint8_t R,uint8_t G,uint8_t B);
-uint8_t ExtractRFromRGB(uint16_t wRGB);
-uint8_t ExtractGFromRGB(uint16_t wRGB);
-uint8_t ExtractBFromRGB(uint16_t wRGB);
+int OLEDrgb_SPIInit(XSpi *SpiInstancePtr, u16 SpiDeviceId, u32 mode);
+uint16_t OLEDrgb_BuildRGB(uint8_t R,uint8_t G,uint8_t B);
+uint16_t OLEDrgb_BuildHSV(uint8_t hue, uint8_t sat, uint8_t val);
+uint8_t OLEDrgb_ExtractRFromRGB(uint16_t wRGB);
+uint8_t OLEDrgb_ExtractGFromRGB(uint16_t wRGB);
+uint8_t OLEDrgb_ExtractBFromRGB(uint16_t wRGB);
 
 
-void Oledrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
-void Oledrgb_delay(int ms);
-void DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor);
-void DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor);
-void DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor);
-void Oledrgb_Clear(PmodOLEDrgb* InstancePtr);
-void DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp);
+void OLEDrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 
-void Oledrgb_HostInit();
-void Oledrgb_DevInit();
-uint8_t WriteSPI(XSpi* OLEDSpi, uint8_t bVal);
-uint8_t WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2);
-uint8_t WriteSPI2(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData);
+void OLEDrgb_DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor);
+void OLEDrgb_DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor);
+void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor);
+void OLEDrgb_Clear(PmodOLEDrgb* InstancePtr);
+void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp);
+
+void OLEDrgb_HostInit();
+void OLEDrgb_DevInit();
+uint8_t OLEDrgb_WriteSPI(XSpi* OLEDSpi, uint8_t bVal);
+uint8_t OLEDrgb_WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2);
+uint8_t OLEDrgb_WriteSPI2(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData);
 
 
 #endif // PMODOLEDRGB_H

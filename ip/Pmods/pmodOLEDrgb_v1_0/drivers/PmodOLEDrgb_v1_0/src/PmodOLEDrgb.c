@@ -23,10 +23,10 @@ XSpi_Config XSpi_OLEDrgb =
 	0,
 	0
 };
-uint16_t BuildRGB(uint8_t R,uint8_t G,uint8_t B){return ((R>>3)<<11) | ((G>>2)<<5) | (B>>3);};
-uint8_t ExtractRFromRGB(uint16_t wRGB){return (uint8_t)((wRGB>>11)&0x1F);};
-uint8_t ExtractGFromRGB(uint16_t wRGB){return (uint8_t)((wRGB>>5)&0x3F);};
-uint8_t ExtractBFromRGB(uint16_t wRGB){return (uint8_t)(wRGB&0x1F);};
+uint16_t OLEDrgb_BuildRGB(uint8_t R,uint8_t G,uint8_t B){return ((R>>3)<<11) | ((G>>2)<<5) | (B>>3);};
+uint8_t OLEDrgb_ExtractRFromRGB(uint16_t wRGB){return (uint8_t)((wRGB>>11)&0x1F);};
+uint8_t OLEDrgb_ExtractGFromRGB(uint16_t wRGB){return (uint8_t)((wRGB>>5)&0x3F);};
+uint8_t OLEDrgb_ExtractBFromRGB(uint16_t wRGB){return (uint8_t)(wRGB&0x1F);};
 
 
 /* ------------------------------------------------------------ */
@@ -44,16 +44,60 @@ uint8_t ExtractBFromRGB(uint16_t wRGB){return (uint8_t)(wRGB&0x1F);};
 **	Description:
 **		Initialize the OLED display controller and turn the display on.
 */
-void Oledrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
+void OLEDrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 {
 	InstancePtr->GPIO_addr=GPIO_Address;
 	XSpi_OLEDrgb.BaseAddress=SPI_Address;
 
-	Oledrgb_HostInit(InstancePtr);
-	Oledrgb_DevInit(InstancePtr);
+	OLEDrgb_HostInit(InstancePtr);
+	OLEDrgb_DevInit(InstancePtr);
 }
 
-void DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor)
+uint16_t OLEDrgb_BuildHSV(uint8_t hue, uint8_t sat, uint8_t val){
+   uint8_t region, remain, p, q, t;
+   uint8_t R,G,B;
+   region = hue/43;
+   remain = (hue - (region * 43))*6;
+   p = (val * (255-sat))>>8;
+   q = (val * (255 - ((sat * remain)>>8)))>>8;
+   t = (val * (255 - ((sat * (255 - remain))>>8)))>>8;
+
+   switch(region){
+      case 0:
+       R = val;
+       G = t;
+       B = p;
+       break;
+      case 1:
+       R = q;
+       G = val;
+       B = p;
+       break;
+      case 2:
+       R = p;
+       G = val;
+       B = t;
+       break;
+       case 3:
+       R = p;
+       G = q;
+       B = val;
+       break;
+       case 4:
+       R = t;
+       G = p;
+       B = val;
+       break;
+       default:
+       R = val;
+       G = p;
+       B = q;
+       break;
+   }
+   return OLEDrgb_BuildRGB(R,G,B);
+}
+
+void OLEDrgb_DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor)
 {
 	uint8_t cmds[6];
 	uint8_t data[2];
@@ -70,10 +114,10 @@ void DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelCol
 	data[0] = pixelColor >> 8;
 	data[1] = pixelColor;
 
-	WriteSPI2(InstancePtr, cmds, 6, data, 2);
+	OLEDrgb_WriteSPI2(InstancePtr, cmds, 6, data, 2);
 }
 
-void DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor)
+void OLEDrgb_DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor)
 {
 	uint8_t cmds[8];
 	cmds[0] = CMD_DRAWLINE; 		//draw line
@@ -81,14 +125,14 @@ void DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint
 	cmds[2] = r1;					// start row
 	cmds[3] = c2;					// end column
 	cmds[4] = r2;					//end row
-	cmds[5] = ExtractRFromRGB(lineColor);	//R
-	cmds[6] = ExtractGFromRGB(lineColor);	//G
-	cmds[7] = ExtractBFromRGB(lineColor);	//R
+	cmds[5] = OLEDrgb_ExtractRFromRGB(lineColor);	//R
+	cmds[6] = OLEDrgb_ExtractGFromRGB(lineColor);	//G
+	cmds[7] = OLEDrgb_ExtractBFromRGB(lineColor);	//R
 
-	WriteSPI2(InstancePtr, cmds, 8, NULL, 0);
+	OLEDrgb_WriteSPI2(InstancePtr, cmds, 8, NULL, 0);
 }
 
-void DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor)
+void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor)
 {
 	uint8_t cmds[13];
     cmds[0] = CMD_FILLWINDOW;		//fill window
@@ -99,18 +143,18 @@ void DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2,
 	cmds[5] = c2;					// end column
 	cmds[6] = r2;					//end row
 
-	cmds[7] = ExtractRFromRGB(lineColor);	//R
-	cmds[8] = ExtractGFromRGB(lineColor);	//G
-	cmds[9] = ExtractBFromRGB(lineColor);	//R
+	cmds[7] = OLEDrgb_ExtractRFromRGB(lineColor);	//R
+	cmds[8] = OLEDrgb_ExtractGFromRGB(lineColor);	//G
+	cmds[9] = OLEDrgb_ExtractBFromRGB(lineColor);	//R
 
 
 	if(bFill)
 	{
-		cmds[10] = ExtractRFromRGB(fillColor);	//R
-		cmds[11] = ExtractGFromRGB(fillColor);	//G
-		cmds[12] = ExtractBFromRGB(fillColor);	//R
+		cmds[10] = OLEDrgb_ExtractRFromRGB(fillColor);	//R
+		cmds[11] = OLEDrgb_ExtractGFromRGB(fillColor);	//G
+		cmds[12] = OLEDrgb_ExtractBFromRGB(fillColor);	//R
 	}
-	WriteSPI2(InstancePtr, cmds, bFill ? 13: 10, NULL, 0);
+	OLEDrgb_WriteSPI2(InstancePtr, cmds, bFill ? 13: 10, NULL, 0);
 }
 
 /* ------------------------------------------------------------ */
@@ -129,7 +173,7 @@ void DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2,
 **		Clear the display. This clears the memory buffer and then
 **		updates the display.
 */
-void Oledrgb_Clear(PmodOLEDrgb* InstancePtr)
+void OLEDrgb_Clear(PmodOLEDrgb* InstancePtr)
 {
 	uint8_t cmds[5];
 	cmds[0] = CMD_CLEARWINDOW; 		// Enter the “clear mode”
@@ -137,10 +181,10 @@ void Oledrgb_Clear(PmodOLEDrgb* InstancePtr)
 	cmds[2] = 0x00;					// Set the starting row coordinates
 	cmds[3] = OLEDRGB_WIDTH - 1;	// Set the finishing column coordinates;
 	cmds[4] = OLEDRGB_HEIGHT - 1;	// Set the finishing row coordinates;
-	WriteSPI2(InstancePtr, cmds, 5, NULL, 0);
+	OLEDrgb_WriteSPI2(InstancePtr, cmds, 5, NULL, 0);
 }
 
-void DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp)
+void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp)
 {
 	uint8_t cmds[6];
 	//set column start and end
@@ -153,7 +197,7 @@ void DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, ui
 	cmds[4] = r1;					// Set the starting row coordinates
 	cmds[5] = r2;					// Set the finishing row coordinates
 
-	WriteSPI2(InstancePtr, cmds, 6, pBmp, (((c2 - c1 + 1)  * (r2 - r1 + 1)) << 1));
+	OLEDrgb_WriteSPI2(InstancePtr, cmds, 6, pBmp, (((c2 - c1 + 1)  * (r2 - r1 + 1)) << 1));
 }
 
 /* ------------------------------------------------------------ */
@@ -173,99 +217,100 @@ void DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, ui
 **		of the OLEDrgb display.
 
 */
-void Oledrgb_HostInit(PmodOLEDrgb* InstancePtr)
+void OLEDrgb_HostInit(PmodOLEDrgb* InstancePtr)
 	{
 	Xil_Out32(InstancePtr->GPIO_addr+4, 0x0000);
 	Xil_Out32(InstancePtr->GPIO_addr, 0xA);
-	SPIInit(&InstancePtr->OLEDSpi, 0, 0);
+	OLEDrgb_SPIInit(&InstancePtr->OLEDSpi, 0, 0);
 }
 
-void Oledrgb_DevInit(PmodOLEDrgb* InstancePtr)
+void OLEDrgb_DevInit(PmodOLEDrgb* InstancePtr)
 	{
 	/*Bring PmodEn HIGH*/
 	Xil_Out32(InstancePtr->GPIO_addr,0b1010);
 
 	usleep(100000);
 	/* command un-lock*/
-	WriteSPI(&InstancePtr->OLEDSpi,0xFD);
-    WriteSPI(&InstancePtr->OLEDSpi,0x12);
+	OLEDrgb_WriteSPI(&InstancePtr->OLEDSpi,0xFD);
+	OLEDrgb_WriteSPI(&InstancePtr->OLEDSpi,0x12);
 
     usleep(100000);
 	/* 5. Univision Initialization Steps*/
 
 	// 5a) Set Display Off
-	WriteSPI(&InstancePtr->OLEDSpi, CMD_DISPLAYOFF);
+    OLEDrgb_WriteSPI(&InstancePtr->OLEDSpi, CMD_DISPLAYOFF);
 	usleep(100000);
     // 5b) Set Remap and Data Format
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETREMAP, 0x72);
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETREMAP, 0x72);
+
 	// 5c) Set Display Start Line
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETDISPLAYSTARTLINE, 0x00); //start line is set at upper left corner
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETDISPLAYSTARTLINE, 0x00); //start line is set at upper left corner
 
 	// 5d) Set Display Offset
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETDISPLAYOFFSET, 0x00); //no offset
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETDISPLAYOFFSET, 0x00); //no offset
 
     // 5e)
-    WriteSPI(&InstancePtr->OLEDSpi, CMD_NORMALDISPLAY);
+	OLEDrgb_WriteSPI(&InstancePtr->OLEDSpi, CMD_NORMALDISPLAY);
 
 	// 5f) Set Multiplex Ratio
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETMULTIPLEXRATIO, 0x3F); //64MUX
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETMULTIPLEXRATIO, 0x3F); //64MUX
 
     // 5g)Set Master Configuration
-    WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETMASTERCONFIGURE, 0x8E);
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETMASTERCONFIGURE, 0x8E);
 
     // 5h)Set Power Saving Mode
-    WriteSPI1(&InstancePtr->OLEDSpi, CMD_POWERSAVEMODE, 0x0B);
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_POWERSAVEMODE, 0x0B);
 
 	// 5i) Set Phase Length
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_PHASEPERIODADJUSTMENT, 0x31); //phase 2 = 14 DCLKs, phase 1 = 15 DCLKS
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_PHASEPERIODADJUSTMENT, 0x31); //phase 2 = 14 DCLKs, phase 1 = 15 DCLKS
 
 
 	// 5j) Send Clock Divide Ratio and Oscillator Frequency
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_DISPLAYCLOCKDIV, 0xF0); //mid high oscillator frequency, DCLK = FpbCllk/2
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_DISPLAYCLOCKDIV, 0xF0); //mid high oscillator frequency, DCLK = FpbCllk/2
 
 	// 5k) Set Second Pre-charge Speed of Color A
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGESPEEDA, 0x64); //Set Second Pre-change Speed For ColorA
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGESPEEDA, 0x64); //Set Second Pre-change Speed For ColorA
 
 	// 5l) Set Set Second Pre-charge Speed of Color B
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGESPEEDB, 0x78); //Set Second Pre-change Speed For ColorB
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGESPEEDB, 0x78); //Set Second Pre-change Speed For ColorB
 
 	// 5m) Set Second Pre-charge Speed of Color C
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGESPEEDC, 0x64); //Set Second Pre-change Speed For ColorC
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGESPEEDC, 0x64); //Set Second Pre-change Speed For ColorC
 
 	// 5n) Set Pre-Charge Voltage
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGEVOLTAGE, 0x3A); // Pre-charge voltage =...Vcc
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETPRECHARGEVOLTAGE, 0x3A); // Pre-charge voltage =...Vcc
 
 	// 50) Set VCOMH Deselect Level
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETVVOLTAGE, 0x3E); // Vcomh = ...*Vcc
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETVVOLTAGE, 0x3E); // Vcomh = ...*Vcc
 
 	// 5p) Set Master Current
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_MASTERCURRENTCONTROL, 0x06);
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_MASTERCURRENTCONTROL, 0x06);
 
 	// 5q) Set Contrast for Color A
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETCONTRASTA, 0x91); //Set contrast for color A
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETCONTRASTA, 0x91); //Set contrast for color A
 
 	// 5r) Set Contrast for Color B
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETCONTRASTB, 0x50); //Set contrast for color B
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETCONTRASTB, 0x50); //Set contrast for color B
 
 	// 5s) Set Contrast for Color C
-	WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETCONTRASTC, 0x7D); //Set contrast for color C
+	OLEDrgb_WriteSPI1(&InstancePtr->OLEDSpi, CMD_SETCONTRASTC, 0x7D); //Set contrast for color C
 
-	WriteSPI(&InstancePtr->OLEDSpi, CMD_DEACTIVESCROLLING);   //disable scrolling
+	OLEDrgb_WriteSPI(&InstancePtr->OLEDSpi, CMD_DEACTIVESCROLLING);   //disable scrolling
 
 	// 5u) Clear Screen
-	Oledrgb_Clear(InstancePtr);
-
+	OLEDrgb_Clear(InstancePtr);
+	usleep(100000);
 	/* Turn on VCC and wait 100ms*/
 	Xil_Out32(InstancePtr->GPIO_addr,0b1110);
 
 	usleep(100000);
 
 	/* Send Display On command*/
-	WriteSPI(&InstancePtr->OLEDSpi, CMD_DISPLAYON);
+	OLEDrgb_WriteSPI(&InstancePtr->OLEDSpi, CMD_DISPLAYON);
 
 }
 
-int SPIInit(XSpi *SpiInstancePtr, u16 SpiDeviceId, u32 mode){
+int OLEDrgb_SPIInit(XSpi *SpiInstancePtr, u16 SpiDeviceId, u32 mode){
 	int Status;
 	XSpi_Config *ConfigPtr; /* Pointer to Configuration data */
 
@@ -312,7 +357,7 @@ int SPIInit(XSpi *SpiInstancePtr, u16 SpiDeviceId, u32 mode){
 }
 
 
-uint8_t WriteSPI(XSpi* OLEDSpi, uint8_t bVal)
+uint8_t OLEDrgb_WriteSPI(XSpi* OLEDSpi, uint8_t bVal)
 {
 	uint8_t	bRx;
 	uint8_t txBuf=bVal;
@@ -322,7 +367,7 @@ uint8_t WriteSPI(XSpi* OLEDSpi, uint8_t bVal)
 	return bRx;
 }
 
-uint8_t WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2)
+uint8_t OLEDrgb_WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2)
 {
 	uint8_t	bRx[2];
 	uint8_t txBuf[2] = {bVal1, bVal2};
@@ -332,7 +377,7 @@ uint8_t WriteSPI1(XSpi* OLEDSpi, uint8_t bVal1, uint8_t bVal2)
 	return bRx[0];
 }
 
-uint8_t WriteSPI2(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData)
+uint8_t OLEDrgb_WriteSPI2(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData)
 {
 	XSpi_Transfer(&InstancePtr->OLEDSpi, pCmd, 0, nCmd);
 	if (nData!= 0){

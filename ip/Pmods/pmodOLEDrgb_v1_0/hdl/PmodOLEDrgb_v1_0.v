@@ -14,7 +14,7 @@
 
 		// Parameters of Axi Slave Bus Interface AXI_LITE_GPIO
 		parameter integer C_AXI_LITE_GPIO_DATA_WIDTH	= 32,
-		parameter integer C_AXI_LITE_GPIO_ADDR_WIDTH	= 4
+		parameter integer C_AXI_LITE_GPIO_ADDR_WIDTH	= 9
 	)
 	(
 		// Users to add ports here

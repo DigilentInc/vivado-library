@@ -37,6 +37,24 @@ proc validate_PARAM_VALUE.kEdidFileName { PARAM_VALUE.kEdidFileName } {
 	return true
 }
 
+proc update_PARAM_VALUE.IIC_BOARD_INTERFACE { PARAM_VALUE.IIC_BOARD_INTERFACE } {
+	# Procedure called to update IIC_BOARD_INTERFACE when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.IIC_BOARD_INTERFACE { PARAM_VALUE.IIC_BOARD_INTERFACE } {
+	# Procedure called to validate IIC_BOARD_INTERFACE
+	return true
+}
+
+proc update_PARAM_VALUE.TMDS_BOARD_INTERFACE { PARAM_VALUE.TMDS_BOARD_INTERFACE } {
+	# Procedure called to update TMDS_BOARD_INTERFACE when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.TMDS_BOARD_INTERFACE { PARAM_VALUE.TMDS_BOARD_INTERFACE } {
+	# Procedure called to validate TMDS_BOARD_INTERFACE
+	return true
+}
+
 proc update_PARAM_VALUE.kAddBUFG { PARAM_VALUE.kAddBUFG } {
 	# Procedure called to update kAddBUFG when any of the dependent parameters in the arguments change
 }

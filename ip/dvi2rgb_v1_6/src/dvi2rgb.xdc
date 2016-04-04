@@ -1,6 +1,7 @@
 ### Clock constraints ###
-# Constrain TMDS clock to the 165 MHz maximum from DVI 1.0 specs
-create_clock -period 6.060 [get_ports TMDS_Clk_p]
+# Constrain TMDS clock in the top-level project. Constraining it here, even if overridden in the top-level project
+# results in [DRC 23-20] Rule violation (PDRC-34) for the maximum MMCM VCO frequency.
+# create_clock -period 6.060 [get_ports TMDS_Clk_p]
 
 ### I/O constraints ###
 # group data channel IODELAYE2 cells with the IDELAYCTRL

@@ -1,19 +1,25 @@
 #include "xparameters.h"
-#include "xil_types.h"
-#include "xil_io.h"
-#include "PmodACL.h"
-#include <stdio.h>
-#include <sleep.h>
+//#include "xil_types.h"
+//#include "xil_io.h"
+
 #include "xil_cache.h"
+#include "PmodBT2.h"
+
+#define BUFFERSIZE 8
 
 void DemoInitialize();
 void DemoRun();
 
-PmodACL ACL;
+void recv(PmodBT2* InstancePtr);
+void send(PmodBT2* InstancePtr);
+
+PmodBT2 BT2;
+
 
 int main(void)
 {
 	Xil_ICacheEnable();
+	Xil_DCacheEnable();
 
 	DemoInitialize();
 	DemoRun();
@@ -22,24 +28,30 @@ int main(void)
 
 void DemoInitialize()
 {
-	ACL_begin(&ACL, XPAR_PMODACL_0_AXI_LITE_GPIO_BASEADDR,XPAR_PMODACL_0_AXI_LITE_SPI_BASEADDR);
-	SetMeasure(&ACL, FALSE);
-	SetGRange(&ACL, PAR_GRANGE_PM4G);
-	SetMeasure(&ACL, TRUE);
-	CalibrateOneAxisGravitational(&ACL, PAR_AXIS_ZP);
+	BT2_begin(&BT2, XPAR_PMODBT2_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODBT2_0_AXI_LITE_UART_BASEADDR);
+#ifndef NO_IRPT
+	BT2_SetupInterruptSystem(&BT2, XPAR_INTC_0_PMODBT2_0_VEC_ID, recv, send);
+#endif
 }
 
 
 void DemoRun()
 {
-	float x;
-	float y;
-	float z;
-	char strMes[150];
-	while (1){
-		ReadAccelG(&ACL, &x, &y, &z);
-		sprintf(strMes ,"X=%f\tY=%f\tZ=%f\n\r", x, y, z);
-		xil_printf(strMes);
-		usleep(100000);
+	int len;
+
+	BT2_getData(&BT2, BUFFERSIZE);//Start scanning for input
+	while(1){
+		//Polled mode, if no interrupts
+		/*if((len=BT2_getData(&BT2, BUFFERSIZE))){
+			BT2_sendData(&BT2, BT2.recv, len);
+		}*/
 	}
+}
+
+void recv(PmodBT2* InstancePtr){
+	BT2_sendData(InstancePtr, BT2.recv, BUFFERSIZE);//Echo back through BT
+	BT2_getData(&BT2, BUFFERSIZE);//Start scanning for next input
+}
+void send(PmodBT2* InstancePtr){
+
 }

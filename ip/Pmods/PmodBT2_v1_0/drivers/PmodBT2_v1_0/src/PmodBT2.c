@@ -102,20 +102,13 @@ int BT2_read3DFpin(PmodBT2* InstancePtr){
 **	  verify the packet starts with $GP, then checks the next three
 **	  to decide which struct to parse the data into.
 */
-bool BT2_getData(PmodBT2* InstancePtr, char* output)
+int BT2_getData(PmodBT2* InstancePtr, int buffersize)
 {
 	//char recv[500]={0};
-	int i=0;
-	int count = 0;
 	unsigned int ReceivedCount = 0;
-	u8 StatusRegister = XUartLite_GetStatusReg(InstancePtr->BT2Uart.RegBaseAddress);
-	if (StatusRegister & XUL_SR_RX_FIFO_VALID_DATA){	//If there is a sentence
-		ReceivedCount += XUartLite_Recv(&InstancePtr->BT2Uart, output+ReceivedCount, 16);
-	}
-	else{
-		return 0;
-	}
-	return ReceivedCount;//Return the type of sentence that was sent
+	ReceivedCount += XUartLite_Recv(&InstancePtr->BT2Uart, InstancePtr->recv, buffersize);
+
+	return ReceivedCount;
 }
 
 /* ------------------------------------------------------------ */
@@ -137,7 +130,7 @@ bool BT2_getData(PmodBT2* InstancePtr, char* output)
 **	  verify the packet starts with $GP, then checks the next three
 **	  to decide which struct to parse the data into.
 */
-bool BT2_sendData(PmodBT2* InstancePtr, char* sendData, int size)
+int BT2_sendData(PmodBT2* InstancePtr, char* sendData, int size)
 {
 	char recv[500]={0};
 	int i=0;
@@ -145,27 +138,134 @@ bool BT2_sendData(PmodBT2* InstancePtr, char* sendData, int size)
 	unsigned int ReceivedCount = 0;
 	while(i<size){
 		i+= XUartLite_Send(&InstancePtr->BT2Uart, sendData, size);
-		while(XUartLite_IsSending(&InstancePtr->BT2Uart));
+		//while(XUartLite_IsSending(&InstancePtr->BT2Uart));
 	}
-
-
-	/*u8 StatusRegister = XUartLite_GetStatusReg(InstancePtr->BT2Uart.RegBaseAddress);
-
-	if (StatusRegister & XUL_SR_RX_FIFO_VALID_DATA){	//If there is a sentence
-			while(recv[ReceivedCount-1] != '\n'){
-				ReceivedCount += XUartLite_Recv(&InstancePtr->BT2Uart, recv+ReceivedCount, 500);
-			}
-			//mode=chooseMode(recv+count);
-			count=ReceivedCount;
-			ReceivedCount += XUartLite_Recv(&InstancePtr->BT2Uart, recv+ReceivedCount, 500);
-	}
-	else{
-		return 0;
-	}*/
-	//Format the sentence into structs
-	//XUartLite_ResetFifos(&InstancePtr->BT2Uart);
-
 
 	return i;//Return the type of sentence that was sent
+}
+
+
+/****************************************************************************/
+/**
+* This function sets up the interrupt system for the example.  The processing
+* contained in this funtion assumes the hardware system was built with
+* and interrupt controller.
+*
+* @param	None.
+*
+* @return	A status indicating XST_SUCCESS or a value that is contained in
+*		xstatus.h.
+*
+* @note		None.
+*
+*****************************************************************************/
+int BT2_SetupInterruptSystem(PmodBT2* InstancePtr, u32 interruptID, void* receiveHandlerFunction, void* sendHandlerFunction)
+{
+	int Result;
+
+
+#ifdef XPAR_XINTC_NUM_INSTANCES
+	INTC *IntcInstancePtr = &InstancePtr->intc;
+	/*
+	 * Initialize the interrupt controller driver so that it's ready to use.
+	 * specify the device ID that was generated in xparameters.h
+	 */
+	Result = XIntc_Initialize(IntcInstancePtr, interruptID);
+	if (Result != XST_SUCCESS) {
+		return Result;
+	}
+
+	/* Hook up interrupt service routine */
+	XIntc_Connect(IntcInstancePtr, interruptID,
+		      (Xil_ExceptionHandler)XUartLite_InterruptHandler, &InstancePtr->BT2Uart);
+
+	/* Enable the interrupt vector at the interrupt controller */
+
+	XIntc_Enable(IntcInstancePtr, interruptID);
+
+	/*
+	 * Start the interrupt controller such that interrupts are recognized
+	 * and handled by the processor
+	 */
+	Result = XIntc_Start(IntcInstancePtr, XIN_REAL_MODE);
+	if (Result != XST_SUCCESS) {
+		return Result;
+	}
+	XUartLite_SetRecvHandler(&InstancePtr->BT2Uart, (XUartLite_Handler)receiveHandlerFunction, InstancePtr);
+	XUartLite_SetSendHandler(&InstancePtr->BT2Uart, (XUartLite_Handler)sendHandlerFunction, InstancePtr);
+	/*
+	 * Initialize the exception table and register the interrupt
+	 * controller handler with the exception table
+	 */
+	Xil_ExceptionInit();
+
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
+			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
+
+	/* Enable non-critical exceptions */
+	Xil_ExceptionEnable();
+
+	XUartLite_EnableInterrupt(&InstancePtr->BT2Uart);
+#endif
+#ifdef XPAR_SCUGIC_0_DEVICE_ID
+	INTC *IntcInstancePtr = &InstancePtr->intc;
+	XScuGic_Config *IntcConfig;
+
+	/*
+	 * Initialize the interrupt controller driver so that it is ready to
+	 * use.
+	 */
+	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	if (NULL == IntcConfig) {
+		return XST_FAILURE;
+	}
+
+	Result = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig,
+					IntcConfig->CpuBaseAddress);
+	if (Result != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	XScuGic_SetPriorityTriggerType(IntcInstancePtr, interruptID,
+					0xA0, 0x3);
+
+	/*
+	 * Connect the interrupt handler that will be called when an
+	 * interrupt occurs for the device.
+	 */
+	Result = XScuGic_Connect(IntcInstancePtr, interruptID,
+				 (Xil_ExceptionHandler)GPS_getData, InstancePtr);
+	if (Result != XST_SUCCESS) {
+		return Result;
+	}
+
+	/*
+	 * Enable the interrupt for the GPIO device.
+	 */
+	XScuGic_Enable(IntcInstancePtr, interruptID);
+
+	/*
+	 * Enable the GPIO channel interrupts so that push button can be
+	 * detected and enable interrupts for the GPIO device
+	 */
+
+
+	/*
+	 * Initialize the exception table and register the interrupt
+	 * controller handler with the exception table
+	 */
+	Xil_ExceptionInit();
+
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
+			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
+
+	/* Enable non-critical exceptions */
+	Xil_ExceptionEnable();
+
+	XUartLite_EnableInterrupt(&InstancePtr->GPSUart);
+#endif
+
+
+	return XST_SUCCESS;
 }
 

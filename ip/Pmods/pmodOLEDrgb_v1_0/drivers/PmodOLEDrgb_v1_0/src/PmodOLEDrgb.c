@@ -28,7 +28,14 @@ uint8_t OLEDrgb_ExtractRFromRGB(uint16_t wRGB){return (uint8_t)((wRGB>>11)&0x1F)
 uint8_t OLEDrgb_ExtractGFromRGB(uint16_t wRGB){return (uint8_t)((wRGB>>5)&0x3F);};
 uint8_t OLEDrgb_ExtractBFromRGB(uint16_t wRGB){return (uint8_t)(wRGB&0x1F);};
 
-
+#ifndef usleep
+void usleep(unsigned int useconds)
+{
+  int i,j;
+  for (j=0;j<useconds;j++)
+    for (i=0;i<15;i++) asm("nop");
+}
+#endif
 /* ------------------------------------------------------------ */
 /***	void Oledrgb::begin(void)
 **

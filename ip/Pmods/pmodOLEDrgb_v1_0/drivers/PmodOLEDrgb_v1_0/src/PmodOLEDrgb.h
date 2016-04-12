@@ -8,6 +8,9 @@
 #include "xstatus.h"
 #include "xspi_l.h"
 #include "xspi.h"
+#include "xparameters.h"
+
+
 
 #define bool u8
 #define true 1
@@ -144,6 +147,8 @@ uint16_t OLEDrgb_BuildHSV(uint8_t hue, uint8_t sat, uint8_t val);
 uint8_t OLEDrgb_ExtractRFromRGB(uint16_t wRGB);
 uint8_t OLEDrgb_ExtractGFromRGB(uint16_t wRGB);
 uint8_t OLEDrgb_ExtractBFromRGB(uint16_t wRGB);
+
+
 
 
 void OLEDrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);

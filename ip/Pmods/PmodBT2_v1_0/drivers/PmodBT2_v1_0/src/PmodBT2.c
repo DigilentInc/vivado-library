@@ -234,7 +234,7 @@ int BT2_SetupInterruptSystem(PmodBT2* InstancePtr, u32 interruptID, void* receiv
 	 * interrupt occurs for the device.
 	 */
 	Result = XScuGic_Connect(IntcInstancePtr, interruptID,
-				 (Xil_ExceptionHandler)GPS_getData, InstancePtr);
+				 (Xil_ExceptionHandler)XUartLite_InterruptHandler, &InstancePtr->BT2Uart);
 	if (Result != XST_SUCCESS) {
 		return Result;
 	}
@@ -244,11 +244,8 @@ int BT2_SetupInterruptSystem(PmodBT2* InstancePtr, u32 interruptID, void* receiv
 	 */
 	XScuGic_Enable(IntcInstancePtr, interruptID);
 
-	/*
-	 * Enable the GPIO channel interrupts so that push button can be
-	 * detected and enable interrupts for the GPIO device
-	 */
-
+	XUartLite_SetRecvHandler(&InstancePtr->BT2Uart, (XUartLite_Handler)receiveHandlerFunction, InstancePtr);
+	XUartLite_SetSendHandler(&InstancePtr->BT2Uart, (XUartLite_Handler)sendHandlerFunction, InstancePtr);
 
 	/*
 	 * Initialize the exception table and register the interrupt

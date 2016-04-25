@@ -87,7 +87,7 @@ signal dc_bias_2, cnt_t_3, cnt_t_2 : signed(4 downto 0) := "00000"; --range -8 -
 signal pC0_1, pC1_1, pVde_1, pC0_2, pC1_2, pVde_2 : std_logic;
 signal cond_not_balanced_2, cond_balanced_2 : std_logic;
 
-function sum_bits(u : std_logic_vector) return unsigned(3 downto 0) is
+function sum_bits(u : std_logic_vector) return unsigned is
    variable sum : unsigned(3 downto 0);
 	begin
       assert u'length < 16 report "sum_bits error";

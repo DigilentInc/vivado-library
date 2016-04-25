@@ -44,6 +44,27 @@ entity ClockGen is
 end ClockGen;
 
 architecture Behavioral of ClockGen is
+
+component SyncAsync is
+   Generic (
+      kResetTo : std_logic := '0'; --value when reset and upon init
+      kStages : natural := 2); --double sync by default
+   Port (
+      aReset : in STD_LOGIC; -- active-high asynchronous reset
+      aIn : in STD_LOGIC;
+      OutClk : in STD_LOGIC;
+      oOut : out STD_LOGIC);
+end component SyncAsync;
+
+component ResetBridge is
+   Generic (
+      kPolarity : std_logic := '1');
+   Port (
+      aRst : in STD_LOGIC; -- asynchronous reset; active-high, if kPolarity=1
+      OutClk : in STD_LOGIC;
+      oRst : out STD_LOGIC);
+end component ResetBridge;
+
 signal PixelClkInX1, PixelClkInX5, FeedbackClk : std_logic;
 signal aLocked_int, pLocked, pRst, pLockWasLost : std_logic;
 signal pLocked_q : std_logic_vector(2 downto 0) := (others => '1');
@@ -53,7 +74,7 @@ begin
 -- and decrease the chance of metastability. The signal pRst can be used as
 -- asynchronous reset for any flip-flop in the PixelClkIn domain, since it will be de-asserted
 -- synchronously.
-LockLostReset: entity work.ResetBridge
+LockLostReset: ResetBridge
    generic map (
       kPolarity => '1')
    port map (
@@ -61,7 +82,7 @@ LockLostReset: entity work.ResetBridge
       OutClk => PixelClkIn,
       oRst => pRst);
 
-PLL_LockSyncAsync: entity work.SyncAsync
+PLL_LockSyncAsync: SyncAsync
    port map (
       aReset => '0',
       aIn => aLocked_int,

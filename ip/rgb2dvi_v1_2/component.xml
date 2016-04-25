@@ -63,7 +63,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>ASSOCIATED_RESET</spirit:name>
-          <spirit:value spirit:format="string" spirit:resolve="immediate" spirit:id="BUSIFPARAM_VALUE.SERIALCLK.ASSOCIATED_RESET">aRst:aRst_n:pRst:pRst_n</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.SERIALCLK.ASSOCIATED_RESET">aRst:aRst_n:pRst:pRst_n</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -85,7 +85,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>POLARITY</spirit:name>
-          <spirit:value spirit:format="string" spirit:resolve="immediate" spirit:id="BUSIFPARAM_VALUE.ASYNCRST_N.POLARITY" spirit:choiceRef="choices_1">ACTIVE_LOW</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.ASYNCRST_N.POLARITY" spirit:choiceRef="choice_list_9d8b0d81">ACTIVE_LOW</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -107,7 +107,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>POLARITY</spirit:name>
-          <spirit:value spirit:format="string" spirit:resolve="immediate" spirit:id="BUSIFPARAM_VALUE.ASYNCRST.POLARITY" spirit:choiceRef="choices_3">ACTIVE_HIGH</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.ASYNCRST.POLARITY" spirit:choiceRef="choice_list_9d8b0d81">ACTIVE_HIGH</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -184,7 +184,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>3c87b0ec</spirit:value>
+            <spirit:value>14643eef</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -200,7 +200,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>a325b29f</spirit:value>
+            <spirit:value>e5a604e1</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -265,8 +265,8 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="immediate">2</spirit:left>
-            <spirit:right spirit:format="long" spirit:resolve="immediate">0</spirit:right>
+            <spirit:left spirit:format="long">2</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
@@ -282,8 +282,8 @@
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="immediate">2</spirit:left>
-            <spirit:right spirit:format="long" spirit:resolve="immediate">0</spirit:right>
+            <spirit:left spirit:format="long">2</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
@@ -306,13 +306,12 @@
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
-            <spirit:defaultValue>0</spirit:defaultValue>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
           </spirit:driver>
         </spirit:wire>
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:presence>optional</xilinx:presence>
               <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kRstActiveHigh">true</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
@@ -330,13 +329,12 @@
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
-            <spirit:defaultValue>1</spirit:defaultValue>
+            <spirit:defaultValue spirit:format="long">1</spirit:defaultValue>
           </spirit:driver>
         </spirit:wire>
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:presence>optional</xilinx:presence>
               <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="()()not ($kRstActiveHigh)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
@@ -347,8 +345,8 @@
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="immediate">23</spirit:left>
-            <spirit:right spirit:format="long" spirit:resolve="immediate">0</spirit:right>
+            <spirit:left spirit:format="long">23</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
@@ -423,13 +421,12 @@
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
-            <spirit:defaultValue>0</spirit:defaultValue>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
           </spirit:driver>
         </spirit:wire>
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:presence>optional</xilinx:presence>
               <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="()()not ($kGenerateSerialClk)">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
@@ -445,7 +442,7 @@
       <spirit:modelParameter spirit:dataType="string">
         <spirit:name>kClkPrimitive</spirit:name>
         <spirit:displayName>Kclkprimitive</spirit:displayName>
-        <spirit:value spirit:format="string" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kClkPrimitive">MMCM</spirit:value>
+        <spirit:value spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kClkPrimitive">MMCM</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="boolean">
         <spirit:name>kRstActiveHigh</spirit:name>
@@ -455,38 +452,23 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>kClkRange</spirit:name>
         <spirit:displayName>Kclkrange</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kClkRange" spirit:minimum="0">1</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.kClkRange" spirit:minimum="0" spirit:rangeType="long">1</spirit:value>
       </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
   <spirit:choices>
     <spirit:choice>
-      <spirit:name>choices_0</spirit:name>
+      <spirit:name>choice_list_9d8b0d81</spirit:name>
       <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
       <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
-      <spirit:name>choices_1</spirit:name>
-      <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
-      <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
-    </spirit:choice>
-    <spirit:choice>
-      <spirit:name>choices_2</spirit:name>
-      <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
-      <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
-    </spirit:choice>
-    <spirit:choice>
-      <spirit:name>choices_3</spirit:name>
-      <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
-      <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
-    </spirit:choice>
-    <spirit:choice>
-      <spirit:name>choices_4</spirit:name>
+      <spirit:name>choice_list_e099fe6c</spirit:name>
       <spirit:enumeration>MMCM</spirit:enumeration>
       <spirit:enumeration>PLL</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
-      <spirit:name>choices_7</spirit:name>
+      <spirit:name>choice_pairs_c59fad91</spirit:name>
       <spirit:enumeration spirit:text=">=120 MHz (1080p)">1</spirit:enumeration>
       <spirit:enumeration spirit:text="&lt; 120 MHz (720p)">2</spirit:enumeration>
     </spirit:choice>
@@ -496,25 +478,23 @@
       <spirit:name>xilinx_vhdlsynthesis_view_fileset</spirit:name>
       <spirit:file>
         <spirit:name>src/rgb2dvi.xdc</spirit:name>
-        <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
         <spirit:userFileType>xdc</spirit:userFileType>
-        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
+        <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
         <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
+        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/rgb2dvi_ooc.xdc</spirit:name>
         <spirit:userFileType>xdc</spirit:userFileType>
-        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
         <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
         <spirit:userFileType>USED_IN_out_of_context</spirit:userFileType>
-        <spirit:logicalName/>
+        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/rgb2dvi_clocks.xdc</spirit:name>
         <spirit:userFileType>xdc</spirit:userFileType>
-        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
         <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
-        <spirit:logicalName/>
+        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
         <spirit:define>
           <spirit:name>processing_order</spirit:name>
           <spirit:value>late</spirit:value>
@@ -523,18 +503,15 @@
       <spirit:file>
         <spirit:name>src/ClockGen.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/SyncAsync.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/SyncAsyncReset.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_a25accdf</spirit:userFileType>
-        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/DVI_Constants.vhd</spirit:name>
@@ -554,8 +531,8 @@
       <spirit:file>
         <spirit:name>src/rgb2dvi.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>CHECKSUM_dc6fcd25</spirit:userFileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
-        <spirit:userFileType>CHECKSUM_c951f00c</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -563,34 +540,41 @@
       <spirit:file>
         <spirit:name>src/ClockGen.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/SyncAsync.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/SyncAsyncReset.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/DVI_Constants.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/OutputSERDES.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/TMDS_Encoder.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/rgb2dvi.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -598,8 +582,8 @@
       <spirit:file>
         <spirit:name>xgui/rgb2dvi_v1_2.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
         <spirit:userFileType>CHECKSUM_c85f233a</spirit:userFileType>
+        <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -620,16 +604,15 @@
     <spirit:parameter>
       <spirit:name>kRstActiveHigh</spirit:name>
       <spirit:displayName>Reset active high</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kRstActiveHigh" spirit:order="1100" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kRstActiveHigh" spirit:order="1100">true</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kClkPrimitive</spirit:name>
       <spirit:displayName>MMCM/PLL</spirit:displayName>
-      <spirit:value spirit:format="string" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkPrimitive" spirit:choiceRef="choices_4" spirit:order="1100" spirit:configGroups="0 UnGrouped radioGroup">MMCM</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.kClkPrimitive" spirit:choiceRef="choice_list_e099fe6c" spirit:order="1100">MMCM</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
-            <xilinx:presence>optional</xilinx:presence>
             <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kGenerateSerialClk">true</xilinx:isEnabled>
           </xilinx:enablement>
         </xilinx:parameterInfo>
@@ -638,12 +621,12 @@
     <spirit:parameter>
       <spirit:name>kGenerateSerialClk</spirit:name>
       <spirit:displayName>Generate SerialClk internally from pixel clock.</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kGenerateSerialClk" spirit:order="1200" spirit:configGroups="0 UnGrouped checkBox">true</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kGenerateSerialClk" spirit:order="1200">true</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kClkRange</spirit:name>
       <spirit:displayName>TMDS clock range</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choices_7" spirit:configGroups="0 UnGrouped radioGroup">1</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choice_pairs_c59fad91">1</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
@@ -661,25 +644,25 @@
       <xilinx:displayName>RGB to DVI Video Encoder (Source)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>5</xilinx:coreRevision>
+      <xilinx:coreRevision>7</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.1</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2015-04-23T10:19:02Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2016-04-25T15:27:39Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="xilinx.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.1_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.2_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.2_ARCHIVE_LOCATION">D:/xcam/common-repo/vivado-library/ip/rgb2dvi_v1_2</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2014.4</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="6d33c469"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="562106cc"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="8f54593c"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="51521899"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="6469a587"/>
+      <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7fc9a1d2"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="669ae062"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="16681a3c"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="6e4840da"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="a1d85ba9"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

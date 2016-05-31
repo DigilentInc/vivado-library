@@ -61,7 +61,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity rgb2dvi is
    Generic (
       kGenerateSerialClk : boolean := true;
-      kClkPrimitive : string := "MMCM"; -- "MMCM" or "PLL" to instantiate, if kGenerateSerialClk true
+      kClkPrimitive : string := "PLL"; -- "MMCM" or "PLL" to instantiate, if kGenerateSerialClk true
       kClkRange : natural := 1;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)      
       kRstActiveHigh : boolean := true); --true, if active-high; false, if active-low
    Port (

@@ -5,9 +5,9 @@ proc init_gui { IPINST } {
   set Page_0 [ipgui::add_page $IPINST -name "Page 0"]
   ipgui::add_param $IPINST -name "kRstActiveHigh" -parent ${Page_0}
   ipgui::add_param $IPINST -name "kGenerateSerialClk" -parent ${Page_0}
-  ipgui::add_param $IPINST -name "kClkPrimitive" -parent ${Page_0}
+  ipgui::add_param $IPINST -name "kClkPrimitive" -parent ${Page_0} -layout horizontal
+  ipgui::add_param $IPINST -name "kClkRange" -parent ${Page_0} -layout horizontal
 
-  ipgui::add_param $IPINST -name "kClkRange" -layout horizontal
 
 }
 

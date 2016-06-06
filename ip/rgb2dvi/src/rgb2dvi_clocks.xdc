@@ -1,2 +1,2 @@
 ### Clock constraints ###
-create_generated_clock -source [get_ports PixelClk] -multiply_by 5 [get_ports SerialClk]
+### MMCM/PLL should automatically derive the generated clock constraints, if the PixelClk input is properly constrained.

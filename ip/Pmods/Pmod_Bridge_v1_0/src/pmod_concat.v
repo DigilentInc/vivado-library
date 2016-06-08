@@ -170,15 +170,15 @@ generate
                     assign out2_T = 1;
                   end
          "I2C": begin
-                    assign in_top_i2c_gpio_bus_I={out3_I,out2_I};
-                    assign {out3_O,out2_O}=in_top_i2c_gpio_bus_O;
-                    assign {out3_T,out2_T}=in_top_i2c_gpio_bus_T;
-                    assign out0_O = in0_O;
-                    assign out1_O = in1_O;
-                    assign out0_T = in0_T;
-                    assign out1_T = in1_T;
-                    assign in0_I = out0_I;
-                    assign in1_I = out1_I;
+                    assign in_top_i2c_gpio_bus_I={out1_I,out0_I};//Input is I2C bus, output is to Pmod Pins
+                    assign {out1_O,out0_O}=in_top_i2c_gpio_bus_O;
+                    assign {out1_T,out0_T}=in_top_i2c_gpio_bus_T;
+                    assign out2_O = in2_O;
+                    assign out3_O = in3_O;
+                    assign out2_T = in2_T;
+                    assign out3_T = in3_T;
+                    assign in2_I = out2_I;
+                    assign in3_I = out3_I;
                   end
          default: begin
                     assign out0_O = in0_O;
@@ -216,15 +216,15 @@ generate
                        assign in6_I = out6_I;
                      end
             "I2C": begin
-                       assign in_bottom_i2c_gpio_bus_I={out7_I,out6_I};
-                       assign {out7_O,out6_O}=in_bottom_i2c_gpio_bus_O;
-                       assign {out7_T,out6_T}=in_bottom_i2c_gpio_bus_T;
-                       assign out4_O = in4_O;
-                       assign out5_O = in5_O;
-                       assign out4_T = in4_T;
-                       assign out5_T = in5_T;
-                       assign in4_I = out4_I;
-                       assign in5_I = out5_I;
+                       assign in_bottom_i2c_gpio_bus_I={out5_I,out4_I};
+                       assign {out5_O,out4_O}=in_bottom_i2c_gpio_bus_O;
+                       assign {out5_T,out4_T}=in_bottom_i2c_gpio_bus_T;
+                       assign out6_O = in6_O;
+                       assign out7_O = in6_O;
+                       assign out6_T = in6_T;
+                       assign out7_T = in7_T;
+                       assign in6_I = out6_I;
+                       assign in7_I = out7_I;
                      end
             default: begin
                         assign out4_O = in4_O;

@@ -3,7 +3,7 @@
 /* PmodR2R.c	--		Template driver for a Pmod which uses GPIO		*/
 /*																		*/
 /************************************************************************/
-/*	Author:		Thomas Kappenman										*/
+/*	Author:		Thomas Kappenman, Arthur Brown									*/
 /*	Copyright 2015, Digilent Inc.										*/
 /************************************************************************/
 /*
@@ -31,6 +31,7 @@
 /*  Revision History:													*/
 /*																		*/
 /*	04/19/2016(TommyK): Created 
+/*	06/13/2016(ArtVVB): Edited for PmodR2R
 /*																		*/
 /************************************************************************/
 
@@ -109,7 +110,7 @@ void R2R_writeVoltage(PmodR2R* InstancePtr, double voltage)
 **		none
 **
 **	Errors:
-**		massively imprecise on microblaze, measured output frequency of demo at 800ms instead of 360ms.
+**		massively imprecise on microblaze, measured output period of demo sin wave at 800ms instead of 360ms.
 **
 **	Description:
 **		Delay program for a number of milliseconds.
@@ -117,7 +118,7 @@ void R2R_writeVoltage(PmodR2R* InstancePtr, double voltage)
 void R2R_delay(int millis)
 {	
 #ifdef XPAR_MICROBLAZE_ID
-	MB_Sleep(millis);//This delay function is extremely imprecise, Ocilloscope on output shows 800ms period instead of 360 ms.
+	MB_Sleep(millis);
 #else
 	usleep(1000*millis);
 #endif

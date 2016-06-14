@@ -311,7 +311,7 @@ void JSTK_getData(PmodJSTK* InstancePtr, u8* recv){
 **		none
 **
 **	Errors:
-**		need to implement in both microblaze and zynq
+**		none
 **
 **	Description:
 **		delays for a given amount of microseconds. Adapted from sleep and MB_Sleep

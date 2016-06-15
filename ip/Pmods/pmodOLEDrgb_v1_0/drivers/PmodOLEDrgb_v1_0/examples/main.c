@@ -65,7 +65,7 @@ void DemoRun()
 	  OLEDrgb_PutString(&oledrgb,"Demo");
 	  OLEDrgb_PutChar(&oledrgb, 0);
 
-	  usleep(5000);//Wait 5 seconds
+	  usleep(5000000);//Wait 5 seconds
 
 	  OLEDrgb_DrawBitmap(&oledrgb,0,0,95,63, (u8*)tommy);
 }

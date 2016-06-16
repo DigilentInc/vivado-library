@@ -32,7 +32,9 @@
 /*  Revision History:													*/
 /*																		*/
 /*	07/20/2015(CristianF): created										*/
-/*  04/19/2015(TommyK): Adapted for use with Microblaze/Zynq .c designs	*/
+/*  04/19/2015(TommyK): Adapted for use with Microblaze/Zynq .c designs */
+/*  06/15/2016(AndrewH): fixed usleep delays							*/
+/* 	06/16/2016(AndrewH): fixed OLEDrgb_DrawRectangle()					*/
 /*																		*/
 /************************************************************************/
 
@@ -232,14 +234,11 @@ void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uin
 	cmds[8] = OLEDrgb_ExtractGFromRGB(lineColor);	//G
 	cmds[9] = OLEDrgb_ExtractBFromRGB(lineColor);	//R
 
+	cmds[10] = OLEDrgb_ExtractRFromRGB(fillColor);	//R
+	cmds[11] = OLEDrgb_ExtractGFromRGB(fillColor);	//G
+	cmds[12] = OLEDrgb_ExtractBFromRGB(fillColor);	//R
 
-	if(bFill)
-	{
-		cmds[10] = OLEDrgb_ExtractRFromRGB(fillColor);	//R
-		cmds[11] = OLEDrgb_ExtractGFromRGB(fillColor);	//G
-		cmds[12] = OLEDrgb_ExtractBFromRGB(fillColor);	//R
-	}
-	OLEDrgb_WriteSPI(InstancePtr, cmds, bFill ? 13: 10, NULL, 0);
+	OLEDrgb_WriteSPI(InstancePtr, cmds, 13, NULL, 0);
 }
 
 /* ------------------------------------------------------------ */

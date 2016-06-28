@@ -1,10 +1,10 @@
 /************************************************************************/
-/*                                    */
-/* PmodKYPD.c --    Template driver for a Pmod which uses GPIO    */
-/*                                    */
+/*                                                                      */
+/* PmodKYPD.c --    Template driver for a Pmod which uses GPIO          */
+/*                                                                      */
 /************************************************************************/
-/*  Author:   Mikel Skreen                    */
-/*  Copyright 2016, Digilent Inc.                   */
+/*  Author:   Mikel Skreen                                              */
+/*  Copyright 2016, Digilent Inc.                                       */
 /************************************************************************/
 /*
   This library is free software; you can redistribute it and/or
@@ -22,27 +22,26 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /************************************************************************/
-/*  File Description:                         */
-/*                                    */
-/*  This file contains a template that you can use to create a library
-/*  for the PmodKYPD (insert name, duh). 
-/*                                    */
+/*  File Description:                                                   */
+/*                                                                      */
+/*  This library contains functions to read keypresses from the PmodKYPD*/
+/*                                                                      */
 /************************************************************************/
-/*  Revision History:                         */
-/*                                    */
-/*  06/08/2016(MikelS): Created 
-/*                                    */
+/*  Revision History:                                                   */
+/*                                                                      */
+/*  06/08/2016(MikelS): Created                                         */
+/*                                                                      */
 /************************************************************************/
 
-/***************************** Include Files *******************************/
+/***************************** Include Files ****************************/
 #include "PmodKYPD.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-/************************** Function Definitions ***************************/
+/************************** Function Definitions ************************/
 
-/* ------------------------------------------------------------ */
+/* -------------------------------------------------------------------- */
 /***  void KYPB_begin(PmodKYPD* InstancePtr, u32 GPIO_Address)
 **
 **  Parameters:
@@ -75,7 +74,7 @@ void KYPD_begin(PmodKYPD* InstancePtr, u32 GPIO_Address)
   Xil_Out32(InstancePtr->GPIO_addr+4, 0xF0);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc.
 }
 
-/* ------------------------------------------------------------------- */
+/* -------------------------------------------------------------------- */
 /***  bool KYPD_getKey(PmodKYPB* InstancePtr, u32 button)
 **
 **  Parameters:
@@ -112,7 +111,7 @@ bool KYPD_getKey(PmodKYPD* InstancePtr, u32 button)
     return false;
 }
 
-/* ------------------------------------------------------------ */
+/* ------------------------------------------------------------------- */
 /***  u16 KYPD_getStatus(PmodKYPB* InstancePtr)
 **
 **  Parameters:

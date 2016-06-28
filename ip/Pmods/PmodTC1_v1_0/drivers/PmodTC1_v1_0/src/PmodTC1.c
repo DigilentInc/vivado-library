@@ -24,8 +24,8 @@
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
-/*	This file contains a template that you can use to create a library
-/*	for the PmodTC1.
+/*	This file contains a basic library in order to read temperature from*/
+/*  the PmodTC1.														*/
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/

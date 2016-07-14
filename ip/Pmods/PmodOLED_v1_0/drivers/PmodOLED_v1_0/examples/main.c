@@ -44,9 +44,8 @@
 
 #include <stdio.h>
 #include "xparameters.h"
-#include "platform.h"
 #include "xil_printf.h"
-
+#include "xil_cache.h"
 #include "PmodOLED.h"
 
 /* ------------------------------------------------------------ */
@@ -80,17 +79,17 @@ void DemoCleanup();
 **		none
 **
 **	Description:
-**		Handles opening and closing UART connection and demo function calls.
+**		Handles opening caches and wraps demo function calls.
 */
 int main()
 {
-    init_platform();
+    Xil_ICacheEnable();
+    Xil_DCacheEnable();
 
-	DemoInitialize();
-	DemoRun();
-	DemoCleanup();
+    DemoInitialize();
+    DemoRun();
+    DemoCleanup();
 
-    cleanup_platform();
     return 0;
 }
 

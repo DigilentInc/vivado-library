@@ -24,8 +24,7 @@
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
-/*	This file contains a template that you can use to create a library
-/*	for the PmodOLED (insert name, duh). 
+/*	Contains drivers and library functions for use with a PmodOLED
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/

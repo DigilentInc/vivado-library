@@ -44,6 +44,7 @@
 #include "xstatus.h"
 #include "xspi_l.h"
 #include "xspi.h"
+#include "xparameters.h"
 
 #ifdef XPAR_MICROBLAZE_ID
 	#include "microblaze_sleep.h"

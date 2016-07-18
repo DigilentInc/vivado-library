@@ -37,7 +37,7 @@ void GPS_begin(PmodGPS* InstancePtr, u32 GPIO_Address, u32 UART_Address)
 	GPS_Config.BaseAddress=UART_Address;
 	Xil_Out32(InstancePtr->GPIO_addr+4, 0b11);//Set 3DF and PPS to inputs
 	GPS_UARTInit(&InstancePtr->GPSUart);
-	GPS_changeBaud(InstancePtr,11500);//Set baud rate to 115200 to maximize performance
+	GPS_changeBaud(InstancePtr,115200);//Set baud rate to 115200 to maximize performance
 	GPS_setModes(InstancePtr, 1, 1, 1, 1, 1, 1);
 }
 /* ------------------------------------------------------------ */

@@ -24,7 +24,8 @@
 /************************************************************************/
 /*  File Description:                                                   */
 /*                                                                      */
-/*  This library contains functions to read keypresses from the PmodKYPD*/
+/*  This library contains basic functions to read keypresses from       */
+/*  Digilent's PmodKYPD                                                 */
 /*                                                                      */
 /************************************************************************/
 /*  Revision History:                                                   */

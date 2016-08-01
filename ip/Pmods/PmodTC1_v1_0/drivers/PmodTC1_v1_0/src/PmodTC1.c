@@ -3,7 +3,7 @@
 /* PmodTC1.c	--		Template driver for a Pmod which uses SPI		*/
 /*																		*/
 /************************************************************************/
-/*	Author:		Mikel Skreen									*/
+/*	Author:		Mikel Skreen											*/
 /*	Copyright 2016, Digilent Inc.										*/
 /************************************************************************/
 /*
@@ -24,13 +24,13 @@
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
-/*	This file contains a basic library in order to read temperature from*/
-/*  the PmodTC1.														*/
+/*	This file contains a basic library in order to read temperature 	*/
+/*  from Digilent's PmodTC1.											*/
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*  06/02/2016(MikelS):  Created			*/
+/*  06/02/2016(MikelS):  Created										*/
 /*																		*/
 /************************************************************************/
 
@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+  
 /************************** Function Definitions ***************************/
 XSpi_Config TC1Config =
 {

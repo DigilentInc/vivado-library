@@ -1,7 +1,7 @@
 /* PmodCLS.c	--		Template driver for a Pmod which uses SPI		*/
 /*																		*/
 /************************************************************************/
-/*	Author:		Mikel Skreen										*/
+/*	Author:		Mikel Skreen											*/
 /*	Copyright 2016, Digilent Inc.										*/
 /************************************************************************/
 /*
@@ -22,13 +22,12 @@
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
-/*	This file contains a template that you can use to create a library
-/*	for the PmodCLS (insert name, duh).
+/*	This file contains a basic library for the Pmod CLS.				*/
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	06/15/2016(MikelSkreen): Created											*/
+/*	06/15/2016(MikelSkreen): Created									*/
 /*																		*/
 /************************************************************************/
 

@@ -170,7 +170,8 @@ void SDSetup(void)
 
     else
     {
-    	xil_printf("Unable to find default HTML page: %s\r\nError: %d", szDefaultPage, fr);
+    	xil_printf("Unable to find default HTML page: %s\r\nError: %d\r\n", szDefaultPage, fr);
+		xil_printf("Make sure you added the contents from\r\nPmodWIFI_v1_0/drivers/PmodWIFI_v1_0/examples/HTTPServer/CopyTheseToYourSDCard\r\n");
         return;
     }
 

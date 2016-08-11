@@ -31,7 +31,7 @@
 /*  Revision History:													*/
 /*																		*/
 /*  06/20/2016(JonP): Created PmodAD1 IP for microblaze and Zynq    	*/
-/*																		*/
+/*	Only uses ADC2 use pin P3 																	*/
 /************************************************************************/
 
 /***************************** Include Files *******************************/

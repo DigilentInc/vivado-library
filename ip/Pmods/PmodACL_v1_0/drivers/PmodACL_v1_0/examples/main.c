@@ -3,7 +3,9 @@
 #include "xil_io.h"
 #include "PmodACL.h"
 #include <stdio.h>
-#include <sleep.h>
+#ifdef XPAR_MICROBLAZE_ID
+#include "microblaze_sleep.h"
+#endif
 #include "xil_cache.h"
 
 void DemoInitialize();
@@ -40,6 +42,11 @@ void DemoRun()
 		ReadAccelG(&ACL, &x, &y, &z);
 		sprintf(strMes ,"X=%f\tY=%f\tZ=%f\n\r", x, y, z);
 		xil_printf(strMes);
-		usleep(100000);
+
+#ifdef XPAR_MICROBLAZE_ID
+		MB_Sleep(500);
+#else
+		sleep(100000);
+#endif
 	}
 }

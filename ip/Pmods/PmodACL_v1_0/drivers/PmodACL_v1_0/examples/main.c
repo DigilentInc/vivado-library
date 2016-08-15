@@ -5,6 +5,8 @@
 #include <stdio.h>
 #ifdef XPAR_MICROBLAZE_ID
 #include "microblaze_sleep.h"
+#else
+#include<sleep.h>
 #endif
 #include "xil_cache.h"
 
@@ -46,7 +48,7 @@ void DemoRun()
 #ifdef XPAR_MICROBLAZE_ID
 		MB_Sleep(500);
 #else
-		sleep(100000);
+		sleep(1);
 #endif
 	}
 }

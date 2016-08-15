@@ -693,7 +693,7 @@ void CalibrateOneAxisGravitational(PmodACL* InstancePtr, uint8_t bAxisInfo)
 #ifdef XPAR_MICROBLAZE_ID
 		MB_Sleep(500);
 #else
-		sleep(10000);
+		sleep(1);
 #endif
 
 }

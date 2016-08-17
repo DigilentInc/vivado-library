@@ -230,8 +230,8 @@ module PmodSD
   assign AXI_LITE_SPI_rresp[1:0] = AXI_LITE_1_RRESP;
   assign AXI_LITE_SPI_rvalid = AXI_LITE_1_RVALID;
   assign AXI_LITE_SPI_wready = AXI_LITE_1_WREADY;
-  assign Pmod_out_pin10_o = pmod_bridge_0_Pmod_out_PIN10_O;
-  assign Pmod_out_pin10_t = pmod_bridge_0_Pmod_out_PIN10_T;
+  assign Pmod_out_pin10_o = 0;
+  assign Pmod_out_pin10_t = 0;
   assign Pmod_out_pin1_o = pmod_bridge_0_Pmod_out_PIN1_O;
   assign Pmod_out_pin1_t = pmod_bridge_0_Pmod_out_PIN1_T;
   assign Pmod_out_pin2_o = pmod_bridge_0_Pmod_out_PIN2_O;
@@ -255,7 +255,7 @@ module PmodSD
   assign S_AXI_1_WDATA = AXI_LITE_SDCS_wdata[31:0];
   assign S_AXI_1_WSTRB = AXI_LITE_SDCS_wstrb[3:0];
   assign S_AXI_1_WVALID = AXI_LITE_SDCS_wvalid;
-  assign pmod_bridge_0_Pmod_out_PIN10_I = Pmod_out_pin10_i;
+  assign pmod_bridge_0_Pmod_out_PIN10_I = 0;
   assign pmod_bridge_0_Pmod_out_PIN1_I = Pmod_out_pin1_i;
   assign pmod_bridge_0_Pmod_out_PIN2_I = Pmod_out_pin2_i;
   assign pmod_bridge_0_Pmod_out_PIN3_I = Pmod_out_pin3_i;

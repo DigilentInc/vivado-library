@@ -60,7 +60,8 @@ static CLIENTINFO * pClientMutex    = NULL;
 static uint8_t rgDedicatedPins[] = DEDCATEDPINS;
 u8 LEDS=0;
 
-static GPIO gpio[NUM_DIGITAL_PINS];
+static u32 NUM_DIGITAL_PINS=0;
+static GPIO gpio[128];
 static uint32_t cbPage = 0;
 static uint32_t iPin = 0;
 static char szPinNbr[4];
@@ -146,6 +147,24 @@ typedef enum {
     JMPFILENOTFOUND,
     DONE
 } STATEGet;
+
+
+void inline pinMode(int pin, int state){
+	if (state)//Input
+		Xil_Out32(gpio[pin].baseaddr+4,Xil_In32(gpio[pin].baseaddr+4)|1<<gpio[pin].bitnum);
+	else
+		Xil_Out32(gpio[pin].baseaddr+4,Xil_In32(gpio[pin].baseaddr+4)&~1<<gpio[pin].bitnum);
+}
+void inline digitalWrite(int pin, int state){
+	if (state)
+		Xil_Out32(gpio[pin].baseaddr,Xil_In32(gpio[pin].baseaddr)|1<<gpio[pin].bitnum);
+	else
+		Xil_Out32(gpio[pin].baseaddr,Xil_In32(gpio[pin].baseaddr)&~(1<<gpio[pin].bitnum));
+}
+u32 inline digitalRead(int pin){
+	return Xil_In32(gpio[pin].baseaddr)&1<<gpio[pin].bitnum;
+}
+
 
 /*
     There are 3 magic predefined states:
@@ -474,7 +493,7 @@ GCMD::ACTION ComposeHTMLGetPINS(CLIENTINFO * pClientInfo)
  *    
  *      Sets the pin state to the requested GPIO / Analog setting
  * ------------------------------------------------------------ */
-static void UpdatePin(const int iPin, const char pinState)
+static void UpdatePin(const u32 iPin, const char pinState)
 {
     PINCFG pinCfg = DEDICATED;
 
@@ -705,6 +724,7 @@ GCMD::ACTION ComposeHTMLPostPINS(CLIENTINFO * pClientInfo)
                     // move up to the underscore, the start of the pin number
                     iIn += ((byte *) pUnderscore - &pClientInfo->rgbIn[iIn]);
                 }
+
                 if((pClientInfo->cbRead - iIn) < sizeof(PINDATA))
                 {
                     memcpy(pClientInfo->rgbIn, &pClientInfo->rgbIn[iIn], (pClientInfo->cbRead - iIn));
@@ -868,3 +888,49 @@ void InitializePins(void)
 
     cbPage += sizeof(szHTMLStart) + sizeof(szHTMLEnd) - 2;
 }
+
+
+
+/***    void addPINs(u32 BASE_ADDR, u32 num_pins, bool input)
+ *
+ *    Parameters:
+ *          BASE_ADDR	-	Base Address of the GPIO block
+ *          num_pins	-	GPIO Width (number of pins)
+ *          input		-	1 if input 0 if output
+ *
+ *    Return Values:
+ *          None
+ *
+ *    Description:
+ *
+ *			Adds pins to the GPIO array which is posted on
+ *			PinsPage.htm
+ *
+ * ------------------------------------------------------------ */
+void addPINs(u32 BASE_ADDR, u32 num_pins, bool input){
+	if (cbPage==0){
+		cbPage += sizeof(szHTMLStart) + sizeof(szHTMLEnd) - 2;
+	}
+	for (u32 i=NUM_DIGITAL_PINS; i<NUM_DIGITAL_PINS+num_pins; i++){
+		cbPage += sizeof(szPin) - 1;
+		cbPage += sizeof(szPinValue) + sizeof(szChecked) - 2;
+		gpio[i].baseaddr=BASE_ADDR;
+		gpio[i].bitnum=i-NUM_DIGITAL_PINS;
+		if (input){
+			cbPage += sizeof(szState) + sizeof(szDigitalIn) - 2;
+			pinMode(i, 1);
+			gpio[i].pincap=DIGITALIN;
+			gpio[i].pinState=DIGITALIN;
+
+		}
+		else{
+			pinMode(i, 0);
+			cbPage += sizeof(szState) + sizeof(szDigitalLow) - 2;
+			cbPage += sizeof(szState) + sizeof(szDigitalHigh) - 2;
+			gpio[i].pincap=DIGITALOUTLOW | DIGITALOUTHIGH;
+			gpio[i].pinState=DIGITALOUTLOW;
+		}
+	}
+	NUM_DIGITAL_PINS+=num_pins;
+}
+

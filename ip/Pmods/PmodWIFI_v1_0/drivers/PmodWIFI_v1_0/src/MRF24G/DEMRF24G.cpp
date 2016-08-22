@@ -51,62 +51,8 @@
 /*  10/16/2013 (KeithV): Created                                        */
 /*                                                                      */
 /************************************************************************/
-#include "../DEIPcK/utility/System.h"
-#include "../DEIPcK/DEIPcK.h"
-#include "MRF24GAdaptor.h"
-
-extern int WF_GPIO_BASEADDRESS;
-
-const NWADP * DEMRF24::deIPGetAdaptor(void)
-{
-    // get our pins set up
-//    WF_HIBERNATE_IO     = 0;
-//    WF_HIBERNATE_TRIS   = 0;
-//
-//    WF_RESET_IO         = 0;
-//    WF_RESET_TRIS       = 0;
-//
-//    // Enable the WiFi
-//    WF_CS_IO            = 1;
-//    WF_CS_TRIS          = 0;
-//
-//    WF_INT_TRIS         = 1;
-//
-//    // register our interrupt vectors
-//    setIntVector(WF_INT_VEC, _WFInterrupt);
-//    setIntPriority(WF_INT_VEC, 3, 0);
-	Xil_Out32(WF_GPIO_BASEADDRESS+4, 0b0001);
-	Xil_Out32(WF_GPIO_BASEADDRESS, Xil_In32(WF_GPIO_BASEADDRESS)&0b0001);
-
-    return(GetMRF24GAdaptor(NULL, hRRAdpHeap, NULL));
-}
-
-const NWWF * DEMRF24::deWFGetWF()
-{
-    return(GetMRF24WF());
-}
-
-// this should be safe to call at any time
-bool DEMRF24::wpaCalPSK(const char * szSsid, const char * szPassphrase, WPA2KEY& wpaKey)
-{
-    t_wpaKeyInfo wpaInfo;
-
-    if( szSsid != NULL &&
-        szPassphrase != NULL &&
-        (wpaInfo.ssidLen = strlen(szSsid)) <= WF_MAX_SSID_LENGTH &&
-        (wpaInfo.keyLength = strlen(szPassphrase)) <= WF_MAX_PASSPHRASE_LENGTH )
-    {
-
-        memcpy(wpaInfo.ssid, szSsid, wpaInfo.ssidLen);
-        memcpy(wpaInfo.key, szPassphrase, wpaInfo.keyLength);
-
-        WF_WpaConvPassphraseToKey(&wpaInfo);
-
-        memcpy(wpaKey.rgbKey, wpaInfo.key, sizeof(WPA2KEY));
-
-        return(true);
-    }
-
-    return(false);
-}
-
+#if defined(__arm__) || defined(__MICROBLAZE__)
+#include "utility/fpga/DEMRF24G.cpp"
+#else
+#include "utility/pic32/DEMRF24G.cpp"
+#endif

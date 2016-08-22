@@ -45,7 +45,7 @@
 #include "./ud_inc/shared/wf_universal_driver.h"
 #include "./ud_inc/internal/wf_global_includes.h"
 
-//extern uint32_t SYSGetMilliSecond(void);
+extern uint32_t SYSGetMilliSecond(void);
 
 //==============================================================================
 //                                  CONSTANTS
@@ -117,19 +117,19 @@ void WF_Init(void)
 
     // take chip out of hibernate and out of reset; must be done before calling ResetPll()
     WF_GpioSetHibernate(WF_HIGH);  // Toggle the module into and then out of hibernate
-    tStart = WF_TimerRead();
-    while(WF_TimerRead() - tStart <= 2);
+    tStart = SYSGetMilliSecond();
+    while(SYSGetMilliSecond() - tStart <= 2);
     WF_GpioSetHibernate(WF_LOW);
-    tStart = WF_TimerRead();
-    while(WF_TimerRead() - tStart <= 300);
+    tStart = SYSGetMilliSecond();
+    while(SYSGetMilliSecond() - tStart <= 300);
 
 
     WF_GpioSetReset(WF_LOW);       // Toggle the module into and out of reset
-    tStart = WF_TimerRead();
-    while(WF_TimerRead() - tStart <= 2);
+    tStart = SYSGetMilliSecond();
+    while(SYSGetMilliSecond() - tStart <= 2);
     WF_GpioSetReset(WF_HIGH);
-    tStart = WF_TimerRead();
-    while(WF_TimerRead() - tStart <= 5);
+    tStart = SYSGetMilliSecond();
+    while(SYSGetMilliSecond() - tStart <= 5);
 
 
     // MRF24WG silicon work-around -- needed for A1 silicon to initialize PLL values correctly

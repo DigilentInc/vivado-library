@@ -46,7 +46,11 @@ extern "C" {
 // Compiler specific keyword used for inline functions.  Customize for your compiler.
 // If inline functions are not supported make the define empty.
 //------------------------------------------------------------------------------
+#if defined(__MICROBLAZE__)||defined(__arm__)
 #define INLINE
+#else
+#define INLINE inline
+#endif
 // TODO: need OVERLAY_MEMORY_USED switch for global variables in interrupt?
 
 

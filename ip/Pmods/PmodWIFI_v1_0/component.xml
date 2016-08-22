@@ -1526,7 +1526,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>5096fc58</spirit:value>
+            <spirit:value>3cc253d6</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -3722,6 +3722,46 @@
         <spirit:name>drivers/PmodWIFI_v1_0/examples/HTTPServer/CopyTheseToYourSDCard/SrvSetupFPGA.htm</spirit:name>
         <spirit:userFileType>html</spirit:userFileType>
       </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/Wprogram.h</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/MRF24G/utility/fpga/wf_timer_stub.c</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/MRF24G/utility/fpga/wf_spi_stub.c</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/MRF24G/utility/fpga/wf_eint_stub.c</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/DEIPcK/utility/fpga/System.h</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/MRF24G/utility/fpga/wf_gpio_stub.c</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/MRF24G/utility/fpga/wf_event_stub.c</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/Networkprofile.x</spirit:name>
+        <spirit:fileType>unknown</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/DEIPcK/utility/fpga/System.c</spirit:name>
+        <spirit:fileType>cSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>drivers/PmodWIFI_v1_0/src/MRF24G/utility/fpga/DEMRF24G.cpp</spirit:name>
+        <spirit:fileType>cppSource</spirit:fileType>
+      </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_implementation_view_fileset</spirit:name>
@@ -3814,8 +3854,8 @@
       </xilinx:taxonomies>
       <xilinx:displayName>PmodWIFI_v1_0</xilinx:displayName>
       <xilinx:definitionSource>IPI</xilinx:definitionSource>
-      <xilinx:coreRevision>24</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2016-08-15T18:57:23Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>25</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2016-08-22T16:54:23Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodWIFI:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGeneric/PmodWIFI_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodWIFI:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGeneric/PmodWIFI_v1_0</xilinx:tag>
@@ -3921,7 +3961,7 @@
       <xilinx:xilinxVersion>2016.2</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="9c1c6882"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="2820b97a"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="97259586"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="ec8336dc"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="d373eb5e"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="d21194fa"/>
     </xilinx:packagingInfo>

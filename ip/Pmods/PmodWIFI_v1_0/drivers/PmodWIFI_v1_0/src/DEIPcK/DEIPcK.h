@@ -59,11 +59,11 @@
 #endif
 
 #ifdef __cplusplus
-//#include "WProgram.h"
+#include "WProgram.h"
 extern "C" {
     #include "utility/deIP.h"
 }
-//#include <NetworkProfile.x>
+#include <NetworkProfile.x>
 
 // Unique IP STATUS codes for deIPcK and deWFcK
 #define ipsNetworkNotInitialized    ForceIPError(MakeDEIPcKStatus(10))
@@ -625,7 +625,7 @@ extern HRRHEAP  hRRAdpHeap;                 // handle to ipStack in memory Round
 extern HPMGR    hNetworkPMGR;               // handle to Socket mem page manager
 extern HPMGR    hDhcpDnsNtpPMGR;            // handle to shared DHCP / DNS / SNTP mem page mgr
 
-#include "../MRF24G/AdaptorClass.h"
+#include <AdaptorClass.h>
 
 #ifdef DEIPINCLUDECODEHERE
 

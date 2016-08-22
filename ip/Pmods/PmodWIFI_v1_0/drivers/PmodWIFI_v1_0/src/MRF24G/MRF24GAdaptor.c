@@ -430,7 +430,11 @@ WFMRFD wfmrf24 =
         false,
         MRF24G_NWA_MTU_RX,
         MRF24G_NWA_MIN_TX_MTU,
+#if defined(__MICROBLAZE__)||defined(__arm__)
         {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
+#else
+		{.u8 = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
+#endif
         NULL,
         MRF24PeriodicTasks,
         IsLinked,

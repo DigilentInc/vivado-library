@@ -105,7 +105,11 @@ int main(void)
 #else
 	setPmodWifiIntVector(XPAR_FABRIC_PMODWIFI_0_WF_INTERRUPT_INTR);
 #endif
-	InitializePins();
+	//Add pins to PinsPage.htm
+	addPINs(XPAR_AXI_GPIO_0_BASEADDR, 4, 0);
+	addPINs(XPAR_AXI_GPIO_0_BASEADDR+8, 4, 1);
+	
+	//Initialize system timer
     WF_TimerInit();
 
     // add rendering functions for dynamically created web pages
@@ -171,3 +175,5 @@ void loop(void)
     // process the HTTP Server
     ProcessServer();
 }
+
+

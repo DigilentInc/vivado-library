@@ -49,77 +49,9 @@
 /*	8/15/2012(KeithV): Created											*/
 /*																		*/
 /************************************************************************/
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
 
-#include <inttypes.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <alloca.h>
-#include <string.h>
-#include "xparameters.h"
-#include "xil_types.h"
-#include "xil_io.h"
-#include "xil_cache.h"
-#include "../../MRF24G/utility/ud_inc/internal/wf_global_includes.h"
-
-
-#define byte u8
-#ifdef XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ
-#include "sleep.h"
-#include "xtime_l.h"
-#define GetSystemClock()        (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ)
+#if defined(__arm__) || defined(__MICROBLAZE__)
+#include "fpga/System.h"
 #else
-#define GetSystemClock()        (XPAR_CPU_CORE_CLOCK_FREQ_HZ)
-#include "../../MRF24G/utility/ud_inc/shared/wf_stubs.h"
+#include "pic32/System.h"
 #endif
-
-
-#if !defined(min)
-#define min(_a, _b) ((_a) > (_b) ? (_b) : (_a))
-#define max(_a, _b) ((_a) > (_b) ? (_a) : (_b))
-#endif
-
-extern uint32_t GetPeripheralClock(void);
-
-// probably not correct for the MX1 & 2
-#define FLASH_SPEED_HZ          30000000
-
-
-
-static inline uint32_t __attribute__((always_inline)) InitBoard(void)
-{
-	Xil_ICacheEnable();
-	Xil_DCacheEnable();
-
-    return(true);
-}
-
-// this will make the size a mult of 4 so the sizes will stall 4 bytes aligned
-#define SYSAdjToDerefSize(_sizeAny) ((((uint32_t) (_sizeAny)) + 3) & 0xFFFFFFFC)
-
-#define InitSysClock()
-#define SYSTICKSPERSEC      (GetSystemClock())
-#define SYSTICKSPERMSEC     (GetSystemClock()/1000)
-#define SYSTICKSPERUSEC     (GetSystemClock()/1000000)
-
-// configuration parameters
-#define SYSLITTLE_ENDIAN    0
-#define SYSBIG_ENDIAN       1
-
-#define NETWORK_ORDER       SYSBIG_ENDIAN                  // RFC 1042
-#define MACHINE_ORDER       SYSLITTLE_ENDIAN
-
-void ExEndian(void * pb, int cb);
-uint16_t CalculateChecksum(uint16_t sumComplement, void * pv, unsigned int cb);
-
-u64 GetSysTick(void);
-void SYSPeriodicTasks(void);
-uint32_t SYSGetSecond(void);
-uint32_t SYSGetMilliSecond(void);
-uint32_t SYSGetMicroSecond(void);
-uint32_t SYSGetSeqNumber(void);
-void setPmodWifiAddresses(u32 SPI_BASEADDRESS, u32 WFGPIO_BASEADDRESS, u32 WFCS_BASEADDRESS, u32 TIMER_BASEADDRESS);
-void setPmodWifiIntVector(u32 VectorNumber);
-
-#endif // _SYSTEM_H_

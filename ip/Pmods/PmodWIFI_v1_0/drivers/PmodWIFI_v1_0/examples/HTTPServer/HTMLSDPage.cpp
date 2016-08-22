@@ -47,7 +47,7 @@
 #include    "HTTPServer.h"
 #ifdef __MICROBLAZE__
 #include    "DXSPISDVOL.h" //If an error occurs, you need to add a PmodSD IP block to your design
-DXSPISDVOL dSDVol(XPAR_PMODSD_0_AXI_LITE_SPI_BASEADDR, XPAR_PMODSD_0_AXI_LITE_SDCS_BASEADDR);
+DXSPISDVOL dSDVol(XPAR_AXI_QUAD_SPI_0_BASEADDR, XPAR_AXI_GPIO_SDCS_BASEADDR);
 DFILE       dFile;              // Create a File handle to use to open files with
 #else
 #include "SD/DSDIOVOL.h"
@@ -170,8 +170,7 @@ void SDSetup(void)
 
     else
     {
-    	xil_printf("Unable to find default HTML page: %s\r\nError: %d\r\n", szDefaultPage, fr);
-		xil_printf("Make sure you added the contents from\r\nPmodWIFI_v1_0/drivers/PmodWIFI_v1_0/examples/HTTPServer/CopyTheseToYourSDCard\r\n");
+    	xil_printf("Unable to find default HTML page: %s\r\nError: %d", szDefaultPage, fr);
         return;
     }
 

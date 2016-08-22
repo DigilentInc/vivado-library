@@ -47,7 +47,7 @@
 
 #define iMKFS (_VOLUMES - 1)    // when we mount, we will do it on the last volume we have 
 
-extern "C" int get_ldnumber (		/* Returns logical drive number (-1:invalid drive) */
+extern int get_ldnumber (		/* Returns logical drive number (-1:invalid drive) */
 	const char** path	/* Pointer to pointer to the path name */
 );
 

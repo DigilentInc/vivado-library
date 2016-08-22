@@ -52,9 +52,14 @@
 
 #include "deIP.h"
 
+
+#if defined(__MICROBLAZE__)||defined(__arm__)
 const MACADDR MACBROADCAST   = {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};    // RFC 894
 const MACADDR MACNONE        = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};    // RFC 894
-
+#else
+const MACADDR MACBROADCAST   = {.u8 = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}};    // RFC 894
+const MACADDR MACNONE        = {.u8 = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};    // RFC 894
+#endif
 
 static FFPT             ffptInputIpStack    = {NULL, NULL};
 

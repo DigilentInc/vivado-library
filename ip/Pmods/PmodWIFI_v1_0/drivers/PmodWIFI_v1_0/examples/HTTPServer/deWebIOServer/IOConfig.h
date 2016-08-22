@@ -145,42 +145,8 @@
 	#define OUTPUT 0
 	#define LOW 0
 	#define HIGH 1
-	struct digital_pin{
-		u32 address;
-		u32 pin;
-	};
-	
-	#define NUM_DIGITAL_PINS 12
-	const struct digital_pin dPins[NUM_DIGITAL_PINS] = {
-		{XPAR_AXI_GPIO_LED_BASEADDR, 0},
-		{XPAR_AXI_GPIO_LED_BASEADDR, 1},
-		{XPAR_AXI_GPIO_LED_BASEADDR, 2},
-		{XPAR_AXI_GPIO_LED_BASEADDR, 3},
-		{XPAR_AXI_GPIO_LED_BASEADDR+8, 0},
-		{XPAR_AXI_GPIO_LED_BASEADDR+8, 1},
-		{XPAR_AXI_GPIO_LED_BASEADDR+8, 2},
-		{XPAR_AXI_GPIO_LED_BASEADDR+8, 3},
-		{XPAR_AXI_GPIO_SW_BASEADDR, 0},
-		{XPAR_AXI_GPIO_SW_BASEADDR, 1},
-		{XPAR_AXI_GPIO_SW_BASEADDR, 2},
-		{XPAR_AXI_GPIO_SW_BASEADDR, 3}
-	};
 
-	void inline pinMode(int pin, int state){
-		if (state)//Input
-			Xil_Out32(dPins[pin].address+4,Xil_In32(dPins[pin].address+4)|1<<dPins[pin].pin);
-		else
-			Xil_Out32(dPins[pin].address+4,Xil_In32(dPins[pin].address+4)&~1<<dPins[pin].pin);
-	}
-	void inline digitalWrite(int pin, int state){
-		if (state)
-			Xil_Out32(dPins[pin].address,Xil_In32(dPins[pin].address)|1<<dPins[pin].pin);
-		else
-			Xil_Out32(dPins[pin].address,Xil_In32(dPins[pin].address)&~(1<<dPins[pin].pin));
-	}
-	u8 inline digitalRead(int pin){
-		return Xil_In32(dPins[pin].address)&1<<dPins[pin].pin;
-	}
+
 
 #else
     #error HTTP Server does not support this board
@@ -220,4 +186,5 @@ typedef struct _PINDATA
 #endif
 
 extern void InitializePins(void);
+void addPINs(u32 BASE_ADDR, u32 num_pins, bool input);
 

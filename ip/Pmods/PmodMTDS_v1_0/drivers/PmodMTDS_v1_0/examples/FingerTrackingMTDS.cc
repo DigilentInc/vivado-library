@@ -76,12 +76,12 @@ int main()
 	  while(true) {
 	    fStat = mtds.begin(pinMtdsSelStd, frqMtdsSpiDefault);
 	    if (fStat) {
-	      xil_printf("mtds.begin() succeeded\r\n");
+	      //xil_printf("mtds.begin() succeeded\r\n");
 	      break;
 	    }
 	    else {
-	      xil_printf("mtds.begin() failed\r\n");
-	      delay(1000);
+	      //xil_printf("mtds.begin() failed\r\n");
+	      //delay(1000);
 	    }
 	  }
 
@@ -124,25 +124,25 @@ int main()
 	   mtds.LineTo(hdsFng2, 19, 39);
 	   mtds.MoveTo(hdsFng2,  0, 19);
 	   mtds.LineTo(hdsFng2, 39, 19);
-
+	   HDS     hds;
+	   		  MTCH    mtch;
 	while(1){
-		HDS     hds;
-		  MTCH    mtch;
 
-		  msCur = millis();
-		  if ((msCur - msStart) > 500) {
-		    msStart = msCur;
-		    fLedState = !fLedState;
 
-		  }
-
-		  if ((msCur - msDisp) > 3000) {
-		    msDisp = msCur;
-
-		    fRun = !fRun;
-
-		    //MtdsTest5();
-		  }
+//		  msCur = millis();
+//		  if ((msCur - msStart) > 500) {
+//		    msStart = msCur;
+//		    fLedState = !fLedState;
+//
+//		  }
+//
+//		  if ((msCur - msDisp) > 3000) {
+//		    msDisp = msCur;
+//
+//		    fRun = !fRun;
+//
+//		    //MtdsTest5();
+//		  }
 
 		  if (mtds.GetMsgStatus() != 0) {
 		    mtds.GetMsg((MEVT *)&mtch);
@@ -231,7 +231,7 @@ void MtdsTest5() {
   hdsTest = mtds.GetDs();
   hbmpTest = mtds.CreateBitmap(40, 40, 16);
   if (hbmpTest == 0) {
-    xil_printf("MtdsTest5: CreateBitmap failed\r\n");
+    //xil_printf("MtdsTest5: CreateBitmap failed\r\n");
   }
   mtds.SetDrawingSurface(hdsTest, hbmpTest);
 

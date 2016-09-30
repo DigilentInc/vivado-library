@@ -13,6 +13,12 @@
 /*  Revision History:															*/
 /*																				*/
 /*	2015/08/03(GeneApperson): Created											*/
+/*	2016-09-27(GeneApperson): Changed calls to low level driver functions to	*/
+/*		use functions in the new hardware abstraction layer to make library		*/
+/*		more portable across platforms.											*/
+/*	2016-09-27(GeneApperson) Changed conditionals from __SIM__ to MPIDE to make	*/
+/*		it more explicit that it was for generating debugging output when being	*/
+/*		built under MPIDE for testing.											*/
 /*																				*/
 /********************************************************************************/
 
@@ -22,7 +28,7 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)
+#if defined(__SIM__) || defined(__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
 #endif
@@ -32,19 +38,13 @@
 #include	"ProtoDefs.h"
 #include	"mtds.h"
 #include	"MtdsCore.h"
+#include	"MtdsHal.h"
 
 /* ------------------------------------------------------------ */
 /*				Local Type Definitions							*/
 /* ------------------------------------------------------------ */
 
-#define	__MTDSTRACE__
-
-#if defined(__SIM__)
-#define	_DSPI0_BASE		0
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-//Just define as baseaddress
-#define _DSPI0_BASE		XPAR_PMODMTDS_0_AXI_LITE_SPI_BASEADDR
-#endif
+//#define	__MTDSTRACE__
 
 /* ------------------------------------------------------------ */
 /*				Global Variables								*/
@@ -59,12 +59,6 @@ MTWS	mtws;
 extern RHDR *	prhdrMtdsRet;
 extern DHDR *	pdhdrMtdsData;
 extern uint8_t	rgbMtdsRetVal[cbRetValInit];
-
-extern int	pinMtdsSel;
-
-#if defined(__SIM__)
-extern uint16_t PORTG;
-#endif
 
 /* ------------------------------------------------------------ */
 /*				Local Variables									*/
@@ -103,8 +97,6 @@ MTDS::MTDS() {
 
 	fInitialized = false;
 	fUpdating = false;
-
-	pinMtdsSel = -1;
 
 	clsLastError = 0;
 	cmdLastError = 0;
@@ -177,31 +169,21 @@ bool MTDS::begin(int pinSelInit, uint32_t frqSpi) {
 
 	/* Set up the basic hardware environment.
 	*/
-	MtdsInitPins(pinSelInit);
+	MtdsHalInitPins(pinSelInit);
 
 	/* Initialize the SPI port that we will use to talk to the shield. Set up the
 	** other pins used by the interface.
 	*/
-	MtdsInitSpi(_DSPI0_BASE, frqSpi);
+	MtdsHalInitSpi(_SPI_BASE, frqSpi);
 
-#if defined(_BOARD_CEREBOT_MX3CK_) || \
-	defined(_BOARD_CEREBOT_MX4CK_) || \
-	defined(_BOARD_CEREBOT_MX7CK_)
-
-	/* If we are building for a Cerebot Board, we are most likely talking to a
-	** PmodMTDS, so we need to do a hardware reset on it before we try to establish
-	** communications with it.
-	*/
-	ResetDisplay(pinMtdsSel);
-	delay(2000);
-#endif
+	if (MtdsHalResetDisplay(pinSelInit)) {
+		MtdsHalDelayMs(2000);
+	}
 
 	/* We need to establish communication with the shield. Depending on how quickly
 	** we got called, the shield might still be doing its power on reset processing.
 	*/
-#if !defined(__SIM__)
-	delay(1);
-#endif
+	MtdsHalDelayMs(1);
 	if (!MtdsSyncChannel()) {
 		return false;
 	}
@@ -216,9 +198,7 @@ bool MTDS::begin(int pinSelInit, uint32_t frqSpi) {
 			if (cntInit < 0) {
 				return false;
 			}
-#if !defined(__SIM__)
-			delay(1000);
-#endif
+			MtdsHalDelayMs(1000);
 		}
 	}
 
@@ -253,43 +233,6 @@ void MTDS::end() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MTDS::ResetDisplay(pinSel)
-**
-**	Parameters:
-**		pinSel		- digital pin number of CS pin
-**
-**	Return Values:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Perform a hardware reset on the display board. This is only possible or useful
-**		with some implementations of the display hardware (e.g. PmodMTDS). Some versions
-**		don't support hardware reset under software control (e.g. Mulit-Touch Display
-**		Shield).
-**		Following the call to ResestDisplay(), it is necessary to wait at least two
-**		seconds and then call one of the variants of begin().
-*/
-
-void MTDS::ResetDisplay(int pinSel) {
-	int pinRst = pinSel + 5;
-
-#if !defined(__SIM__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-	pinMode(pinRst, OUTPUT);
-	digitalWrite(pinRst, LOW);
-	delay(1);
-	digitalWrite(pinRst, HIGH);
-	delay(1);
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-#endif
-#endif
-
-}
-
-/* ------------------------------------------------------------ */
 /***	MTDS::GetStatusPin(idPin)
 **
 **	Parameters:
@@ -309,36 +252,8 @@ void MTDS::ResetDisplay(int pinSel) {
 
 bool MTDS::GetStatusPin(int idPin) {
 
-#if !defined(__SIM__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-	if (idPin == idPinStatusA) {
-		return (digitalRead(pinMtdsIntA) != LOW);
-	}
-	else if (idPin == idPinStatusB) {
-		return (digitalRead(pinMtdsIntB) != LOW);
-	}
-	else {
-		return false;
-	}
-#elif defined(__MICROBLAZE__)||defined(__arm__)
+	return MtdsHalGetStatusPin(idPin);
 
-#endif
-#else
-	if (idPin == idPinStatusA) {
-		/* Return HOST_INTA - PORTG bit 13
-		*/
-		return (PORTG & (1 << 13)) != 0;
-	}
-	else if (idPin == idPinStatusB) {
-		/* Return HOST_INTB - PORTG bit 14
-		*/
-		return (PORTG & (1 << 14)) != 0;
-	}
-	else {
-		return false;
-	}
-	
-#endif
 }
 
 /* ------------------------------------------------------------ */
@@ -388,15 +303,12 @@ bool MTDS::MtdsSyncChannel() {
 	cntSync = 0;
 	cntByte = 0;
 	while (cntSync < cbSyncCount) {
-#if !defined(__SIM__)
-		//M00TODO - Tune this delay time to improve performance.
-		delayMicroseconds(tusSyncDelay);
-#endif
-		while (!FMtdsSpiReady()) {
+		MtdsHalDelayUs(tusSyncDelay);
+		while (!MtdsHalSpiReady()) {
 		}		
-		MtdsEnableSlave(true);
-		bRcv = MtdsPutSpiByte(chnCmdSync);
-		MtdsEnableSlave(false);
+		MtdsHalEnableSlave(true);
+		bRcv = MtdsHalPutSpiByte(chnCmdSync);
+		MtdsHalEnableSlave(false);
 		if (bRcv == chnStaSync) {
 			cntSync += 1;
 		}
@@ -411,6 +323,12 @@ bool MTDS::MtdsSyncChannel() {
 			** an error.
 			*/
 #if !defined(__SIM__)
+			/* This needs to be suppressed when building to run under the simulator.
+			** There are no communications delays when running under the simulator and the
+			** return happens too fast there. Since communications errors aren't really
+			** possible when running under the simulator this condition couldn't actually
+			** come up anyway.
+			*/
 			return false;
 #endif
 		}
@@ -420,15 +338,12 @@ bool MTDS::MtdsSyncChannel() {
 	*/
 	cntStart = 0;
 	while (true) {
-#if !defined(__SIM__)
-		//M00TODO - Tune this delay time to improve performance.
-		delayMicroseconds(tusPacketDelay);
-#endif
-		while (!FMtdsSpiReady()) {
+		MtdsHalDelayUs(tusPacketDelay);
+		while (!MtdsHalSpiReady()) {
 		}		
-		MtdsEnableSlave(true);
-		bRcv = MtdsPutSpiByte(chnCmdStart);
-		MtdsEnableSlave(false);
+		MtdsHalEnableSlave(true);
+		bRcv = MtdsHalPutSpiByte(chnCmdStart);
+		MtdsHalEnableSlave(false);
 		if (bRcv == chnStaIdle) {
 			break;
 		}
@@ -474,13 +389,9 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 	uint16_t	cbRem;
 	uint8_t		chnSta;
 	bool		fStat;
-#if !defined(__SIM__)
 	uint32_t	tusStart;
-#endif
 
-#if !defined(__SIM__)
-	tusStart = micros();
-#endif
+	tusStart = MtdsHalTusElapsed();
 
 	/* Send the command packet.
 	*/
@@ -488,7 +399,7 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 	cmdLastError = cmd;
 	staLastError = staCmdError;
 
-#if !defined(__SIM__)
+#if defined(MPIDE)
 #if !defined(__MTDSTRACE__)
 	if ((cls == clsCmdUtil) && (cmd == cmdUtilBeginUpdate)) {
 		Serial.print("Cmd Wr: cls = ");
@@ -537,13 +448,9 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 					/* The shield wants to abort the command, so we need to stop
 					** sending it data packets.
 					*/
-#if !defined(__SIM__)
+#if defined(MPIDE)
 #if defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 					Serial.println("!CmdWr: abort command");
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-		xil_printf("!CmdWr: abort command\r\n");
-#endif
 #endif
 #endif
 					if (!MtdsResumeChannel()) {
@@ -574,13 +481,9 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 			** we have a bad communications channel, it is in some weird state, or it
 			** has crashed. Try resynchronizing the channel.
 			*/
-#if !defined(__SIM__)
+#if !defined(MPIDE)
 #if defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 			Serial.println("!CmdWr: ready timeout");
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-				xil_printf("!CmdWr: ready timeout\r\n");
-#endif
 #endif
 #endif
 			goto lSyncError;
@@ -595,13 +498,9 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 		/* Error waiting for the shield to go to the done state. This means that we
 		** timed out waiting for a response from the shield.
 		*/
-#if !defined(__SIM__)
+#if !defined(MPIDE)
 #if defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 		Serial.println("!CmdWr: shield idle timeout");
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-		xil_printf("!CmdWr: shield idle timeout\r\n");
-#endif
 #endif
 #endif
 		goto lSyncError;
@@ -619,13 +518,9 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 		** status byte received from the display device. In any case, we seem
 		** to be out of sync with the display device.
 		*/
-#if !defined(__SIM__)
+#if !defined(MPIDE)
 #if defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 		Serial.println("!CmdWr: read status packet error");
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-		xil_printf("!CmdWr: read status packet error\r\n");
-#endif
 #endif
 #endif
 		goto lSyncError;
@@ -636,9 +531,8 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 	*/
 	if (((cls & ~mskPacketCls) != (prhdrMtdsRet->cls & ~mskPacketCls)) ||
 		 (cmd != prhdrMtdsRet->cmd)) {
-#if !defined(__SIM__)
+#if !defined(MPIDE)
 #if defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 		Serial.println("!CmdWr: status packet doesn't match command");
 		Serial.print("   cls = ");
 		Serial.print(cls, HEX);
@@ -648,10 +542,6 @@ void MTDS::MtdsProcessCmdWr(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 		Serial.print(prhdrMtdsRet->cls, HEX);
 		Serial.print(" cmdRhdr = ");
 		Serial.println(prhdrMtdsRet->cmd, HEX);
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-		xil_printf("!CmdWr: status packet doesn't match command\r\n");
-		xil_printf("   cls = %X cmd = %X clsRhdr = %X cmdRhdr = %X\r\n", cls, cmd, prhdrMtdsRet->cls, prhdrMtdsRet->cmd);
-#endif
 #endif
 #endif
 	}
@@ -691,9 +581,7 @@ lSyncError:
 lCmdWrExit:
 	;
 
-#if !defined(__SIM__)
-	tusElapsed = tusStart - micros();
-#endif
+	tusElapsed = tusStart - MtdsHalTusElapsed();
 
 }
 
@@ -729,13 +617,9 @@ void MTDS::MtdsProcessCmdRd(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 	uint16_t	cbRem;
 	uint16_t	cbRead;
 	bool		fStat;
-#if !defined(__SIM__)
 	uint32_t	tusStart;
-#endif
 
-#if !defined(__SIM__)
-	tusStart = micros();
-#endif
+	tusStart = MtdsHalTusElapsed();
 
 	/* Send the command packet.
 	*/
@@ -743,7 +627,7 @@ void MTDS::MtdsProcessCmdRd(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 	cmdLastError = cmd;
 	staLastError = staCmdError;
 
-#if defined(__SIM__)
+#if defined(MPIDE)
 #if !defined(__MTDSTRACE__)
 	Serial.print("Cmd Rd: cls = ");
 	Serial.print(cls, HEX);
@@ -818,13 +702,9 @@ void MTDS::MtdsProcessCmdRd(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 		** means we are out of sync with the display device. To recover from the
 		** error, we attempt to resynchronize communications with the display.
 		*/
-#if !defined(__SIM__)
+#if defined(MPIDE)
 #if !defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-			Serial.println("!CmdRd: timeout");
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-		xil_printf("!CmdRd: timeout\r\n");
-#endif
+		Serial.println("!CmdRd: timeout");
 #endif
 #endif
 		goto lSyncError;
@@ -838,7 +718,7 @@ void MTDS::MtdsProcessCmdRd(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 		/* Error waiting for the shield to go to the done state. This means that we
 		** timed out waiting for a response from the shield.
 		*/
-#if !defined(__SIM__)
+#if defined(MPIDE)
 #if !defined(__MTDSTRACE__)
 		Serial.println("!CmdRd: shield done timeout");
 #endif
@@ -854,13 +734,9 @@ void MTDS::MtdsProcessCmdRd(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t 
 		** timed out waiting for the first byte of the status packet. We seem
 		** to be out of sync with the display device.
 		*/
-#if !defined(__SIM__)
+#if defined(MPIDE)
 #if !defined(__MTDSTRACE__)
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
 		Serial.println("!CmdRd: read status packet error");
-#elif defined(__MICROBLAZE__)||defined(__arm__)
-		xil_printf("!CmdRd: read status packet error\r\n");
-#endif
 #endif
 #endif
 		goto lSyncError;
@@ -890,9 +766,7 @@ lSyncError:
 lCmdRdExit:
 	;
 
-#if !defined(__SIM__)
-	tusElapsed = tusStart - micros();
-#endif
+	tusElapsed = tusStart - MtdsHalTusElapsed();
 
 }
 

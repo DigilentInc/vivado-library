@@ -187,21 +187,39 @@
 /* Drawing mode raster operations for use with line and text drawing.
 */
 #define	drwBlack				0		// 0
-#define	drwNotOrPen				1		// ~(P | D)
-#define	drwAndNotPen			2		// ~P & D
-#define	drwCopyNotPen			3		// ~P
-#define	drwAndPenNot			4		// P & ~D
-#define	drwNot					5		// ~D
-#define	drwXorPen				6		// P ^ D
-#define	drwNotAndPen			7		// ~(P & D)
-#define	drwAndPen				8		// P & D
-#define	drwNotXorPen			9		// ~(P ^ D)
-#define	drwNop					10		// D
-#define	drwOrNotPen				11		// ~P | D
-#define	drwCopyPen				12		// P
-#define	drwOrPenNot				13		// P | ~D
-#define	drwOrPen				14		// P | D
+#define	drwPenDstOrNot			1		// ~(P | D)
+#define	drwPenNotDstAnd			2		// ~P & D
+#define	drwPenNot				3		// ~P
+#define	drwPenDstNotAnd			4		// P & ~D
+#define	drwDstNot				5		// ~D
+#define	drwPenDstXor			6		// P ^ D
+#define	drwPenDstAndNot			7		// ~(P & D)
+#define	drwPenDstAnd			8		// P & D
+#define	drwPenDstXorNot			9		// ~(P ^ D)
+#define	drwDst					10		// D
+#define	drwPenNotDstOr			11		// ~P | D
+#define	drwPen					12		// P
+#define	drwPenDstNotOr			13		// P | ~D
+#define	drwPenDstOr				14		// P | D
 #define	drwWhite				15		// 1
+
+/* Synonyms for the above drwing mode raster operations. These are the names
+** used in Microsoft Windows.
+*/
+#define	drwNotOrPen				drwPenDstOrNot		// ~(P | D)
+#define	drwAndNotPen			drwPenNotDstAnd		// ~P & D
+#define	drwCopyNotPen			drwPenNot			// ~P
+#define	drwAndPenNot			drwPenDstNotAnd		// P & ~D
+#define	drwNot					drwDstNot			// ~D
+#define	drwXorPen				drwPenDstXor		// P ^ D
+#define	drwNotAndPen			drwPenDstAndNot		// ~(P & D)
+#define	drwAndPen				drwPenDstAnd		// P & D
+#define	drwNotXorPen			drwPenDstXorNot		// ~(P ^ D)
+#define	drwNop					drwDst				// D
+#define	drwOrNotPen				drwPenNotDstOr		// ~P | D
+#define	drwCopyPen				drwPen				// P
+#define	drwOrPenNot				drwPenDstNotOr		// P | ~D
+#define	drwOrPen				drwPenDstOr			// P | D
 
 /* Background drawing mode for line and text drawing.
 */
@@ -225,6 +243,8 @@
 
 /* Message system symbol declarations.
 */
+#define	msgUserFirst		0x8000
+
 /* Messages for touch events.
 */
 #define	msgFingerFirst		0x0010

@@ -22,7 +22,7 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)
+#if defined(__SIM__)|| defined (__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
 #endif
@@ -45,10 +45,6 @@
 extern CHDR *	pchdrMtdsCmd;
 extern RHDR *	prhdrMtdsRet;
 extern uint8_t	rgbMtdsRetVal[cbRetValInit+sizeof(RHDR)];
-
-extern int	pinMtdsSel;
-extern int	pinMtdsInt;
-extern bool	fMtdsUseInt;
 
 /* ------------------------------------------------------------ */
 /*				Local Variables									*/

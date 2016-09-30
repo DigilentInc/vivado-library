@@ -22,7 +22,7 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)
+#if defined(__SIM__) || defined (__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
 #endif
@@ -873,7 +873,11 @@ bool MTFS::RenameFile(char * szOld, char * szNew) {
 		return false;
 	}
 
-	/* Send the command packet to set the file name.
+	/* Send the command packet to set the old file file name. The command processing
+	** model only supports sending one data packet with to pass parameter information
+	** with a command, the SetFName command causes the old name to be stored
+	** temporarily on the display device until the rename command is sent with the
+	** new name.
 	*/
 	prm.valB1 = strlen(szOld)+1;
 	mtds.MtdsProcessCmdWr(clsCmdFs, cmdFsSetFname, sizeof(prm), (uint8_t *)&prm,
@@ -883,7 +887,7 @@ bool MTFS::RenameFile(char * szOld, char * szNew) {
 		return false;
 	}
 
-	/* Now send the command with the FINF structure for attrib to set.
+	/* Now send the command to rename the file along with the new name.
 	*/
 	prm.valB1 = strlen(szNew)+1;
 	mtds.MtdsProcessCmdWr(clsCmdFs, cmdFsRename, sizeof(prm), (uint8_t *)&prm,
@@ -1110,10 +1114,10 @@ int MTFS::Ferr(HFIL fh) {
 	/* Check for error and return failure.
 	*/
 	if (prhdrMtdsRet->sta != staCmdSuccess) {
-		/* Note: in the case that the command failed, we return true so that it
-		** looks line end of file.
+		/* Note: in the case that the command failed, we return -1, which is different
+		** than any error code.
 		*/
-		return false;
+		return -1;
 	}
 
 	/* Return the end of file status.

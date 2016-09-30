@@ -1,6 +1,6 @@
 /********************************************************************************/
 /*																				*/
-/*	MtdsUtil.h	--	Utility Support Functions for mtds.cpp						*/
+/*	MtdsCore.h	--	Low Level Support Functions for mtds.cpp					*/
 /*																				*/
 /********************************************************************************/
 /*	Author:		Gene Apperson													*/
@@ -16,38 +16,20 @@
 /*  Revision History:															*/
 /*																				*/
 /* 2015/08/03(GeneApperson): Created											*/
+/* 2016/10/05(GeneApperson): Renamed from MtdsUtil.h							*/
+/* 2016-09-27(GeneApperson): Moved all platform dependent declarations to the	*/
+/*		new file MtdsHal.h as part of the definition of a hardware abstraction	*/
+/*		layer to make the library more portable between platforms				*/
 /*																				*/
 /********************************************************************************/
 
-#if !defined(_MTDSUTIL_H_)
-#define	_MTDSUTIL_H_
+#if !defined(_MTDSCORE_H_)
+#define	_MTDSCORE_H_
 
-#if !defined(__SIM__)
 #if defined(MPIDE)
 #include	<WProgram.h>
 #include	<p32xxxx.h>
 #include	<p32_defs.h>
-#elif defined(__MICROBLAZE__) || defined(__arm__)
-#include "xparameters.h"
-#include "XTmrCtr.h"
-extern XTmrCtr Timer;
-int inline millis(){
-	return ((u64)XTmrCtr_GetValue(&Timer, 1)<<32|XTmrCtr_GetValue(&Timer,0))/(100000000/1000);
-}
-int inline micros(){
-	return ((u64)XTmrCtr_GetValue(&Timer, 1)<<32|XTmrCtr_GetValue(&Timer,0))/(100000000/1000000);
-}
-void inline delayMicroseconds(int microseconds){
-	int start=micros();
-	while(micros()-start<microseconds);
-}
-void inline delay(int milliseconds){
-	int start=millis();
-	while(millis()-start<milliseconds);
-}
-#else
-#include	<Arduino.h>
-#endif
 #endif
 
 #include <stdint.h>
@@ -57,7 +39,7 @@ void inline delay(int milliseconds){
 /* ------------------------------------------------------------ */
 
 #define	verMtdsMajor	1			// library major version number
-#define	verMtdsMinor	0			// library minor version number
+#define	verMtdsMinor	1			// library minor version number
 
 /* The cbSyncLimit value specifies the maximum number of bytes to send to the shield
 ** when attempting to synchronize the communications channel. The worst case would
@@ -87,21 +69,6 @@ void inline delay(int milliseconds){
 #define	cbDataOutMax	cbDhdrDataOutMax				// maximum payload of data out packet
 #define cbDataInMax		cbDhdrDataInMax					// maximum payload of data in packet
 #define	cbRetValInit	(sizeof(RHDR)+cbRhdrDataMax)	// size of status packet buffer
-
-#if defined(__SIM__)
-#define	StiEnableInterrupts()	0
-#define	StiDisableInterrupts()	0, HostDisableInt()
-#define	RestoreInterrupts(val)	HostRestoreInt()
-void	HostDisableInt();
-void	HostRestoreInt();
-#endif
-
-/* Symbols used for initializing and operating the SPI controller.
-*/
-#define SPI_MODE0 ((0 << _SPICON_CKP)|(1 << _SPICON_CKE))		// CKP = 0 CKE = 1
-#define SPI_MODE1 ((0 << _SPICON_CKP)|(0 << _SPICON_CKE))		// CKP = 0 CKE = 0
-#define SPI_MODE2 ((1 << _SPICON_CKP)|(1 << _SPICON_CKE))		// CKP = 1 CKE = 1 
-#define SPI_MODE3 ((1 << _SPICON_CKP)|(0 << _SPICON_CKE))		// CKP = 1 CKE = 0
 
 /* ------------------------------------------------------------ */
 /*					General Type Declarations					*/
@@ -143,7 +110,6 @@ struct DHDR {
 ** These structure are ovelaid on the command buffer to allow easy
 ** access to the parameters.
 */
-// M00TODO Pack parameter structure definitions
 /* Up to four 32 bit values.
 */
 #pragma pack(push, 1)
@@ -428,10 +394,6 @@ struct RET6B {
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-void	MtdsInitPins(int pinSel);
-void	MtdsInitSpi(uint32_t pspiInit, uint32_t frq);
-void	MtdsEnableStatusPin(int idPin);
-
 void	MtdsSendCmdPacket(uint8_t cls, uint8_t cmd, uint16_t cbParam, uint8_t * pbParam);
 void	MtdsSendDataPacket(uint8_t cmd, uint16_t cb, uint8_t * pb);
 bool	MtdsReadStatusPacket();
@@ -449,13 +411,8 @@ bool	MtdsResumeChannel();
 uint8_t	MtdsBeginUpdate();
 uint8_t	MtdsQueryUpdate();
 
-bool		FMtdsSpiReady();
-void		MtdsEnableSlave(bool fEn);
-uint8_t		MtdsPutSpiByte(uint8_t bSnd);
-uint16_t	MtdsComputeBrg(uint32_t spd);
-
 /* ------------------------------------------------------------ */
 
-#endif	// _MTDSUTIL_H_
+#endif	// _MTDSCORE_H_
 
 /********************************************************************************/

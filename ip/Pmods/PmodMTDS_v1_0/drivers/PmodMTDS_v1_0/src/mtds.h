@@ -21,45 +21,12 @@
 
 #include	<stdint.h>
 #include	"MtdsDefs.h"
+#include	"MtdsHal.h"
 
 /* ------------------------------------------------------------ */
 /*					Miscellaneous Declarations					*/
 /* ------------------------------------------------------------ */
 
-/* Define digital pin numbers used by the hardware interface.
-** The "standard" CS pin is taken from the symbol SS defined in the board variant
-** header file for the selected board. This corresponds to the CS pin for the "default"
-** SPI port, which is the one used by the standard SPI library.
-** The "alternate" CS pin is supported on the Multi-Touch Display Shield when the CS
-** select jumper is in the "alt" position. There is no alt CS pin on the PmodMTDS.
-*/
-#if !defined(__SIM__)
-//#define	pinMtdsSelStd		SS		// standard SPI SS pin
-#define	pinMtdsSelStd		0	// standard SPI SS pin
-#define	pinMtdsSelAlt		8				// alternate SPI SS pin
-#else
-#define	pinMtdsSelStd		10				// standard SPI SS pin
-#define	pinMtdsSelAlt		8				// alternate SPI SS pin
-#endif
-
-/* Pins available to be used for status between shield and host.
-** These pins are labeled HOST_INTA and HOST_INTB on the Multi-Touch Display Shield
-** schematic, but are not actually used as interrupt pins. They are available as general
-** purpose status pins between the host and the shield. Their use is not required by the
-** shield firmware or the MTDS library.
-*/
-#define	pinMtdsIntA			7		// touch panel message status pin
-#define	pinMtdsIntB			3		// shield ready status pin
-
-/* Default SPI clock frequency
-*/
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-#define	frqMtdsSpiDefault	3500000
-#elif defined(__AVR__)
-#define	frqMtdsSpiDefault	4000000
-#else
-#define	frqMtdsSpiDefault	4000000
-#endif
 /* Define types of object handles used by the system.
 */
 #define	mskHandleSig		0xFF000000		// mask to extract handle signature
@@ -134,7 +101,6 @@ public:
 	/* General control and status functions.
 	*/
 	bool		FInitialized()			{ return fInitialized; };
-	void		ResetDisplay(int pinSel);
 	bool		FInitDisplay();
 	bool		GetVersionInfo(VINFO * pvinfo);
 	uint8_t		GetLastError()			{ return staLastError; };

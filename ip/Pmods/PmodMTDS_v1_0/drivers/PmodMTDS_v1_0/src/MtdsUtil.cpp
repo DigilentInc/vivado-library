@@ -22,7 +22,7 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)
+#if defined(__SIM__)||defined (__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
 #endif
@@ -32,6 +32,7 @@
 #include	"ProtoDefs.h"
 #include	"mtds.h"
 #include	"MtdsCore.h"
+#include	"MtdsHal.h"
 
 /* ------------------------------------------------------------ */
 /*				Local Type Definitions							*/
@@ -45,8 +46,6 @@
 extern CHDR *	pchdrMtdsCmd;
 extern RHDR *	prhdrMtdsRet;
 extern uint8_t	rgbMtdsRetVal[cbRetValInit];
-
-extern int	pinMtdsSel;
 
 /* ------------------------------------------------------------ */
 /*				Local Variables									*/
@@ -479,7 +478,7 @@ bool MTDS::EnableStatusPin(int idPin, int fEn) {
 	/* If we are enabling the pin, ensure the pin on the host side is an input.
 	*/
 	if (fEn) {
-		MtdsEnableStatusPin(idPin);
+		MtdsHalEnableStatusPin(idPin);
 	}
 
 	/* Send the command packet.

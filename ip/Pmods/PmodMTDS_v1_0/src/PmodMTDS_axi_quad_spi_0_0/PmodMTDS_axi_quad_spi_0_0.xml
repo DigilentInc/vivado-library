@@ -4332,7 +4332,7 @@ This bit has no significance in dual or quad mode.
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_SCK_RATIO</spirit:name>
         <spirit:displayName>SCK Ratio</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_SCK_RATIO">8</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_SCK_RATIO">16</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_NUM_SS_BITS</spirit:name>
@@ -4553,7 +4553,7 @@ This bit has no significance in dual or quad mode.
       <spirit:name>C_SCK_RATIO</spirit:name>
       <spirit:displayName>SCK Ratio</spirit:displayName>
       <spirit:description>This parameter should be set while choosing the division ratio for SPI clock. Please refer PG for more reference. Standard SPI mode has variable values for division ratio for SPI clock, while Dual and Quad mode allows only 2. XIP mode also allows division ratio of 2.</spirit:description>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_SCK_RATIO" spirit:choiceRef="choice_list_552a89ba" spirit:order="90">8</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_SCK_RATIO" spirit:choiceRef="choice_list_552a89ba" spirit:order="90">16</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>

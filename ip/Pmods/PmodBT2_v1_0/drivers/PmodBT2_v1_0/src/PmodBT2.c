@@ -1,6 +1,6 @@
 /************************************************************************/
-/*	Author:		Mikel Skreen											*/												*/
-/*	Copyright 2016, Digilent Inc.										*/										*/
+/*	Author:		Mikel Skreen											*/
+/*	Copyright 2016, Digilent Inc.										*/
 /************************************************************************/
 /*
   This library is free software; you can redistribute it and/or
@@ -18,11 +18,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /************************************************************************/
-/*  File Description:													*/													*/
-/*																		*/																	*/
+/*  File Description:													*/
+/*																		*/
 /*	This file contains the necessary functions in order to operate the 	*/
-/*	Pmod BT2 using simple reads and writes. 							*/														*/
-/*																		*/																	*/
+/*	Pmod BT2 using simple reads and writes. 							*/
+/*																		*/
 /************************************************************************/
 /*  Revision History:																										*/
 /*																																			*/
@@ -30,12 +30,12 @@
 /*																																			*/
 /************************************************************************/
 
-/***************************** Include Files *******************************/
+/***************************** Include Files *****************************/
 #include "PmodBT2.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-/************************** Function Definitions ***************************/
+/************************** Function Definitions *************************/
 XUartNs550_Config BT2_Config =
 {
 		0,

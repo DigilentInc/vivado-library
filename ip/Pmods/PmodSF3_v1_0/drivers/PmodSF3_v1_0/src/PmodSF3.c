@@ -22,7 +22,7 @@ XSpi_Config XSpi_SF3Config = {
 		1,
 		0,
 		1,
-		8,
+		8, 
 		2,
 		0,
 		0,

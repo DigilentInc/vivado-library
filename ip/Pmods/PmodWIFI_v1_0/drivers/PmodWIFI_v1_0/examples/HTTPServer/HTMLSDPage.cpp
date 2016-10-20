@@ -47,7 +47,7 @@
 #include    "HTTPServer.h"
 #ifdef __MICROBLAZE__
 #include    "DXSPISDVOL.h" //If an error occurs, you need to add a PmodSD IP block to your design
-DXSPISDVOL dSDVol(XPAR_AXI_QUAD_SPI_0_BASEADDR, XPAR_AXI_GPIO_SDCS_BASEADDR);
+DXSPISDVOL dSDVol(XPAR_PMODSD_0_AXI_LITE_SPI_BASEADDR, XPAR_PMODSD_0_AXI_LITE_SDCS_BASEADDR);
 DFILE       dFile;              // Create a File handle to use to open files with
 #else
 #include "SD/DSDIOVOL.h"

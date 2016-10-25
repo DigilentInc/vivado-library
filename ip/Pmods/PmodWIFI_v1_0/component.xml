@@ -1364,7 +1364,7 @@
       <spirit:description>{SEG_axi_quad_spi_0_Reg;/axi_quad_spi_0/AXI_LITE/Reg;0x0000;64K;xilinx.com:ip:axi_quad_spi:3.2;register}</spirit:description>
       <spirit:addressBlock>
         <spirit:name>Reg0</spirit:name>
-        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0x0000</spirit:baseAddress>
+        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0</spirit:baseAddress>
         <spirit:range spirit:format="bitString">0x00010000</spirit:range>
         <spirit:width spirit:format="long">32</spirit:width>
         <spirit:usage>register</spirit:usage>
@@ -1385,7 +1385,7 @@
       <spirit:description>{SEG_axi_gpio_cs_Reg;/axi_gpio_cs/S_AXI/Reg;0x000;4K;xilinx.com:ip:axi_gpio:2.0;register}</spirit:description>
       <spirit:addressBlock>
         <spirit:name>Reg0</spirit:name>
-        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0x000</spirit:baseAddress>
+        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0</spirit:baseAddress>
         <spirit:range spirit:format="bitString">0x00001000</spirit:range>
         <spirit:width spirit:format="long">32</spirit:width>
         <spirit:usage>register</spirit:usage>
@@ -1406,7 +1406,7 @@
       <spirit:description>{SEG_axi_gpio_wf_Reg;/axi_gpio_wf/S_AXI/Reg;0x000;4K;xilinx.com:ip:axi_gpio:2.0;register}</spirit:description>
       <spirit:addressBlock>
         <spirit:name>Reg0</spirit:name>
-        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0x000</spirit:baseAddress>
+        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0</spirit:baseAddress>
         <spirit:range spirit:format="bitString">0x00001000</spirit:range>
         <spirit:width spirit:format="long">32</spirit:width>
         <spirit:usage>register</spirit:usage>
@@ -1427,7 +1427,7 @@
       <spirit:description>{SEG_axi_timer_0_Reg;/axi_timer_0/S_AXI/Reg;0x0000;64K;xilinx.com:ip:axi_timer:2.0;register}</spirit:description>
       <spirit:addressBlock>
         <spirit:name>Reg0</spirit:name>
-        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0x0000</spirit:baseAddress>
+        <spirit:baseAddress spirit:format="bitString" spirit:resolve="generated">0</spirit:baseAddress>
         <spirit:range spirit:format="bitString">0x00010000</spirit:range>
         <spirit:width spirit:format="long">32</spirit:width>
         <spirit:usage>register</spirit:usage>

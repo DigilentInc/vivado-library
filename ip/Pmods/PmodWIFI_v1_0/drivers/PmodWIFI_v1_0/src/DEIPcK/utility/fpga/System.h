@@ -71,7 +71,7 @@
 #define GetSystemClock()        (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ)
 #else
 #define GetSystemClock()        (XPAR_CPU_CORE_CLOCK_FREQ_HZ)
-#include "../../MRF24G/utility/ud_inc/shared/wf_stubs.h"
+#include "MRF24G/utility/ud_inc/shared/wf_stubs.h"
 #endif
 
 

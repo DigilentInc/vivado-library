@@ -85,10 +85,23 @@ module PmodMTDS
     Pmod_out_pin9_i,
     Pmod_out_pin9_o,
     Pmod_out_pin9_t,
+    SPI_SS_I,
+    SPI_SS_O,
+    SPI_SS_T,
+    SPI_IO0_I,
+    SPI_IO0_O,
+    SPI_IO0_T,
+    SPI_IO1_I,
+    SPI_IO1_O,
+    SPI_IO1_T,
+    SPI_CLK_I,
+    SPI_CLK_O,
+    SPI_CLK_T,
     SPI_Interrupt,
     GPIO_Interrupt,
     s_axi_aclk,
     s_axi_aresetn);
+    parameter Interface = "SPI";
   input [8:0]AXI_LITE_GPIO_araddr;
   output AXI_LITE_GPIO_arready;
   input AXI_LITE_GPIO_arvalid;
@@ -164,6 +177,18 @@ module PmodMTDS
   input Pmod_out_pin9_i;
   output Pmod_out_pin9_o;
   output Pmod_out_pin9_t;
+  input SPI_SS_I;
+  output SPI_SS_O;
+  output SPI_SS_T;
+  input SPI_IO0_I;
+  output SPI_IO0_O;
+  output SPI_IO0_T;
+  input SPI_IO1_I;
+  output SPI_IO1_O;
+  output SPI_IO1_T;
+  input SPI_CLK_I;
+  output SPI_CLK_O;
+  output SPI_CLK_T;
   output SPI_Interrupt;
   output GPIO_Interrupt;
   input s_axi_aclk;
@@ -308,22 +333,7 @@ module PmodMTDS
   assign AXI_LITE_TIMER_rresp[1:0] = AXI_LITE_2_RRESP;
   assign AXI_LITE_TIMER_rvalid = AXI_LITE_2_RVALID;
   assign AXI_LITE_TIMER_wready = AXI_LITE_2_WREADY;
-  assign Pmod_out_pin10_o = pmod_bridge_0_Pmod_out_PIN10_O;
-  assign Pmod_out_pin10_t = pmod_bridge_0_Pmod_out_PIN10_T;
-  assign Pmod_out_pin1_o = pmod_bridge_0_Pmod_out_PIN1_O;
-  assign Pmod_out_pin1_t = pmod_bridge_0_Pmod_out_PIN1_T;
-  assign Pmod_out_pin2_o = pmod_bridge_0_Pmod_out_PIN2_O;
-  assign Pmod_out_pin2_t = pmod_bridge_0_Pmod_out_PIN2_T;
-  assign Pmod_out_pin3_o = pmod_bridge_0_Pmod_out_PIN3_O;
-  assign Pmod_out_pin3_t = pmod_bridge_0_Pmod_out_PIN3_T;
-  assign Pmod_out_pin4_o = pmod_bridge_0_Pmod_out_PIN4_O;
-  assign Pmod_out_pin4_t = pmod_bridge_0_Pmod_out_PIN4_T;
-  assign Pmod_out_pin7_o = pmod_bridge_0_Pmod_out_PIN7_O;
-  assign Pmod_out_pin7_t = pmod_bridge_0_Pmod_out_PIN7_T;
-  assign Pmod_out_pin8_o = pmod_bridge_0_Pmod_out_PIN8_O;
-  assign Pmod_out_pin8_t = pmod_bridge_0_Pmod_out_PIN8_T;
-  assign Pmod_out_pin9_o = pmod_bridge_0_Pmod_out_PIN9_O;
-  assign Pmod_out_pin9_t = pmod_bridge_0_Pmod_out_PIN9_T;
+
   assign S_AXI_1_ARADDR = AXI_LITE_GPIO_araddr[8:0];
   assign S_AXI_1_ARVALID = AXI_LITE_GPIO_arvalid;
   assign S_AXI_1_AWADDR = AXI_LITE_GPIO_awaddr[8:0];
@@ -334,14 +344,7 @@ module PmodMTDS
   assign S_AXI_1_WSTRB = AXI_LITE_GPIO_wstrb[3:0];
   assign S_AXI_1_WVALID = AXI_LITE_GPIO_wvalid;
   assign ext_spi_clk_1 = s_axi_aclk;
-  assign pmod_bridge_0_Pmod_out_PIN10_I = Pmod_out_pin10_i;
-  assign pmod_bridge_0_Pmod_out_PIN1_I = Pmod_out_pin1_i;
-  assign pmod_bridge_0_Pmod_out_PIN2_I = Pmod_out_pin2_i;
-  assign pmod_bridge_0_Pmod_out_PIN3_I = Pmod_out_pin3_i;
-  assign pmod_bridge_0_Pmod_out_PIN4_I = Pmod_out_pin4_i;
-  assign pmod_bridge_0_Pmod_out_PIN7_I = Pmod_out_pin7_i;
-  assign pmod_bridge_0_Pmod_out_PIN8_I = Pmod_out_pin8_i;
-  assign pmod_bridge_0_Pmod_out_PIN9_I = Pmod_out_pin9_i;
+
   assign SPI_Interrupt = SPI_Interrupt_1;
   assign GPIO_Interrupt = GPIO_Interrupt_1;
   assign s_axi_aclk_1 = s_axi_aclk;
@@ -407,47 +410,132 @@ module PmodMTDS
         .ss_o(0'b1),
         .ss_t(0'b1),
         .ip2intc_irpt(SPI_Interrupt_1));
-  PmodMTDS_pmod_bridge_0_0 pmod_bridge_0
-       (.in0_I(axi_gpio_0_GPIO_TRI_I[4]),
-        .in0_O(axi_gpio_0_GPIO_TRI_O[4]),
-        .in0_T(axi_gpio_0_GPIO_TRI_T[4]),
-        .in1_I(axi_quad_spi_0_SPI_0_IO0_I),
-        .in1_O(axi_quad_spi_0_SPI_0_IO0_O),
-        .in1_T(axi_quad_spi_0_SPI_0_IO0_T),
-        .in2_I(axi_quad_spi_0_SPI_0_IO1_I),
-        .in2_O(axi_quad_spi_0_SPI_0_IO1_O),
-        .in2_T(axi_quad_spi_0_SPI_0_IO1_T),
-        .in3_I(axi_quad_spi_0_SPI_0_SCK_I),
-        .in3_O(axi_quad_spi_0_SPI_0_SCK_O),
-        .in3_T(axi_quad_spi_0_SPI_0_SCK_T),
-        .in_bottom_bus_I(axi_gpio_0_GPIO_TRI_I[3:0]),
-        .in_bottom_bus_O(axi_gpio_0_GPIO_TRI_O[3:0]),
-        .in_bottom_bus_T(axi_gpio_0_GPIO_TRI_T[3:0]),
-        .out0_I(pmod_bridge_0_Pmod_out_PIN1_I),
-        .out0_O(pmod_bridge_0_Pmod_out_PIN1_O),
-        .out0_T(pmod_bridge_0_Pmod_out_PIN1_T),
-        .out1_I(pmod_bridge_0_Pmod_out_PIN2_I),
-        .out1_O(pmod_bridge_0_Pmod_out_PIN2_O),
-        .out1_T(pmod_bridge_0_Pmod_out_PIN2_T),
-        .out2_I(pmod_bridge_0_Pmod_out_PIN3_I),
-        .out2_O(pmod_bridge_0_Pmod_out_PIN3_O),
-        .out2_T(pmod_bridge_0_Pmod_out_PIN3_T),
-        .out3_I(pmod_bridge_0_Pmod_out_PIN4_I),
-        .out3_O(pmod_bridge_0_Pmod_out_PIN4_O),
-        .out3_T(pmod_bridge_0_Pmod_out_PIN4_T),
-        .out4_I(pmod_bridge_0_Pmod_out_PIN7_I),
-        .out4_O(pmod_bridge_0_Pmod_out_PIN7_O),
-        .out4_T(pmod_bridge_0_Pmod_out_PIN7_T),
-        .out5_I(pmod_bridge_0_Pmod_out_PIN8_I),
-        .out5_O(pmod_bridge_0_Pmod_out_PIN8_O),
-        .out5_T(pmod_bridge_0_Pmod_out_PIN8_T),
-        .out6_I(pmod_bridge_0_Pmod_out_PIN9_I),
-        .out6_O(pmod_bridge_0_Pmod_out_PIN9_O),
-        .out6_T(pmod_bridge_0_Pmod_out_PIN9_T),
-        .out7_I(pmod_bridge_0_Pmod_out_PIN10_I),
-        .out7_O(pmod_bridge_0_Pmod_out_PIN10_O),
-        .out7_T(pmod_bridge_0_Pmod_out_PIN10_T));
         
+
+generate
+    case(Interface)    
+    "PMOD":begin
+	    PmodMTDS_pmod_bridge_0_0 pmod_bridge_0
+		   (.in0_I(axi_gpio_0_GPIO_TRI_I[4]),
+			.in0_O(axi_gpio_0_GPIO_TRI_O[4]),
+			.in0_T(axi_gpio_0_GPIO_TRI_T[4]),
+			.in1_I(axi_quad_spi_0_SPI_0_IO0_I),
+			.in1_O(axi_quad_spi_0_SPI_0_IO0_O),
+			.in1_T(axi_quad_spi_0_SPI_0_IO0_T),
+			.in2_I(axi_quad_spi_0_SPI_0_IO1_I),
+			.in2_O(axi_quad_spi_0_SPI_0_IO1_O),
+			.in2_T(axi_quad_spi_0_SPI_0_IO1_T),
+			.in3_I(axi_quad_spi_0_SPI_0_SCK_I),
+			.in3_O(axi_quad_spi_0_SPI_0_SCK_O),
+			.in3_T(axi_quad_spi_0_SPI_0_SCK_T),
+			.in_bottom_bus_I(axi_gpio_0_GPIO_TRI_I[3:0]),
+			.in_bottom_bus_O(axi_gpio_0_GPIO_TRI_O[3:0]),
+			.in_bottom_bus_T(axi_gpio_0_GPIO_TRI_T[3:0]),
+			.out0_I(pmod_bridge_0_Pmod_out_PIN1_I),
+			.out0_O(pmod_bridge_0_Pmod_out_PIN1_O),
+			.out0_T(pmod_bridge_0_Pmod_out_PIN1_T),
+			.out1_I(pmod_bridge_0_Pmod_out_PIN2_I),
+			.out1_O(pmod_bridge_0_Pmod_out_PIN2_O),
+			.out1_T(pmod_bridge_0_Pmod_out_PIN2_T),
+			.out2_I(pmod_bridge_0_Pmod_out_PIN3_I),
+			.out2_O(pmod_bridge_0_Pmod_out_PIN3_O),
+			.out2_T(pmod_bridge_0_Pmod_out_PIN3_T),
+			.out3_I(pmod_bridge_0_Pmod_out_PIN4_I),
+			.out3_O(pmod_bridge_0_Pmod_out_PIN4_O),
+			.out3_T(pmod_bridge_0_Pmod_out_PIN4_T),
+			.out4_I(pmod_bridge_0_Pmod_out_PIN7_I),
+			.out4_O(pmod_bridge_0_Pmod_out_PIN7_O),
+			.out4_T(pmod_bridge_0_Pmod_out_PIN7_T),
+			.out5_I(pmod_bridge_0_Pmod_out_PIN8_I),
+			.out5_O(pmod_bridge_0_Pmod_out_PIN8_O),
+			.out5_T(pmod_bridge_0_Pmod_out_PIN8_T),
+			.out6_I(pmod_bridge_0_Pmod_out_PIN9_I),
+			.out6_O(pmod_bridge_0_Pmod_out_PIN9_O),
+			.out6_T(pmod_bridge_0_Pmod_out_PIN9_T),
+			.out7_I(pmod_bridge_0_Pmod_out_PIN10_I),
+			.out7_O(pmod_bridge_0_Pmod_out_PIN10_O),
+			.out7_T(pmod_bridge_0_Pmod_out_PIN10_T));
+        assign pmod_bridge_0_Pmod_out_PIN10_I = Pmod_out_pin10_i;
+        assign pmod_bridge_0_Pmod_out_PIN1_I = Pmod_out_pin1_i;
+        assign pmod_bridge_0_Pmod_out_PIN2_I = Pmod_out_pin2_i;
+        assign pmod_bridge_0_Pmod_out_PIN3_I = Pmod_out_pin3_i;
+        assign pmod_bridge_0_Pmod_out_PIN4_I = Pmod_out_pin4_i;
+        assign pmod_bridge_0_Pmod_out_PIN7_I = Pmod_out_pin7_i;
+        assign pmod_bridge_0_Pmod_out_PIN8_I = Pmod_out_pin8_i;
+        assign pmod_bridge_0_Pmod_out_PIN9_I = Pmod_out_pin9_i;
+        assign Pmod_out_pin10_o = pmod_bridge_0_Pmod_out_PIN10_O;
+        assign Pmod_out_pin10_t = pmod_bridge_0_Pmod_out_PIN10_T;
+        assign Pmod_out_pin1_o = pmod_bridge_0_Pmod_out_PIN1_O;
+        assign Pmod_out_pin1_t = pmod_bridge_0_Pmod_out_PIN1_T;
+        assign Pmod_out_pin2_o = pmod_bridge_0_Pmod_out_PIN2_O;
+        assign Pmod_out_pin2_t = pmod_bridge_0_Pmod_out_PIN2_T;
+        assign Pmod_out_pin3_o = pmod_bridge_0_Pmod_out_PIN3_O;
+        assign Pmod_out_pin3_t = pmod_bridge_0_Pmod_out_PIN3_T;
+        assign Pmod_out_pin4_o = pmod_bridge_0_Pmod_out_PIN4_O;
+        assign Pmod_out_pin4_t = pmod_bridge_0_Pmod_out_PIN4_T;
+        assign Pmod_out_pin7_o = pmod_bridge_0_Pmod_out_PIN7_O;
+        assign Pmod_out_pin7_t = pmod_bridge_0_Pmod_out_PIN7_T;
+        assign Pmod_out_pin8_o = pmod_bridge_0_Pmod_out_PIN8_O;
+        assign Pmod_out_pin8_t = pmod_bridge_0_Pmod_out_PIN8_T;
+        assign Pmod_out_pin9_o = pmod_bridge_0_Pmod_out_PIN9_O;
+        assign Pmod_out_pin9_t = pmod_bridge_0_Pmod_out_PIN9_T;
+     end
+     "SPI":begin
+        assign axi_quad_spi_0_SPI_0_IO0_I=SPI_IO0_I;
+        assign SPI_IO0_O=axi_quad_spi_0_SPI_0_IO0_O;
+        assign SPI_IO0_T=axi_quad_spi_0_SPI_0_IO0_T;
+        assign axi_quad_spi_0_SPI_0_IO1_I=SPI_IO1_I;
+        assign SPI_IO1_O=axi_quad_spi_0_SPI_0_IO1_O;
+        assign SPI_IO1_T=axi_quad_spi_0_SPI_0_IO1_T;
+        assign axi_quad_spi_0_SPI_0_SCK_I=SPI_CLK_I;
+        assign SPI_CLK_O=axi_quad_spi_0_SPI_0_SCK_O;
+        assign SPI_CLK_T=axi_quad_spi_0_SPI_0_SCK_T;
+        assign axi_gpio_0_GPIO_TRI_I[4]=SPI_SS_I;
+        assign SPI_SS_O=axi_gpio_0_GPIO_TRI_O[4];
+        assign SPI_SS_T=axi_gpio_0_GPIO_TRI_T[4];
+		PmodMTDS_pmod_bridge_0_0 pmod_bridge_0
+		   (.in0_I(),
+			.in0_O(),
+			.in0_T(),
+			.in1_I(),
+			.in1_O(),
+			.in1_T(),
+			.in2_I(),
+			.in2_O(),
+			.in2_T(),
+			.in3_I(),
+			.in3_O(),
+			.in3_T(),
+			.in_bottom_bus_I(axi_gpio_0_GPIO_TRI_I[3:0]),
+			.in_bottom_bus_O(axi_gpio_0_GPIO_TRI_O[3:0]),
+			.in_bottom_bus_T(axi_gpio_0_GPIO_TRI_T[3:0]),
+			.out0_I(pmod_bridge_0_Pmod_out_PIN1_I),
+			.out0_O(pmod_bridge_0_Pmod_out_PIN1_O),
+			.out0_T(pmod_bridge_0_Pmod_out_PIN1_T),
+			.out1_I(pmod_bridge_0_Pmod_out_PIN2_I),
+			.out1_O(pmod_bridge_0_Pmod_out_PIN2_O),
+			.out1_T(pmod_bridge_0_Pmod_out_PIN2_T),
+			.out2_I(pmod_bridge_0_Pmod_out_PIN3_I),
+			.out2_O(pmod_bridge_0_Pmod_out_PIN3_O),
+			.out2_T(pmod_bridge_0_Pmod_out_PIN3_T),
+			.out3_I(pmod_bridge_0_Pmod_out_PIN4_I),
+			.out3_O(pmod_bridge_0_Pmod_out_PIN4_O),
+			.out3_T(pmod_bridge_0_Pmod_out_PIN4_T),
+			.out4_I(pmod_bridge_0_Pmod_out_PIN7_I),
+			.out4_O(pmod_bridge_0_Pmod_out_PIN7_O),
+			.out4_T(pmod_bridge_0_Pmod_out_PIN7_T),
+			.out5_I(pmod_bridge_0_Pmod_out_PIN8_I),
+			.out5_O(pmod_bridge_0_Pmod_out_PIN8_O),
+			.out5_T(pmod_bridge_0_Pmod_out_PIN8_T),
+			.out6_I(pmod_bridge_0_Pmod_out_PIN9_I),
+			.out6_O(pmod_bridge_0_Pmod_out_PIN9_O),
+			.out6_T(pmod_bridge_0_Pmod_out_PIN9_T),
+			.out7_I(pmod_bridge_0_Pmod_out_PIN10_I),
+			.out7_O(pmod_bridge_0_Pmod_out_PIN10_O),
+			.out7_T(pmod_bridge_0_Pmod_out_PIN10_T));
+     end
+    endcase
+ endgenerate
     axi_timer_0 axi_timer_0
        (.capturetrig0(),
         .capturetrig1(),

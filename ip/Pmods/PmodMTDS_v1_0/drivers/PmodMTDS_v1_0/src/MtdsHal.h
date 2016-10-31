@@ -53,7 +53,7 @@
 
 #elif defined(__MICROBLAZE__)
 #include "xparameters.h"
-#include "XTmrCtr.h"
+#include "xtmrctr.h"
 extern XTmrCtr Timer;
 static uint32_t mic_delta;
 static uint32_t mil_delta;

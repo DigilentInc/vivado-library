@@ -86,7 +86,7 @@ struct MDBTN {
 	HBMP		hbmpDn;			// bitmap to draw button in down (touched) state
 	HBMP		hbmpBg;			// bitmap for button background used to erase button
 	RCT			rct;			// button region on the display
-	uint16_t	clrTrans;		// background transparency color to use
+	uint32_t	clrTrans;		// background transparency color to use
 	uint16_t	sclPix;			// pixel brightness to use
 	int16_t		dxco;			// bitmap width
 	int16_t		dyco;			// bitmap height
@@ -120,7 +120,7 @@ public:
 	/* Setup and status functions.
 	*/
 	bool		displayOn(bool fEn)				{ return mtds.SetDisplayEnable(fEn ? 1 : 0); };
-	bool		clearDisplay(uint16_t clr)		{ return mtds.ClearDisplay(clr); };
+	bool		clearDisplay(uint32_t clr)		{ return mtds.ClearDisplay(clr); };
 	bool		setBacklight(int val)			{ return mtds.SetDisplayBacklight((uint32_t)val); };
 	HDS			displayHds()					{ return hdsDisp; };
 	bool		setPen(uint16_t pen);

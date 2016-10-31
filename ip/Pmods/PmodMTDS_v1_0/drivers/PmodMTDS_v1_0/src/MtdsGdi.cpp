@@ -22,10 +22,8 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)|| defined (__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
-#endif
 
 #include	<stdint.h>
 
@@ -2276,7 +2274,7 @@ bool MTDS::DrawBitmap(HDS hdsDst, int16_t xcoDst, int16_t ycoDst, int16_t dxco, 
 **		rendered.
 */
 
-bool MTDS::GetTextExtent(HDS hds, int cchText, uint8_t * rgchText, PNT * ppnt) {
+bool MTDS::GetTextExtent(HDS hds, int cchText, char * rgchText, PNT * ppnt) {
 	RET4B *	pret = (RET4B *)&rgbMtdsRetVal[sizeof(RHDR)];
 	PRM1A1B prm;
 
@@ -2287,7 +2285,7 @@ bool MTDS::GetTextExtent(HDS hds, int cchText, uint8_t * rgchText, PNT * ppnt) {
 	prm.valB1 = cchText;
 
 	MtdsProcessCmdWr(clsCmdGdi, cmdGdiGetTextExtent, sizeof(prm), (uint8_t *)&prm,
-						cchText, rgchText);
+						cchText, (uint8_t *)rgchText);
 
 	/* Check for error and return failure.
 	*/
@@ -2324,9 +2322,9 @@ bool MTDS::GetTextExtent(HDS hds, int cchText, uint8_t * rgchText, PNT * ppnt) {
 **		multi-line strings to be drawn.
 */
 
-bool MTDS::TextOut(HDS hds, uint8_t * szText) {
+bool MTDS::TextOut(HDS hds, char * szText) {
 
-	return TextOut(hds, strlen((char *)szText), szText);
+	return TextOut(hds, strlen(szText), szText);
 
 }
 
@@ -2353,7 +2351,7 @@ bool MTDS::TextOut(HDS hds, uint8_t * szText) {
 **		multi-line strings to be drawn.
 */
 
-bool MTDS::TextOut(HDS hds, int cchText, uint8_t * rgchText) {
+bool MTDS::TextOut(HDS hds, int cchText, char * rgchText) {
 	PRM1A1B prm;
 
 	/* Send the command packet.
@@ -2363,7 +2361,7 @@ bool MTDS::TextOut(HDS hds, int cchText, uint8_t * rgchText) {
 	prm.valB1 = cchText;
 
 	MtdsProcessCmdWr(clsCmdGdi, cmdGdiTextOutCch, sizeof(prm), (uint8_t *)&prm,
-						cchText, rgchText);
+						cchText, (uint8_t *)rgchText);
 
 	/* Check for error and return failure.
 	*/
@@ -2398,7 +2396,7 @@ bool MTDS::TextOut(HDS hds, int cchText, uint8_t * rgchText) {
 **		characters. If they are defined by the font, they will be rendered.
 */
 
-bool MTDS::TextOut(HDS hds, int16_t xco, int16_t yco, int cchText, uint8_t * rgchText) {
+bool MTDS::TextOut(HDS hds, int16_t xco, int16_t yco, int cchText, char * rgchText) {
 	PRM1A3B prm;
 
 	/* Send the command packet.
@@ -2410,7 +2408,7 @@ bool MTDS::TextOut(HDS hds, int16_t xco, int16_t yco, int cchText, uint8_t * rgc
 	prm.valB3 = cchText;
 
 	MtdsProcessCmdWr(clsCmdGdi, cmdGdiTextOutXcoYco, sizeof(prm), (uint8_t *)&prm,
-						cchText, rgchText);
+						cchText, (uint8_t *)rgchText);
 
 	/* Check for error and return failure.
 	*/

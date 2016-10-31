@@ -30,13 +30,6 @@
 #include	<stdlib.h>
 #include	<string.h>
 #else
-#if defined(MPIDE)
-#include	<WProgram.h>
-#elif defined(__MICROBLAZE__)
-#include "xparameters.h"
-#else
-#include	<Arduino.h>
-#endif
 #endif
 
 #include	<stdint.h>
@@ -558,7 +551,7 @@ bool MYDISP::drawText(char * txt, int x, int y) {
 	int		cch;
 
 	cch = strlen(txt);
-	return mtds.TextOut(hdsDisp, (int16_t)x, (int16_t)y, cch, (uint8_t *)txt);
+	return mtds.TextOut(hdsDisp, (int16_t)x, (int16_t)y, cch, txt);
 
 }
 

@@ -208,10 +208,10 @@ public:
 	bool		RoundRect(HDS hds, int16_t xcoLeft, int16_t ycoTop, int16_t xcoRight, int16_t ycoBottom,
 							int16_t dxcoWidth, int16_t dycoHeight);
 
-	bool		TextOut(HDS hds, uint8_t * szText);
-	bool		TextOut(HDS hds, int cchText, uint8_t * rgchText);
-	bool		TextOut(HDS hds, int16_t xco, int16_t yco, int cchText, uint8_t * rgchText);
-	bool		GetTextExtent(HDS hds, int cchText, uint8_t * rgchText, PNT * pntExtent);
+	bool		TextOut(HDS hds, char * szText);
+	bool		TextOut(HDS hds, int cchText, char * rgchText);
+	bool		TextOut(HDS hds, int16_t xco, int16_t yco, int cchText, char * rgchText);
+	bool		GetTextExtent(HDS hds, int cchText, char * rgchText, PNT * pntExtent);
 
 	bool		BitBlt(HDS hdsDst, int16_t xcoDst, int16_t ycoDst, int16_t dxco, int16_t dyco, HDS hdsSrc, int16_t xcoSrc, int16_t ycoSrc, uint16_t rop);
 	bool		PatBlt(HDS hdsDst, int16_t xco, int16_t yco, int16_t dxco, int16_t dyco, uint16_t rop);

@@ -28,10 +28,8 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__) || defined(__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
-#endif
 
 #include	<stdint.h>
 
@@ -169,7 +167,7 @@ bool MTDS::begin(int pinSelInit, uint32_t frqSpi) {
 
 	/* Set up the basic hardware environment.
 	*/
-	MtdsHalInitPins(pinSelInit);
+	MtdsHalInit(pinSelInit);
 
 	/* Initialize the SPI port that we will use to talk to the shield. Set up the
 	** other pins used by the interface.
@@ -581,7 +579,7 @@ lSyncError:
 lCmdWrExit:
 	;
 
-	tusElapsed = tusStart - MtdsHalTusElapsed();
+	tusElapsed = MtdsHalTusElapsed() - tusStart;
 
 }
 
@@ -766,7 +764,7 @@ lSyncError:
 lCmdRdExit:
 	;
 
-	tusElapsed = tusStart - MtdsHalTusElapsed();
+	tusElapsed = MtdsHalTusElapsed() - tusStart;
 
 }
 

@@ -21,10 +21,8 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)
 #include	<stdlib.h>
 #include	<string.h>
-#endif
 
 #include	<stdint.h>
 

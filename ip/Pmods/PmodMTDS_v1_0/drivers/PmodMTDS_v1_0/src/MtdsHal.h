@@ -3,7 +3,7 @@
 /*	MtdsHal.h	--	Declarations for MTDS Library HAL Layer				*/
 /*																		*/
 /************************************************************************/
-/*	Author:		Gene Apperson											*/
+/*	Author:		Thomas Kappenman										*/
 /*	Copyright 2016, Digilent Inc. All rights reserved.					*/
 /************************************************************************/
 /*  File Description:													*/
@@ -16,7 +16,8 @@
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	2016-09-26(GeneA): created											*/
+/*	2016-10-01(TommyK): created											*/
+/*	2016-10-30(SamB): Code/comment cleanup, change Init function name	*/
 /*																		*/
 /************************************************************************/
 
@@ -24,16 +25,14 @@
 #define _MTDSHAL_H_
 
 #include	<stdint.h>
+#include "xparameters.h"
+#include "xtmrctr.h"
 
 /* ------------------------------------------------------------ */
 /*					Miscellaneous Declarations					*/
 /* ------------------------------------------------------------ */
 
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-#define	_SPI_BASE		_DSPI0_BASE
-#else
 #define	_SPI_BASE		0
-#endif
 
 /* Define digital pin numbers used by the hardware interface.
 ** The "standard" CS pin is taken from the symbol SS defined in the board variant
@@ -42,18 +41,7 @@
 ** The "alternate" CS pin is supported on the Multi-Touch Display Shield when the CS
 ** select jumper is in the "alt" position. There is no alt CS pin on the PmodMTDS.
 */
-#if defined(MPIDE) || defined(ARDUINO)
 
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-#define	pinMtdsSelStd		PIN_DSPI0_SS	// standard SPI SS pin
-#else
-#define	pinMtdsSelStd		SS		// standard SPI SS pin
-#endif
-#define	pinMtdsSelAlt		8				// alternate SPI SS pin
-
-#elif defined(__MICROBLAZE__)
-#include "xparameters.h"
-#include "xtmrctr.h"
 extern XTmrCtr Timer;
 static uint32_t mic_delta;
 static uint32_t mil_delta;
@@ -97,12 +85,7 @@ void inline delay(int milliseconds){
 
 #define	pinMtdsSelStd		1				// standard SPI SS pin
 #define	pinMtdsSelAlt		2				// alternate SPI SS pin
-#else
 
-#define	pinMtdsSelStd		1				// standard SPI SS pin
-#define	pinMtdsSelAlt		2				// alternate SPI SS pin
-
-#endif
 
 /* Pins available to be used for status between shield and host.
 ** These pins are labeled HOST_INTA and HOST_INTB on the Multi-Touch Display Shield
@@ -115,13 +98,9 @@ void inline delay(int milliseconds){
 
 /* Default SPI clock frequency
 */
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
-#define	frqMtdsSpiDefault	3500000
-#elif defined(__AVR__)
+//TODO: This value is not required for FPGA designs, but it should be fixed to be accurate
 #define	frqMtdsSpiDefault	4000000
-#else
-#define	frqMtdsSpiDefault	4000000
-#endif
+
 
 /* ------------------------------------------------------------ */
 /*					General Type Declarations					*/
@@ -145,7 +124,7 @@ void inline delay(int milliseconds){
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-void		MtdsHalInitPins(int pinSel);
+void		MtdsHalInit(int pinSel);
 void		MtdsHalEnableStatusPin(int idPin);
 bool		MtdsHalGetStatusPin(int idPin);
 bool		MtdsHalResetDisplay(int pinSel);

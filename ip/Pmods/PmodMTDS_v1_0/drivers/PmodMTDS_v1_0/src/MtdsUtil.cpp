@@ -22,10 +22,8 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#if defined(__SIM__)||defined (__MICROBLAZE__)
 #include	<stdlib.h>
 #include	<string.h>
-#endif
 
 #include	<stdint.h>
 

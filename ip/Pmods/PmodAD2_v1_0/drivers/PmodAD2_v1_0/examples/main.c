@@ -46,12 +46,10 @@
  */
 
 #include <stdio.h>
-#include "platform.h"
 
 #include "xparameters.h"
 #include "xil_cache.h"
 #include "PmodAD2.h"
-#include "platform.h"
 
 #ifdef XPAR_MICROBLAZE_ID
 #include "microblaze_sleep.h"
@@ -75,12 +73,10 @@ int main()
     Xil_ICacheEnable();
 	Xil_DCacheEnable();
 
-	init_platform();
 
 	DemoInitialize();
 	DemoRun();
 
-    cleanup_platform();
     return 0;
 }
 

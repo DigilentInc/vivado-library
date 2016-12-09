@@ -8,7 +8,10 @@
 #include "xstatus.h"
 #include "xspi_l.h"
 #include "xspi.h"
-
+w
+'rhs
+f'h
+d';
 /* ------------------------------------------------------------ */
 /*					Definitions									*/
 /* ------------------------------------------------------------ */
@@ -23,7 +26,7 @@ typedef struct PmodNAV{
 	XSpi NAVSpi;
 }PmodNAV;
 
-	
+
 	void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 	void NAV_end(PmodNAV* InstancePtr);
 	int NAV_SPIInit(XSpi *SPIInstancePtr);

@@ -82,13 +82,13 @@
 * 3.01a sdm  04/23/10 Updated the driver to handle new slave mode interrupts
 *		      and the DTR Half Empty interrupt.
 * 3.04a bss  03/21/12 Updated XSpi_CfgInitialize to support XIP Mode
-* 3.05a adk  18/04/13 Updated the code to avoid unused variable 
+* 3.05a adk  18/04/13 Updated the code to avoid unused variable
 *	              warnings when compiling with the -Wextra -Wall flags
 *		      In the file xspi.c. CR:705005.
 * 3.06a adk  07/08/13 Added a dummy read in the CfgInitialize(), if startup
 *		      block is used in the h/w design (CR 721229).
 * 3.07a adk 11/10/13  In the xspi_transfer function moved the assert slave chip
-* 		      select after the configuration of the Data Transmit 
+* 		      select after the configuration of the Data Transmit
 *		      register inorder to work with CPOL and CPHA High Options.
 * 		      As per spec (Dual/Quad SPI Transaction instrunction 7,8,9)
 * 		      CR:732962
@@ -119,7 +119,7 @@ static void StubStatusHandler(void *CallBackRef, u32 StatusEvent,
 				unsigned int ByteCount);
 
 void XSpi_Abort(XSpi *InstancePtr);
-
+//test
 /************************** Variable Definitions *****************************/
 
 
@@ -163,7 +163,7 @@ int XSpi_CfgInitialize(XSpi *InstancePtr, XSpi_Config *Config,
 {
 	u8  Buffer[3];
 	u32 ControlReg;
-	
+
 	Xil_AssertNonvoid(InstancePtr != NULL);
 
 	/*
@@ -222,9 +222,9 @@ int XSpi_CfgInitialize(XSpi *InstancePtr, XSpi_Config *Config,
 	InstancePtr->Stats.SlaveModeFaults = 0;
 	InstancePtr->Stats.BytesTransferred = 0;
 	InstancePtr->Stats.NumInterrupts = 0;
-	
+
         if(Config->Use_Startup == 1) {
-		/*  
+		/*
 		 * Perform a dummy read this is used when startup block is
 		 * enabled in the hardware to fix CR #721229.
 		 */
@@ -232,39 +232,39 @@ int XSpi_CfgInitialize(XSpi *InstancePtr, XSpi_Config *Config,
 		ControlReg |= XSP_CR_TXFIFO_RESET_MASK | XSP_CR_RXFIFO_RESET_MASK |
 				XSP_CR_ENABLE_MASK | XSP_CR_MASTER_MODE_MASK ;
 		XSpi_SetControlReg(InstancePtr, ControlReg);
-		
-		/* 
+
+		/*
 		 * Initiate Read command to get the ID. This Read command is for
 		 * Numonyx flash.
 		 *
-		 * NOTE: If user interfaces different flash to the SPI controller 
+		 * NOTE: If user interfaces different flash to the SPI controller
 		 * this command need to be changed according to target flash Read
 		 * command.
 		 */
 		Buffer[0] = 0x9F;
 		Buffer[1] = 0x00;
 		Buffer[2] = 0x00;
-	
+
 		/* Write dummy ReadId to the DTR register */
 		XSpi_WriteReg(InstancePtr->BaseAddr, XSP_DTR_OFFSET, Buffer[0]);
 		XSpi_WriteReg(InstancePtr->BaseAddr, XSP_DTR_OFFSET, Buffer[1]);
 		XSpi_WriteReg(InstancePtr->BaseAddr, XSP_DTR_OFFSET, Buffer[2]);
-	
+
 		/* Master Inhibit enable in the CR */
 		ControlReg = XSpi_GetControlReg(InstancePtr);
 		ControlReg &= ~XSP_CR_TRANS_INHIBIT_MASK;
 		XSpi_SetControlReg(InstancePtr, ControlReg);
-	
+
 		/* Master Inhibit disable in the CR */
 		ControlReg = XSpi_GetControlReg(InstancePtr);
 		ControlReg |= XSP_CR_TRANS_INHIBIT_MASK;
 		XSpi_SetControlReg(InstancePtr, ControlReg);
-		
+
 		/* Read the Rx Data Register */
 		XSpi_ReadReg(InstancePtr->BaseAddr, XSP_DRR_OFFSET);
 		XSpi_ReadReg(InstancePtr->BaseAddr, XSP_DRR_OFFSET);
 	}
-	
+
 	/*
 	 * Reset the SPI device to get it into its initial state. It is expected
 	 * that device configuration will take place after this initialization
@@ -643,14 +643,14 @@ int XSpi_Transfer(XSpi *InstancePtr, u8 *SendBufPtr,
 		StatusReg = XSpi_GetStatusReg(InstancePtr);
 	}
 
-	
+
 	/*
 	 * Set the slave select register to select the device on the SPI before
 	 * starting the transfer of data.
 	 */
 	XSpi_SetSlaveSelectReg(InstancePtr,
 				InstancePtr->SlaveSelectReg);
-				
+
 	/*
 	 * Start the transfer by no longer inhibiting the transmitter and
 	 * enabling the device. For a master, this will in fact start the

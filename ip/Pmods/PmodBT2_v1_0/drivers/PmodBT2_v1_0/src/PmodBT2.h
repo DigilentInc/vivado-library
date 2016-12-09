@@ -20,7 +20,7 @@
 #include "xuartns550.h"
 #include "xparameters.h"
 
-#ifdef XPAR_AXI_INTC_0_PMODBT2_0_BT2_UART_INTERRUPT_INTR
+#ifdef XPAR_XINTC_NUM_INSTANCES
  #include "xintc.h"
  #define INTC   XIntc
  #define INTC_HANDLER XIntc_InterruptHandler

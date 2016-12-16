@@ -31,7 +31,8 @@
 /*																		*/
 /*	04/19/2016(TommyK): Created 										*/
 /*	06/30/2016(ArtVVB): Updated for PmodOLED IP Drivers					*/
-/*																		*/
+/* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
+/* as well as inverting the white and black                             */
 /************************************************************************/
 
 /***************************** Include Files *******************************/
@@ -74,9 +75,9 @@ XSpi_Config OLEDConfig =
 **	Description:
 **		Initialize the PmodOLED.
 */
-void OLED_Begin(PmodOLED* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
+void OLED_Begin(PmodOLED* InstancePtr, u32 GPIO_Address, u32 SPI_Address, bool orientation, bool invert)
 {
-	OLED_Init(InstancePtr, GPIO_Address, SPI_Address);
+	OLED_Init(InstancePtr, GPIO_Address, SPI_Address, orientation, invert);
 	/*
 	InstancePtr->GPIO_addr=GPIO_Address;
 	OLEDConfig.BaseAddress=SPI_Address;

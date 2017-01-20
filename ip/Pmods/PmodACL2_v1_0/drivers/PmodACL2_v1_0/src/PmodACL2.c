@@ -737,8 +737,7 @@ void ACL2_fillFIFO(PmodACL2 *InstancePtr){
 
 		//lower chip select and send FIFO_READ byte.
 		//chipSelect needs to stay low throughout the transfer
-		XSpi_SetSlaveSelectReg(&InstancePtr->ACL2Spi,
-						&InstancePtr->ACL2Spi.SlaveSelectReg);
+		XSpi_SetSlaveSelectReg(&InstancePtr->ACL2Spi, InstancePtr->ACL2Spi.SlaveSelectReg);
 		XSpi_CustomTransfer(&InstancePtr->ACL2Spi, &read, &nothing, 1);
 
 		nothing = 0;
@@ -795,8 +794,7 @@ void ACL2_fillFIFO(PmodACL2 *InstancePtr){
 			dir = '\0';
 		}
 		//set chip select high again once FIFO transfer is over
-		XSpi_SetSlaveSelectReg(&InstancePtr->ACL2Spi,
-								&InstancePtr->ACL2Spi.SlaveSelectMask);
+		XSpi_SetSlaveSelectReg(&InstancePtr->ACL2Spi, InstancePtr->ACL2Spi.SlaveSelectMask);
 	}
 
 	return;

@@ -5,17 +5,12 @@ source [file join [file dirname [file dirname [info script]]] gui/dvi2rgb_v1_0.g
 # Definitional proc to organize widgets for parameters.
 proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "Component_Name"
-  #Adding Page
-  set Page_0 [ipgui::add_page $IPINST -name "Page 0"]
-  ipgui::add_param $IPINST -name "kEnableSerialClkOutput" -parent ${Page_0}
-  ipgui::add_param $IPINST -name "kAddBUFG" -parent ${Page_0}
-  ipgui::add_param $IPINST -name "kRstActiveHigh" -parent ${Page_0}
-  ipgui::add_param $IPINST -name "kEmulateDDC" -parent ${Page_0}
-  set kClkRange [ipgui::add_param $IPINST -name "kClkRange" -parent ${Page_0} -layout horizontal]
-  set_property tooltip {Specifies the frequency of supported pixel clocks. All preferred resolutions require "less than 120 MHz" except 1920x1080} ${kClkRange}
-  set kEdidFileName [ipgui::add_param $IPINST -name "kEdidFileName" -parent ${Page_0} -layout horizontal]
-  set_property tooltip {The preferred resolution to specify in the EDID. This determines the resolution that most sources will use when first connected. All resolutions are 60Hz progressive.} ${kEdidFileName}
-
+  ipgui::add_param $IPINST -name "kEmulateDDC"
+  ipgui::add_param $IPINST -name "kEnableSerialClkOutput"
+  ipgui::add_param $IPINST -name "kAddBUFG"
+  ipgui::add_param $IPINST -name "kRstActiveHigh"
+  ipgui::add_param $IPINST -name "kClkRange"
+  ipgui::add_param $IPINST -name "kEdidFileName"
 
 }
 

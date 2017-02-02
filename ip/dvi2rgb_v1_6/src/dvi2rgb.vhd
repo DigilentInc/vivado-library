@@ -67,7 +67,7 @@ entity dvi2rgb is
       kRstActiveHigh : boolean := true; --true, if active-high; false, if active-low
       kAddBUFG : boolean := true; --true, if PixelClk should be re-buffered with BUFG 
       kClkRange : natural := 2;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)
-      kEdidFileName : string := "900p_edid.txt";  -- Select EDID file to use
+      kEdidFileName : string := "900p_edid.data";  -- Select EDID file to use
       -- 7-series specific
       kIDLY_TapValuePs : natural := 78; --delay in ps per tap
       kIDLY_TapWidth : natural := 5); --number of bits for IDELAYE2 tap counter   

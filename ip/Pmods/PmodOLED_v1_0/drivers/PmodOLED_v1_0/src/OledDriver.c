@@ -35,7 +35,9 @@
 /*	08/03/2011(GeneA): added functions to shut down the display and to	*/
 /*		turn the display on and off.									*/
 /*	06/20/2016(ArtVVB): edited for PmodOLED IP							*/
-/*																		*/
+/*	                        											*/
+/* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
+/* as well as inverting the white and black                             */
 /************************************************************************/
 
 
@@ -51,11 +53,17 @@
 /*				Local Symbol Definitions						*/
 /* ------------------------------------------------------------ */
 
-#define	cmdOledDisplayOn	0xAF
-#define	cmdOledDisplayOff	0xAE
-#define	cmdOledSegRemap		0xA1	//map column 127 to SEG0
-#define	cmdOledComDir		0xC8	//scan from COM[N-1] to COM0
-#define	cmdOledComConfig	0xDA	//set COM hardware configuration
+#define	cmdOledDisplayOn	   0xAF
+#define	cmdOledDisplayOff	   0xAE
+#define	cmdOledSegRemap		   0xA1	//map column 127 to SEG0
+#define	cmdOledComDir		   0xC8	//scan from COM[N-1] to COM0
+#define	cmdOledComConfig	   0xDA	//set COM hardware configuration
+#define DispContrast1          0x81
+#define DispContrast2          0x0F
+#define SetSegRemap            0xA0
+#define SetScanDirection       0xC0
+#define SetLowerColumnAddress  0xDA
+#define LowerColumnAddress     0x00
 
 /* Setting pins based on DSPI_SS pin plus offset to get to lower 4 pins
 ** on pmod connector
@@ -82,7 +90,7 @@ extern const u8 rgbFillPat[];
 
 void 	OLED_HostInit	(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 void 	OLED_HostTerm	(PmodOLED *InstancePtr);
-void 	OLED_DevInit	(PmodOLED *InstancePtr);
+void 	OLED_DevInit	(PmodOLED *InstancePtr,bool orientation, bool invert);
 void 	OLED_DevTerm	(PmodOLED *InstancePtr);
 void 	OLED_DvrInit	(PmodOLED *InstancePtr);
 
@@ -107,7 +115,7 @@ void	OLED_PutBuffer	(PmodOLED *InstancePtr, int cb, uint8_t *rgbTx);
 **		Initialize the OLED display subsystem.
 */
 
-void OLED_Init(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address)
+void OLED_Init(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address, bool orientation, bool invert)
 {
 
 	/* Init the PIC32 peripherals used to talk to the display.
@@ -121,7 +129,7 @@ void OLED_Init(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 
 	/* Init the OLED display hardware.
 	*/
-	OLED_DevInit(InstancePtr);
+	OLED_DevInit(InstancePtr, orientation, invert);
 
 	/* Clear the display.
 	*/
@@ -292,7 +300,7 @@ void OLED_DvrInit(PmodOLED *InstancePtr)
 **		Initialize the OLED display controller and turn the display on.
 */
 
-void OLED_DevInit(PmodOLED *InstancePtr)
+void OLED_DevInit(PmodOLED *InstancePtr, bool orientation, bool invert)
 	{
 	/* We're going to be sending commands, so clear the Data/Cmd bit
 	*/
@@ -327,18 +335,41 @@ void OLED_DevInit(PmodOLED *InstancePtr)
 	OLED_SetGPIOBits(InstancePtr, VbatCtrl, false);
 	OLED_Delay(100);
 
-	/* Send the commands to invert the display.
-	*/
-	OLED_WriteByte(InstancePtr, cmdOledSegRemap);//remap columns
-	OLED_WriteByte(InstancePtr, cmdOledComDir);//remap the rows
+	// Send the commands to invert the display for onboard OLED or upside down for PmodOLED.
+	// uncomment/comment the next 6 lines if you are using the PmodOLED right side up
 
-	/* Send the commands to select sequential COM configuration
-	*/
-	OLED_WriteByte(InstancePtr, cmdOledComConfig);//set COM configuration command
-	OLED_WriteByte(InstancePtr, 0x20);//sequential COM, left/right remap enabled
+    if(orientation)
+	{
 
-	/* Send Display On command
-	*/
+		OLED_WriteByte(InstancePtr, DispContrast1); /* DispContrast 1 */
+		OLED_WriteByte(InstancePtr, DispContrast2); /* DispContrast 2 */
+		OLED_WriteByte(InstancePtr, SetSegRemap); /* SetSegRemap */
+		OLED_WriteByte(InstancePtr, SetScanDirection); /* SetScanDirection /*/
+		OLED_WriteByte(InstancePtr, SetLowerColumnAddress); /* Set Lower Column Address command */
+		OLED_WriteByte(InstancePtr, LowerColumnAddress); /* Lower Column Address */
+	}else
+	{
+
+		// Send the commands to invert the display for PmodOLED or upside down for onboardOLED.
+		// uncomment/comment the next 4 lines if you are using the PmodOLED right side up
+
+		OLED_WriteByte(InstancePtr, cmdOledSegRemap);//remap columns
+		OLED_WriteByte(InstancePtr, cmdOledComDir);//remap the rows
+
+		/* Send the commands to select sequential COM configuration
+		*/
+		OLED_WriteByte(InstancePtr, cmdOledComConfig);//set COM configuration command
+		OLED_WriteByte(InstancePtr, 0x20);//sequential COM, left/right remap enabled
+
+	}
+
+    if(invert)
+    	OLED_WriteByte(InstancePtr, 0xA7);//invert white/black
+    else
+    	OLED_WriteByte(InstancePtr, 0xA6);//invert black/white
+
+    /* Send Display On command
+    	*/
 	OLED_WriteByte(InstancePtr, cmdOledDisplayOn);
 }
 

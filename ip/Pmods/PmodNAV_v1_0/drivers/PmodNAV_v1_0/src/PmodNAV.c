@@ -30,7 +30,8 @@
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	04/19/2016(TommyK): Created 
+/*	04/19/2016(TommyK): Created
+/*	01/17/2017(AndrewH): Fixed code error
 /*																		*/
 /************************************************************************/
 
@@ -75,7 +76,7 @@ XSpi_Config NAVConfig =
 void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 {
 	InstancePtr->GPIO_addr=GPIO_Address;
-	XSpi_NAVConfig.BaseAddress=SPI_Address;
+	NAVConfig.BaseAddress=SPI_Address;
 	Xil_Out32(InstancePtr->GPIO_addr+4, 0b1111);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc. 
 	NAV_SPIInit(&InstancePtr->NAVSpi);
 }

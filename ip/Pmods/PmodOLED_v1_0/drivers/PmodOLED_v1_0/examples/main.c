@@ -25,11 +25,13 @@
 /*																		*/
 /*	This demo_project initializes and uses the PmodOLED to display strings and show different available fill patterns.							*/
 /*																		*/
-/************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	06/20/2016(ArtVVB): Created 											*/
-/*																		*/
+/*	06/20/2016(ArtVVB): Created 										*/
+/*                                                                      */
+/* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
+/* as well as inverting the white and black                             */
+/*                                                                      */
 /************************************************************************/
 /*  Baud Rates:															*/
 /*																		*/
@@ -58,9 +60,15 @@ PmodOLED myDevice;
 /*				Forward Declarations							*/
 /* ------------------------------------------------------------ */
 
+
+
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
+
+//to change betweeen PmodOLED and OnBoardOLED is to change Orientation 
+bool orientation = false;  //set up for Normal PmodOLED(false) vs normal Onboard OLED(true)
+bool invert = false;       //true = whitebackground/black letters      false = black background /white letters
 
 /* ------------------------------------------------------------ */
 /*				Function Definitions							*/
@@ -110,7 +118,7 @@ int main()
 */
 void DemoInitialize()
 {
-	OLED_Begin(&myDevice, XPAR_PMODOLED_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODOLED_0_AXI_LITE_SPI_BASEADDR);
+	OLED_Begin(&myDevice, XPAR_PMODOLED_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODOLED_0_AXI_LITE_SPI_BASEADDR, orientation, invert);
 }
 
 /* ------------------------------------------------------------ */
@@ -133,6 +141,7 @@ void DemoInitialize()
 */
 void DemoRun()
 {
+
 	int irow, ib, i;
 	u8 *pat;
 	char c;

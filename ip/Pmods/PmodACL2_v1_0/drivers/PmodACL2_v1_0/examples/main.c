@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "xil_printf.h"
 #include "PmodACL2.h"
+#include "xparameters.h"
 #ifdef XPAR_MICROBLAZE_ID
 #include "microblaze_sleep.h"
 #endif
@@ -13,7 +14,6 @@ void SamplesExample();
 void FIFOexample();
 
 PmodACL2 myDevice;
-
 
 int main(void)
 {

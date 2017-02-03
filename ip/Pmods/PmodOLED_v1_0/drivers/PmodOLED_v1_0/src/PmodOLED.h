@@ -31,7 +31,8 @@
 /*																		*/
 /*	04/19/2016(TommyK): Created 										*/
 /*	06/30/2016(ArtVVB): Updated for PmodOLED IP Drivers					*/
-/*																		*/
+/* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
+/* as well as inverting the white and black                             */
 /************************************************************************/
 
 #ifndef PmodOLED_H
@@ -126,7 +127,7 @@ typedef struct PmodOLED {
 
 extern XSpi_Config OLEDConfig;
 
-void OLED_Begin					(PmodOLED* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
+void OLED_Begin					(PmodOLED* InstancePtr, u32 GPIO_Address, u32 SPI_Address, bool orientation, bool invert);
 void OLED_End					(PmodOLED* InstancePtr);
 int  OLED_SPIInit				(XSpi *SPIInstancePtr);
 u8 	 OLED_ReadByte				(PmodOLED* InstancePtr);
@@ -144,7 +145,7 @@ void OLED_Delay					(int millis);
 /* ------------------------------------------------------------ */
 
 void OLED_ClearBuffer			(PmodOLED *InstancePtr);
-void OLED_Init					(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address);
+void OLED_Init					(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address, bool orientation, bool invert);
 void OLED_Term					(PmodOLED *InstancePtr);
 void OLED_DisplayOn				(PmodOLED *InstancePtr);
 void OLED_DisplayOff			(PmodOLED *InstancePtr);

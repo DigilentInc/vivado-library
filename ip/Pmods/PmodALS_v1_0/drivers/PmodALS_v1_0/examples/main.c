@@ -3,7 +3,6 @@
 #include "xil_io.h"
 #include "PmodALS.h"
 #include <stdio.h>
-#include <sleep.h>
 #include "xil_cache.h"
 
 void DemoInitialize();

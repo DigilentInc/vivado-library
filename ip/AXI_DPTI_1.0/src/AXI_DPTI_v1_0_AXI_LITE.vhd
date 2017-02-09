@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity AXI_DPTI_v1_0_AXI_LITE is
+entity axi_dpti_v1_0_AXI_LITE is
 	generic (
 		-- Users to add parameters here
 
@@ -90,9 +90,9 @@ entity AXI_DPTI_v1_0_AXI_LITE is
     		-- accept the read data and response information.
 		S_AXI_RREADY	: in std_logic
 	);
-end AXI_DPTI_v1_0_AXI_LITE;
+end axi_dpti_v1_0_AXI_LITE;
 
-architecture arch_imp of AXI_DPTI_v1_0_AXI_LITE is
+architecture arch_imp of axi_dpti_v1_0_AXI_LITE is
 
 	-- AXI4LITE signals
 	signal axi_awaddr	: std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
@@ -112,7 +112,7 @@ architecture arch_imp of AXI_DPTI_v1_0_AXI_LITE is
 	-- ADDR_LSB = 2 for 32 bits (n downto 2)
 	-- ADDR_LSB = 3 for 64 bits (n downto 3)
 	constant ADDR_LSB  : integer := (C_S_AXI_DATA_WIDTH/32)+ 1;
-	constant OPT_MEM_ADDR_BITS : integer := 1;
+	constant OPT_MEM_ADDR_BITS : integer := 1; 
 	------------------------------------------------
 	---- Signals for user logic register space example
 	--------------------------------------------------

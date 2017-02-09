@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --
--- File: AXI_DPTI_v1_0.vhd
+-- File: axi_dpti_v1_0.vhd
 -- Author: Sergiu Arpadi
 -- Original Project: AXI DPTI 
 -- Date: 8 June 2016
@@ -45,7 +45,7 @@
 --Another function for the module is the clock domain crossings for the LENGTH, 
 --CONTROL and STATUS AXI Lite registers, using the HandshakeData and SyncAsync 
 --modules. A PLL is also instantiated here which is used to compensate for the 
---PROG_CLKO BUFG delay. 
+--prog_clko BUFG delay. 
 -------------------------------------------------------------------------------
 
 library ieee;
@@ -55,7 +55,7 @@ use ieee.numeric_std.all;
 Library UNISIM;
 use UNISIM.vcomponents.all;
 
-entity AXI_DPTI_v1_0 is
+entity axi_dpti_v1_0 is
 	generic (
 		-- Users to add parameters here
 
@@ -70,32 +70,32 @@ entity AXI_DPTI_v1_0 is
 	port (
 		-- Users to add ports here
       --DPTI INTERFACE
-      PROG_CLKO : in STD_LOGIC;
-      PROG_RXEN : in STD_LOGIC;
-      PROG_TXEN : in STD_LOGIC;
-      PROG_SPIEN : in STD_LOGIC;
-      PROG_RDN : out STD_LOGIC;
-      PROG_WRN : out STD_LOGIC;
-      PROG_OEN : out STD_LOGIC;
-      PROG_SIWUN : out STD_LOGIC;
-      PROG_D : inout STD_LOGIC_VECTOR (7 downto 0);
+      prog_clko : in STD_LOGIC;
+      prog_rxen : in STD_LOGIC;
+      prog_txen : in STD_LOGIC;
+      prog_spien : in STD_LOGIC;
+      prog_rdn : out STD_LOGIC;
+      prog_wrn : out STD_LOGIC;
+      prog_oen : out STD_LOGIC;
+      prog_siwun : out STD_LOGIC;
+      prog_d : inout STD_LOGIC_VECTOR (7 downto 0);
       
       --AXI STREAM INTERFACE
-      M_AXIS_ACLK : in  std_logic; 
-      M_AXIS_ARESETN : in  std_logic; 
-      M_AXIS_TREADY : in  std_logic; 
-      M_AXIS_TDATA : out std_logic_vector(31 downto 0);     
-      M_AXIS_TKEEP : out std_logic_vector(3 downto 0); 
-      M_AXIS_TLAST : out std_logic; 
-      M_AXIS_TVALID : out std_logic; 
+      m_axis_aclk : in  std_logic; 
+      m_axis_aresetn : in  std_logic; 
+      m_axis_tready : in  std_logic; 
+      m_axis_tdata : out std_logic_vector(31 downto 0);     
+      m_axis_tkeep : out std_logic_vector(3 downto 0); 
+      m_axis_tlast : out std_logic; 
+      m_axis_tvalid : out std_logic; 
       
-      S_AXIS_ACLK : in  std_logic;
-      S_AXIS_ARESETN : in  std_logic; 
-      S_AXIS_TREADY : out std_logic;  
-      S_AXIS_TDATA : in  std_logic_vector(31 downto 0);  
-      S_AXIS_TKEEP : in  std_logic_vector(3 downto 0);  
-      S_AXIS_TLAST : in  std_logic;  
-      S_AXIS_TVALID : in  std_logic;  
+      s_axis_aclk : in  std_logic;
+      s_axis_aresetn : in  std_logic; 
+      s_axis_tready : out std_logic;  
+      s_axis_tdata : in  std_logic_vector(31 downto 0);  
+      s_axis_tkeep : in  std_logic_vector(3 downto 0);  
+      s_axis_tlast : in  std_logic;  
+      s_axis_tvalid : in  std_logic;  
 
 		-- User ports ends
 		-- Do not modify the ports beyond this line
@@ -124,14 +124,14 @@ entity AXI_DPTI_v1_0 is
 		axi_lite_rvalid	: out std_logic;
 		axi_lite_rready	: in std_logic
 	);
-end AXI_DPTI_v1_0; 
+end axi_dpti_v1_0; 
 
-architecture arch_imp of AXI_DPTI_v1_0 is
+architecture arch_imp of axi_dpti_v1_0 is
 
 --------------------------------------------------------------------------------------------------------------------------
 
 -- component declaration
-component AXI_DPTI_v1_0_AXI_LITE is
+component axi_dpti_v1_0_AXI_LITE is
    generic (
       C_S_AXI_DATA_WIDTH	: integer	:= 32;
       C_S_AXI_ADDR_WIDTH	: integer	:= 4
@@ -169,7 +169,7 @@ component AXI_DPTI_v1_0_AXI_LITE is
       S_AXI_RVALID	: out std_logic;
       S_AXI_RREADY	: in std_logic
    );
-end component AXI_DPTI_v1_0_AXI_LITE;
+end component axi_dpti_v1_0_AXI_LITE;
 --------------------------------------------------------------------------------------------------------------------------
 
 component HandshakeData is
@@ -339,13 +339,13 @@ pStatusReg (15 downto 1) <= (others => '0');
 pStatusReg (31 downto 17) <= (others => '0'); 
 
 -- IOBUF is implemented
-PROG_D <= pCtlDataOut when pCtlOe = '1' else "ZZZZZZZZ";    
-pCtlDataIn <= PROG_D;
+prog_d <= pCtlDataOut when pCtlOe = '1' else "ZZZZZZZZ";    
+pCtlDataIn <= prog_d;
 
 -- SIWU signal is not used
-PROG_SIWUN <= '1';  
+prog_siwun <= '1';  
 
-PROG_OEN <= pCtlOe;
+prog_oen <= pCtlOe;
 
 aCtlResetLength <= not pPLL_Locked;
 aCtlResetControl <= not pPLL_Locked;
@@ -364,7 +364,7 @@ BUFG_inst : BUFG  -- used for PLL feedback clock
 
 --------------------------------------------------------------------------------------------------------------------------
 
-PLLE2_BASE_inst : PLLE2_BASE -- PLL used to correct BUFG delay for PROG_CLKO
+PLLE2_BASE_inst : PLLE2_BASE -- PLL used to correct BUFG delay for prog_clko
    generic map (
       BANDWIDTH => "OPTIMIZED",  -- OPTIMIZED, HIGH, LOW
       CLKFBOUT_MULT => 15,        -- Multiply value for all CLKOUT, (2-64)
@@ -406,7 +406,7 @@ PLLE2_BASE_inst : PLLE2_BASE -- PLL used to correct BUFG delay for PROG_CLKO
       -- Feedback Clocks: 1-bit (each) output: Clock feedback ports
       CLKFBOUT => Pll_Fb_OutClk, -- 1-bit output: Feedback clock
       LOCKED => pPLL_Locked,     -- 1-bit output: LOCK
-      CLKIN1 => PROG_CLKO,     -- 1-bit input: Input clock
+      CLKIN1 => prog_clko,     -- 1-bit input: Input clock
       -- Control Ports: 1-bit (each) input: PLL control ports
       PWRDWN => aPLL_Pwrdwn,     -- 1-bit input: Power-down
       RST => aPLL_Reset,           -- 1-bit input: Reset
@@ -417,7 +417,7 @@ PLLE2_BASE_inst : PLLE2_BASE -- PLL used to correct BUFG delay for PROG_CLKO
 --------------------------------------------------------------------------------------------------------------------------
 
 -- Instantiation of Axi Bus Interface AXI_LITE
-AXI_DPTI_v1_0_AXI_LITE_inst : AXI_DPTI_v1_0_AXI_LITE
+axi_dpti_v1_0_AXI_LITE_inst : axi_dpti_v1_0_AXI_LITE
 	generic map (
 		C_S_AXI_DATA_WIDTH	=> C_AXI_LITE_DATA_WIDTH,
 		C_S_AXI_ADDR_WIDTH	=> C_AXI_LITE_ADDR_WIDTH
@@ -537,7 +537,7 @@ SyncReset_M_AXIS: entity work.ResetBridge
    generic map (
       kPolarity => '1')
    port map (
-      aRst => M_AXIS_ARESETN,
+      aRst => m_axis_aresetn,
       OutClk => PROG_CLK,
       oRst => pM_AXIS_Reset);
 
@@ -545,14 +545,14 @@ SyncReset_S_AXIS: entity work.ResetBridge
    generic map (
       kPolarity => '1')
    port map (
-      aRst => S_AXIS_ARESETN,
+      aRst => s_axis_aresetn,
       OutClk => PROG_CLK,
       oRst => pS_AXIS_Reset);      
 
 ------------------------------------------------------------------------------------------------
 
 RX_fifo : fifo_generator_0 PORT MAP (  -- AXI STREAM FIFO : used only for clock domain crossing. low capacity
-      m_aclk => M_AXIS_ACLK,
+      m_aclk => m_axis_aclk,
       s_aclk => PROG_CLK,
       s_aresetn => aCtlResetRx,
       s_axis_tvalid => pCtlOutTvalid,
@@ -560,24 +560,24 @@ RX_fifo : fifo_generator_0 PORT MAP (  -- AXI STREAM FIFO : used only for clock 
       s_axis_tdata => pCtlOutTdata,
       s_axis_tkeep => pCtlOutTkeep,
       s_axis_tlast => pCtlOutTlast,
-      m_axis_tvalid => M_AXIS_TVALID,
-      m_axis_tready => M_AXIS_TREADY,
-      m_axis_tdata => M_AXIS_TDATA,
-      m_axis_tkeep => M_AXIS_TKEEP,
-      m_axis_tlast => M_AXIS_TLAST
+      m_axis_tvalid => m_axis_tvalid,
+      m_axis_tready => m_axis_tready,
+      m_axis_tdata => m_axis_tdata,
+      m_axis_tkeep => m_axis_tkeep,
+      m_axis_tlast => m_axis_tlast
       );
 
 ----------------------------------------------------------------------------------------------------------   
  
 TX_fifo : fifo_generator_0 PORT MAP (  -- AXI STREAM FIFO : used only for clock domain crossing. low capacity
       m_aclk => PROG_CLK,
-      s_aclk => S_AXIS_ACLK,
+      s_aclk => s_axis_aclk,
       s_aresetn => aCtlResetTx,
-      s_axis_tvalid => S_AXIS_TVALID,
-      s_axis_tready => S_AXIS_TREADY,
-      s_axis_tdata => S_AXIS_TDATA,
-      s_axis_tkeep => S_AXIS_TKEEP,
-      s_axis_tlast => S_AXIS_TLAST,
+      s_axis_tvalid => s_axis_tvalid,
+      s_axis_tready => s_axis_tready,
+      s_axis_tdata => s_axis_tdata,
+      s_axis_tkeep => s_axis_tkeep,
+      s_axis_tlast => s_axis_tlast,
       m_axis_tvalid => pCtlInTvalid,
       m_axis_tready => pCtlOutTready,
       m_axis_tdata => pCtlInTdata,
@@ -590,8 +590,8 @@ TX_fifo : fifo_generator_0 PORT MAP (  -- AXI STREAM FIFO : used only for clock 
 AXI_S_to_DPTI_inst : AXI_S_to_DPTI_converter PORT MAP (  -- converts 32bit AXI STREAM from TX_FIFO data to 8bit data which is then sent to the DPTI interface 
       pResetTx => aCtlResetTx,
       PROG_CLK => PROG_CLK,
-      pTxe => PROG_TXEN,
-      pWr => PROG_WRN,
+      pTxe => prog_txen,
+      pWr => prog_wrn,
       pDataOut => pCtlDataOut,
         
       pOutTready => pCtlOutTready,
@@ -613,8 +613,8 @@ AXI_S_to_DPTI_inst : AXI_S_to_DPTI_converter PORT MAP (  -- converts 32bit AXI S
 DPTI_to_AXI_S_inst : DPTI_to_AXI_S_converter PORT MAP (  -- converts 8bit data received from the DPTI interface to 32bit AXI STREAM data sent to RX_FIFO
       pResetRx => aCtlResetRx,
       PROG_CLK => PROG_CLK,
-      pRxf => PROG_RXEN,
-      pRd => PROG_RDN,
+      pRxf => prog_rxen,
+      pRd => prog_rdn,
       pOe => pCtlOe,
       pDataIn => pCtlDataIn,
                

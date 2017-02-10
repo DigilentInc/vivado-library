@@ -50,7 +50,7 @@ int main()
 			(int)temp_degf, ((int)(temp_degf*100))%100,
 			(int)hum_perrh, ((int)(hum_perrh*100))%100
 		); // %f does not work with xil_printf, instead converting float to a pair of ints to display %.2f.
-		usleep(500000);
+		usleep(1000000); // 1 sample per second maximum, as per 9.2.1 in HDC1080 reference manual
     }
 
     cleanup_platform();

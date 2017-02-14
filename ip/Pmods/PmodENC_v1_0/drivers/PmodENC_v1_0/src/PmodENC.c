@@ -1,48 +1,30 @@
-/************************************************************************/
-/*																		*/
-/* PmodENC.c	--		Template driver for a Pmod which uses GPIO		*/
-/*																		*/
-/************************************************************************/
-/*	Author:		Thomas Kappenman, Arthur Brown							*/
-/*	Copyright 2015, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+/*************************************************************************/
+/*                                                                       */
+/* PmodENC.c	--		Source file for Pmod Encoder driver library		 */
+/*                                                                       */
+/*************************************************************************/
+/*     Author: Arthur Brown                                              */
+/*     Copyright 2016, Digilent Inc.                                     */
+/*************************************************************************/
+/*  Module Description:                                                  */
+/*                                                                       */
+/*            This file contains functions to capture and evaluate the   */
+/*            state of the pmod's rotary shaft encoder                   */
+/*                                                                       */
+/*************************************************************************/
+/*  Revision History:                                                    */
+/*                                                                       */
+/*	04/19/2016(TommyK): Created 								 	     */
+/*	06/10/2016(ArtVVB): Adapted for PmodENC								 */
+/*	02/14/2017(ArtVVB): Validated										 */
+/*																		 */
+/*************************************************************************/
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+/***************************** Include Files *****************************/
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-/************************************************************************/
-/*  File Description:													*/
-/*																		*/
-/*	This file contains a template that you can use to create a library
-/*	for the PmodENC (insert name, duh). 
-/*																		*/
-/************************************************************************/
-/*  Revision History:													*/
-/*																		*/
-/*	04/19/2016(TommyK): Created 
-/*	06/10/2016(ArtVVB): Adapted for PmodENC
-/************************************************************************/
-
-/***************************** Include Files *******************************/
 #include "PmodENC.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-
-/************************** Function Definitions ***************************/
+/************************** Function Definitions *************************/
 
 /* ------------------------------------------------------------ */
 /***	void ENC_begin(PmodENC* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
@@ -50,7 +32,6 @@
 **	Parameters:
 **		InstancePtr: A PmodENC object to start
 **		GPIO_Address: The Base address of the PmodENC GPIO
-**		SPI_Address: The Base address of the PmodENC SPI
 **
 **	Return Value:
 **		none

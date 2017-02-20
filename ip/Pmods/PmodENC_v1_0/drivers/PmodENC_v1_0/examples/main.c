@@ -10,8 +10,16 @@
 /*                                                                       */
 /*            This file contains code for running a demonstration of the */
 /*            Pmod Encoder when used with the PmodENC IP core.           */
+/*                                                                       */
+/*            Rotating the Pmod ENC's rotary shaft increments or 	 */
+/*	      	decrements a counter, depending on direction of 	 */
+/*		rotation. 						 */
+/*            The Pmod ENC's switch controls whether the counter is 	 */
+/*		enabled. 						 */
+/*            Pressing the Pmod ENC's shaft in prints the current count  */
+/*                                                                       */
 /*            Requires a Serial Terminal (such as Tera Term) set to 9600 */
-/* 			  baud for Arty, 112500 for Zynq   							 */
+/* 			  baud for Arty, 112500 for Zynq   		 */
 /*                                                                       */
 /*************************************************************************/
 /*  Revision History:                                                    */

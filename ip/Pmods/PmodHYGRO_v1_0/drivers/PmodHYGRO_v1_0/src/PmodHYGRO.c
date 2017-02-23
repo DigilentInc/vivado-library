@@ -13,16 +13,13 @@
 /*  Revision History:													*/
 /*																		*/
 /*	01/30/2017(ArtVVB): created											*/
+/*	02/21/2017(ArtVVB): validated										*/
 /*																		*/
 /************************************************************************/
 
 /***************************** Include Files *******************************/
 #include "PmodHYGRO.h"
-#include "sleep.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 /************************** Function Definitions ***************************/
 XIic_Config HYGRO_Config =
 {
@@ -31,15 +28,23 @@ XIic_Config HYGRO_Config =
 	0,
 	2
 };
+XTmrCtr_Config HYGRO_TimerConfig = {
+	0,
+	0,
+	0
+};
 static void StatusHandler(PmodHYGRO *InstancePtr);
 
 /* ------------------------------------------------------------ */
-/***	void HYGRO_begin(PmodHYGRO* InstancePtr, u32 IIC_Address)
+/***	void HYGRO_begin(PmodHYGRO* InstancePtr, u32 IIC_Address, u8 Chip_Address, u32 Timer_Address, UINTPTR Timer_DeviceId, u32 Timer_SysClockFreqHz)
 **
 **	Parameters:
 **		InstancePtr: A PmodHYGRO object to start
 **		IIC_Address: The Base address of the PmodHYGRO IIC
 **		Chip_Address: 7 bit Pmod device address
+**		Timer_Address: The Base address of the PmodHYGRO Timer
+**		Timer_DeviceID: The Device ID of the PmodHYGRO
+**		Timer_SysClockFreqHz: The clock frequency of the AXI bus
 **
 **	Return Value:
 **		none
@@ -50,15 +55,26 @@ static void StatusHandler(PmodHYGRO *InstancePtr);
 **	Description:
 **		Initialize the PmodHYGRO.
 */
-void HYGRO_begin(PmodHYGRO* InstancePtr, u32 IIC_Address, u8 Chip_Address)
+void HYGRO_begin(PmodHYGRO* InstancePtr, u32 IIC_Address, u8 Chip_Address, u32 Timer_Address, UINTPTR Timer_DeviceId, u32 Timer_SysClockFreqHz)
 {
 	u16 config = HYGRO_CONFIG_DEFAULT & ~(HYGRO_CONFIG_MODE);
 	u8 bytes[2] = {(config>>8)&0xff, config&0xff};
+
 	HYGRO_Config.BaseAddress=IIC_Address;
 	InstancePtr->chipAddr=Chip_Address;
+	InstancePtr->clockFreqHz = Timer_SysClockFreqHz;
+
+	HYGRO_TimerConfig.DeviceId 	     = Timer_DeviceId;
+	HYGRO_TimerConfig.BaseAddress    = Timer_Address;
+	HYGRO_TimerConfig.SysClockFreqHz = Timer_SysClockFreqHz;
+
+	HYGRO_TimerInit(&InstancePtr->HYGROTimer, &HYGRO_TimerConfig);
 	HYGRO_IICInit(&InstancePtr->HYGROIic);
     HYGRO_WriteIIC(InstancePtr, HYGRO_CONFIG, bytes, 2);
+
+    HYGRO_DelayMillis(InstancePtr, 15);
 }
+
 
 /* ------------------------------------------------------------ */
 /***	HYGRO_end(void)
@@ -80,10 +96,58 @@ void HYGRO_end(PmodHYGRO* InstancePtr){
 }
 
 /* ------------------------------------------------------------ */
-/***	HYGRO_IICInit
+/***	void HYGRO_TimerInit(XTmrCtr* TimerInstancePtr, XTmrCtr_Config* TimerConfigPtr)
 **
 **	Parameters:
+**		TimerInstancePtr: An AXI Timer object to initialize
+**		TimerConfigPtr: A Timer configuration object containing information about the Timer to be initialized
+**
+**	Return Value:
 **		none
+**
+**	Errors:
+**		none
+**
+**	Description:
+**		Initialize the PmodHYGRO's AXI Timer IP core.
+*/
+void HYGRO_TimerInit(XTmrCtr* TimerInstancePtr, XTmrCtr_Config* TimerConfigPtr) {
+	XTmrCtr_CfgInitialize(TimerInstancePtr, TimerConfigPtr, TimerConfigPtr->BaseAddress);
+	XTmrCtr_InitHw(TimerInstancePtr);
+	XTmrCtr_Initialize(TimerInstancePtr, TimerConfigPtr->DeviceId);
+	XTmrCtr_SetResetValue(TimerInstancePtr, 0, 0);
+}
+
+/* ------------------------------------------------------------ */
+/***	void HYGRO_DelayMillis(PmodHYGRO* InstancePtr, u32 millis)
+**
+**	Parameters:
+**		InstancePtr		- PmodHYGRO object containing AXI Timer to use to measure delay
+**		millis			- number of milliseconds to delay
+**
+**	Return Value:
+**		none
+**
+**	Errors:
+**		no error check on millis bounds, large delays (greater than approx 50 secs) might not work as expected
+**
+**	Description:
+**		delays the program for millis milliseconds.
+*/
+void HYGRO_DelayMillis(PmodHYGRO* InstancePtr, u32 millis) {
+	XTmrCtr* TimerInstancePtr = &InstancePtr->HYGROTimer;
+	u32 done_after_ticks = millis * (InstancePtr->clockFreqHz / 1000);
+	XTmrCtr_Reset(TimerInstancePtr, 0);
+	XTmrCtr_Start(TimerInstancePtr, 0);
+	while (XTmrCtr_GetValue(TimerInstancePtr, 0) < done_after_ticks);
+	XTmrCtr_Stop(TimerInstancePtr, 0);
+}
+
+/* ------------------------------------------------------------ */
+/***	int HYGRO_IICInit(XIic *IicInstancePtr)
+**
+**	Parameters:
+**		IicInstancePtr: the IIC object to initialize
 **
 **	Return Value:
 **		none
@@ -126,6 +190,7 @@ int HYGRO_IICInit(XIic *IicInstancePtr){
 **		reg			- Register to read from
 **		Data		- Pointer to recieve buffer
 **		nData		- Number of data values to read
+**		conversion_delay_ms - The number of milliseconds to wait for the PmodHYGRO to finish converting data - if 0, no wait.
 **
 **	Return Value:
 **		none
@@ -137,7 +202,7 @@ int HYGRO_IICInit(XIic *IicInstancePtr){
 **		Reads nData data bytes from register reg
 **
 */
-void HYGRO_ReadIIC(PmodHYGRO* InstancePtr, u8 reg, u8 *Data, int nData, int conversion_delay_us)
+void HYGRO_ReadIIC(PmodHYGRO* InstancePtr, u8 reg, u8 *Data, int nData, u32 conversion_delay_ms)
 {
 	int Status;
 	Status = XIic_Start(&InstancePtr->HYGROIic);
@@ -152,8 +217,9 @@ void HYGRO_ReadIIC(PmodHYGRO* InstancePtr, u8 reg, u8 *Data, int nData, int conv
 		//XIic_MasterRecv(&InstancePtr->HYGROIic, Data, nData);
 	//}
 
-	if (conversion_delay_us > 0)
-		usleep(conversion_delay_us);
+	if (conversion_delay_ms > 0)
+//		usleep(conversion_delay_us);
+		HYGRO_DelayMillis(InstancePtr, conversion_delay_ms);
 
 	XIic_Recv(InstancePtr->HYGROIic.BaseAddress, InstancePtr->chipAddr, Data, nData, XIIC_STOP);
 
@@ -359,7 +425,7 @@ static void StatusHandler(PmodHYGRO *InstancePtr){
 }
 
 /* ------------------------------------------------------------ */
-/*        HYGRO_getTemperature
+/*        float HYGRO_getTemperature(PmodHYGRO *InstancePtr)
 **
 **        Synopsis:
 **				getTemperature(&myDevice);
@@ -380,7 +446,7 @@ float HYGRO_getTemperature(PmodHYGRO *InstancePtr)
 {
 	u8 bytes[2];
 	float deg_c;
-	HYGRO_ReadIIC(InstancePtr, HYGRO_TEMP, bytes, 2, 7000); // conversion time for temperature at 14 bit resolution is 6.35 ms
+	HYGRO_ReadIIC(InstancePtr, HYGRO_TEMP, bytes, 2, 7); // conversion time for temperature at 14 bit resolution is 6.35 ms
 	deg_c = 256.0 * bytes[0] + 1.0 * bytes[1];
 	deg_c /= 65536.0;
 	deg_c *= 160.0;
@@ -390,7 +456,7 @@ float HYGRO_getTemperature(PmodHYGRO *InstancePtr)
 
 
 /* ------------------------------------------------------------ */
-/*        HYGRO_getHumidity
+/*        float HYGRO_getHumidity(PmodHYGRO *InstancePtr)
 **
 **        Synopsis:
 **				getHumidity(&myDevice);
@@ -410,7 +476,7 @@ float HYGRO_getTemperature(PmodHYGRO *InstancePtr)
 float HYGRO_getHumidity(PmodHYGRO *InstancePtr) {
 	u8 bytes[2];
 	float per_rh;
-	HYGRO_ReadIIC(InstancePtr, HYGRO_HUM, bytes, 2, 6500); // conversion time for humidity at 14 bit resolution is 6.35 ms
+	HYGRO_ReadIIC(InstancePtr, HYGRO_HUM, bytes, 2, 7); // conversion time for humidity at 14 bit resolution is 6.35 ms
 	per_rh = 256.0 * bytes[0] + 1.0 * bytes[1];
 	per_rh /= 65536.0;
 	per_rh *= 100.0; // conversion provided in reference manual
@@ -418,7 +484,7 @@ float HYGRO_getHumidity(PmodHYGRO *InstancePtr) {
 }
 
 /* ------------------------------------------------------------ */
-/*        HYGRO_tempF2C
+/*        float HYGRO_tempF2C(float deg_f)
 **
 **        Synopsis:
 **				HYGRO_tempF2C(deg_f);
@@ -440,7 +506,7 @@ float HYGRO_tempF2C(float deg_f)
 }
 
 /* ------------------------------------------------------------ */
-/*        HYGRO_tempC2F
+/*        float HYGRO_tempC2F(float deg_c)
 **
 **        Synopsis:
 **				HYGRO_tempC2F(deg_c);

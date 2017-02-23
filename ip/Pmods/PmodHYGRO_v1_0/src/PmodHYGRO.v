@@ -27,7 +27,27 @@ module PmodHYGRO
     AXI_LITE_IIC_wready,
     AXI_LITE_IIC_wstrb,
     AXI_LITE_IIC_wvalid,
+    
+    AXI_LITE_TMR_araddr,
+    AXI_LITE_TMR_arready,
+    AXI_LITE_TMR_arvalid,
+    AXI_LITE_TMR_awaddr,
+    AXI_LITE_TMR_awready,
+    AXI_LITE_TMR_awvalid,
+    AXI_LITE_TMR_bready,
+    AXI_LITE_TMR_bresp,
+    AXI_LITE_TMR_bvalid,
+    AXI_LITE_TMR_rdata,
+    AXI_LITE_TMR_rready,
+    AXI_LITE_TMR_rresp,
+    AXI_LITE_TMR_rvalid,
+    AXI_LITE_TMR_wdata,
+    AXI_LITE_TMR_wready,
+    AXI_LITE_TMR_wstrb,
+    AXI_LITE_TMR_wvalid,
+    
     I2C_Interrupt,
+    
     Pmod_out_pin10_i,
     Pmod_out_pin10_o,
     Pmod_out_pin10_t,
@@ -52,26 +72,48 @@ module PmodHYGRO
     Pmod_out_pin9_i,
     Pmod_out_pin9_o,
     Pmod_out_pin9_t,
+    
     s_axi_aclk,
-    s_axi_aresetn);
-  input [8:0]AXI_LITE_IIC_araddr;
-  output AXI_LITE_IIC_arready;
-  input AXI_LITE_IIC_arvalid;
-  input [8:0]AXI_LITE_IIC_awaddr;
-  output AXI_LITE_IIC_awready;
-  input AXI_LITE_IIC_awvalid;
-  input AXI_LITE_IIC_bready;
-  output [1:0]AXI_LITE_IIC_bresp;
-  output AXI_LITE_IIC_bvalid;
-  output [31:0]AXI_LITE_IIC_rdata;
-  input AXI_LITE_IIC_rready;
-  output [1:0]AXI_LITE_IIC_rresp;
-  output AXI_LITE_IIC_rvalid;
-  input [31:0]AXI_LITE_IIC_wdata;
-  output AXI_LITE_IIC_wready;
-  input [3:0]AXI_LITE_IIC_wstrb;
-  input AXI_LITE_IIC_wvalid;
-  output I2C_Interrupt;
+    s_axi_aresetn
+    );
+    output I2C_Interrupt;
+  
+    input [8:0]   AXI_LITE_IIC_araddr;
+    output        AXI_LITE_IIC_arready;
+    input         AXI_LITE_IIC_arvalid;
+    input [8:0]   AXI_LITE_IIC_awaddr;
+    output        AXI_LITE_IIC_awready;
+    input         AXI_LITE_IIC_awvalid;
+    input         AXI_LITE_IIC_bready;
+    output [1:0]  AXI_LITE_IIC_bresp;
+    output        AXI_LITE_IIC_bvalid;
+    output [31:0] AXI_LITE_IIC_rdata;
+    input         AXI_LITE_IIC_rready;
+    output [1:0]  AXI_LITE_IIC_rresp;
+    output        AXI_LITE_IIC_rvalid;
+    input [31:0]  AXI_LITE_IIC_wdata;
+    output        AXI_LITE_IIC_wready;
+    input [3:0]   AXI_LITE_IIC_wstrb;
+    input         AXI_LITE_IIC_wvalid;
+    
+    input [8:0]   AXI_LITE_TMR_araddr;
+    output        AXI_LITE_TMR_arready;
+    input         AXI_LITE_TMR_arvalid;
+    input [8:0]   AXI_LITE_TMR_awaddr;
+    output        AXI_LITE_TMR_awready;
+    input         AXI_LITE_TMR_awvalid;
+    input         AXI_LITE_TMR_bready;
+    output [1:0]  AXI_LITE_TMR_bresp;
+    output        AXI_LITE_TMR_bvalid;
+    output [31:0] AXI_LITE_TMR_rdata;
+    input         AXI_LITE_TMR_rready;
+    output [1:0]  AXI_LITE_TMR_rresp;
+    output        AXI_LITE_TMR_rvalid;
+    input [31:0]  AXI_LITE_TMR_wdata;
+    output        AXI_LITE_TMR_wready;
+    input [3:0]   AXI_LITE_TMR_wstrb;
+    input         AXI_LITE_TMR_wvalid;
+    
   input Pmod_out_pin10_i;
   output Pmod_out_pin10_o;
   output Pmod_out_pin10_t;
@@ -99,23 +141,43 @@ module PmodHYGRO
   input s_axi_aclk;
   input s_axi_aresetn;
 
-  wire [8:0]S_AXI_1_ARADDR;
-  wire S_AXI_1_ARREADY;
-  wire S_AXI_1_ARVALID;
-  wire [8:0]S_AXI_1_AWADDR;
-  wire S_AXI_1_AWREADY;
-  wire S_AXI_1_AWVALID;
-  wire S_AXI_1_BREADY;
-  wire [1:0]S_AXI_1_BRESP;
-  wire S_AXI_1_BVALID;
-  wire [31:0]S_AXI_1_RDATA;
-  wire S_AXI_1_RREADY;
-  wire [1:0]S_AXI_1_RRESP;
-  wire S_AXI_1_RVALID;
-  wire [31:0]S_AXI_1_WDATA;
-  wire S_AXI_1_WREADY;
-  wire [3:0]S_AXI_1_WSTRB;
-  wire S_AXI_1_WVALID;
+    wire [8:0]    S_AXI_1_ARADDR;
+    wire          S_AXI_1_ARREADY;
+    wire          S_AXI_1_ARVALID;
+    wire [8:0]    S_AXI_1_AWADDR;
+    wire          S_AXI_1_AWREADY;
+    wire          S_AXI_1_AWVALID;
+    wire          S_AXI_1_BREADY;
+    wire [1:0]    S_AXI_1_BRESP;
+    wire          S_AXI_1_BVALID;
+    wire [31:0]   S_AXI_1_RDATA;
+    wire          S_AXI_1_RREADY;
+    wire [1:0]    S_AXI_1_RRESP;
+    wire          S_AXI_1_RVALID;
+    wire [31:0]   S_AXI_1_WDATA;
+    wire          S_AXI_1_WREADY;
+    wire [3:0]    S_AXI_1_WSTRB;
+    wire          S_AXI_1_WVALID;
+  
+    wire [8:0]    S_AXI_2_ARADDR;
+    wire          S_AXI_2_ARREADY;
+    wire          S_AXI_2_ARVALID;
+    wire [8:0]    S_AXI_2_AWADDR;
+    wire          S_AXI_2_AWREADY;
+    wire          S_AXI_2_AWVALID;
+    wire          S_AXI_2_BREADY;
+    wire [1:0]    S_AXI_2_BRESP;
+    wire          S_AXI_2_BVALID;
+    wire [31:0]   S_AXI_2_RDATA;
+    wire          S_AXI_2_RREADY;
+    wire [1:0]    S_AXI_2_RRESP;
+    wire          S_AXI_2_RVALID;
+    wire [31:0]   S_AXI_2_WDATA;
+    wire          S_AXI_2_WREADY;
+    wire [3:0]    S_AXI_2_WSTRB;
+    wire          S_AXI_2_WVALID;
+    
+  
   wire axi_iic_0_IIC_SCL_I;
   wire axi_iic_0_IIC_SCL_O;
   wire axi_iic_0_IIC_SCL_T;
@@ -124,6 +186,7 @@ module PmodHYGRO
   wire axi_iic_0_IIC_SDA_T;
   wire [1:0]axi_iic_0_gpo;
   wire axi_iic_0_iic2intc_irpt;
+  
   wire pmod_bridge_0_Pmod_out_PIN10_I;
   wire pmod_bridge_0_Pmod_out_PIN10_O;
   wire pmod_bridge_0_Pmod_out_PIN10_T;
@@ -148,18 +211,30 @@ module PmodHYGRO
   wire pmod_bridge_0_Pmod_out_PIN9_I;
   wire pmod_bridge_0_Pmod_out_PIN9_O;
   wire pmod_bridge_0_Pmod_out_PIN9_T;
+  
   wire s_axi_aclk_1;
   wire s_axi_aresetn_1;
+  
   wire [1:0]xlconstant_0_dout;
 
-  assign AXI_LITE_IIC_arready = S_AXI_1_ARREADY;
-  assign AXI_LITE_IIC_awready = S_AXI_1_AWREADY;
-  assign AXI_LITE_IIC_bresp[1:0] = S_AXI_1_BRESP;
-  assign AXI_LITE_IIC_bvalid = S_AXI_1_BVALID;
-  assign AXI_LITE_IIC_rdata[31:0] = S_AXI_1_RDATA;
-  assign AXI_LITE_IIC_rresp[1:0] = S_AXI_1_RRESP;
-  assign AXI_LITE_IIC_rvalid = S_AXI_1_RVALID;
-  assign AXI_LITE_IIC_wready = S_AXI_1_WREADY;
+    assign AXI_LITE_IIC_arready       = S_AXI_1_ARREADY;
+    assign AXI_LITE_IIC_awready       = S_AXI_1_AWREADY;
+    assign AXI_LITE_IIC_bresp[1:0]    = S_AXI_1_BRESP;
+    assign AXI_LITE_IIC_bvalid        = S_AXI_1_BVALID;
+    assign AXI_LITE_IIC_rdata[31:0]   = S_AXI_1_RDATA;
+    assign AXI_LITE_IIC_rresp[1:0]    = S_AXI_1_RRESP;
+    assign AXI_LITE_IIC_rvalid        = S_AXI_1_RVALID;
+    assign AXI_LITE_IIC_wready        = S_AXI_1_WREADY;
+    
+    assign AXI_LITE_TMR_arready       = S_AXI_2_ARREADY;
+    assign AXI_LITE_TMR_awready       = S_AXI_2_AWREADY;
+    assign AXI_LITE_TMR_bresp[1:0]    = S_AXI_2_BRESP;
+    assign AXI_LITE_TMR_bvalid        = S_AXI_2_BVALID;
+    assign AXI_LITE_TMR_rdata[31:0]   = S_AXI_2_RDATA;
+    assign AXI_LITE_TMR_rresp[1:0]    = S_AXI_2_RRESP;
+    assign AXI_LITE_TMR_rvalid        = S_AXI_2_RVALID;
+    assign AXI_LITE_TMR_wready        = S_AXI_2_WREADY;
+    
   assign I2C_Interrupt = axi_iic_0_iic2intc_irpt;
   assign Pmod_out_pin10_o = pmod_bridge_0_Pmod_out_PIN10_O;
   assign Pmod_out_pin10_t = pmod_bridge_0_Pmod_out_PIN10_T;
@@ -177,15 +252,27 @@ module PmodHYGRO
   assign Pmod_out_pin8_t = pmod_bridge_0_Pmod_out_PIN8_T;
   assign Pmod_out_pin9_o = pmod_bridge_0_Pmod_out_PIN9_O;
   assign Pmod_out_pin9_t = pmod_bridge_0_Pmod_out_PIN9_T;
-  assign S_AXI_1_ARADDR = AXI_LITE_IIC_araddr[8:0];
-  assign S_AXI_1_ARVALID = AXI_LITE_IIC_arvalid;
-  assign S_AXI_1_AWADDR = AXI_LITE_IIC_awaddr[8:0];
-  assign S_AXI_1_AWVALID = AXI_LITE_IIC_awvalid;
-  assign S_AXI_1_BREADY = AXI_LITE_IIC_bready;
-  assign S_AXI_1_RREADY = AXI_LITE_IIC_rready;
-  assign S_AXI_1_WDATA = AXI_LITE_IIC_wdata[31:0];
-  assign S_AXI_1_WSTRB = AXI_LITE_IIC_wstrb[3:0];
-  assign S_AXI_1_WVALID = AXI_LITE_IIC_wvalid;
+  
+    assign S_AXI_2_ARADDR     = AXI_LITE_TMR_araddr[8:0];
+    assign S_AXI_2_ARVALID    = AXI_LITE_TMR_arvalid;
+    assign S_AXI_2_AWADDR     = AXI_LITE_TMR_awaddr[8:0];
+    assign S_AXI_2_AWVALID    = AXI_LITE_TMR_awvalid;
+    assign S_AXI_2_BREADY     = AXI_LITE_TMR_bready;
+    assign S_AXI_2_RREADY     = AXI_LITE_TMR_rready;
+    assign S_AXI_2_WDATA      = AXI_LITE_TMR_wdata[31:0];
+    assign S_AXI_2_WSTRB      = AXI_LITE_TMR_wstrb[3:0];
+    assign S_AXI_2_WVALID     = AXI_LITE_TMR_wvalid;
+
+    assign S_AXI_1_ARADDR     = AXI_LITE_IIC_araddr[8:0];
+    assign S_AXI_1_ARVALID    = AXI_LITE_IIC_arvalid;
+    assign S_AXI_1_AWADDR     = AXI_LITE_IIC_awaddr[8:0];
+    assign S_AXI_1_AWVALID    = AXI_LITE_IIC_awvalid;
+    assign S_AXI_1_BREADY     = AXI_LITE_IIC_bready;
+    assign S_AXI_1_RREADY     = AXI_LITE_IIC_rready;
+    assign S_AXI_1_WDATA      = AXI_LITE_IIC_wdata[31:0];
+    assign S_AXI_1_WSTRB      = AXI_LITE_IIC_wstrb[3:0];
+    assign S_AXI_1_WVALID     = AXI_LITE_IIC_wvalid;
+
   assign pmod_bridge_0_Pmod_out_PIN10_I = Pmod_out_pin10_i;
   assign pmod_bridge_0_Pmod_out_PIN1_I = Pmod_out_pin1_i;
   assign pmod_bridge_0_Pmod_out_PIN2_I = Pmod_out_pin2_i;
@@ -194,8 +281,31 @@ module PmodHYGRO
   assign pmod_bridge_0_Pmod_out_PIN7_I = Pmod_out_pin7_i;
   assign pmod_bridge_0_Pmod_out_PIN8_I = Pmod_out_pin8_i;
   assign pmod_bridge_0_Pmod_out_PIN9_I = Pmod_out_pin9_i;
+  
   assign s_axi_aclk_1 = s_axi_aclk;
   assign s_axi_aresetn_1 = s_axi_aresetn;
+  
+    PmodHYGRO_axi_timer_0_0 axi_timer_0 (
+          .s_axi_aclk       (s_axi_aclk_1),
+          .s_axi_araddr     (S_AXI_2_ARADDR),
+          .s_axi_aresetn    (s_axi_aresetn_1),
+          .s_axi_arready    (S_AXI_2_ARREADY),
+          .s_axi_arvalid    (S_AXI_2_ARVALID),
+          .s_axi_awaddr     (S_AXI_2_AWADDR),
+          .s_axi_awready    (S_AXI_2_AWREADY),
+          .s_axi_awvalid    (S_AXI_2_AWVALID),
+          .s_axi_bready     (S_AXI_2_BREADY),
+          .s_axi_bresp      (S_AXI_2_BRESP),
+          .s_axi_bvalid     (S_AXI_2_BVALID),
+          .s_axi_rdata      (S_AXI_2_RDATA),
+          .s_axi_rready     (S_AXI_2_RREADY),
+          .s_axi_rresp      (S_AXI_2_RRESP),
+          .s_axi_rvalid     (S_AXI_2_RVALID),
+          .s_axi_wdata      (S_AXI_2_WDATA),
+          .s_axi_wready     (S_AXI_2_WREADY),
+          .s_axi_wstrb      (S_AXI_2_WSTRB),
+          .s_axi_wvalid     (S_AXI_2_WVALID)
+    );
   PmodHYGRO_axi_iic_0_0 axi_iic_0
        (.gpo(axi_iic_0_gpo),
         .iic2intc_irpt(axi_iic_0_iic2intc_irpt),

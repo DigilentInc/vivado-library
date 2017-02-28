@@ -33,8 +33,10 @@
 #ifdef __MICROBLAZE__
 	#include "microblaze_sleep.h"
 	//(deprecated in Vivado 2016.4)
+	#define TIMER_FREQ_HZ XPAR_CPU_M_AXI_DP_FREQ_HZ
 #else
 	#include "sleep.h"
+	#define TIMER_FREQ_HZ XPAR_PS7_UART_1_UART_CLK_FREQ_HZ
 #endif
 
 PmodHYGRO myDevice;
@@ -65,7 +67,7 @@ void DemoInitialize()
     		0x40, // chip address of PmodHYGRO IIC
     		XPAR_PMODHYGRO_0_AXI_LITE_TMR_BASEADDR,
     		XPAR_PMODHYGRO_0_DEVICE_ID,
-    		XPAR_CPU_M_AXI_DP_FREQ_HZ // the clock frequency of the AXI bus, used to convert timer data
+    		TIMER_FREQ_HZ // the clock frequency of the AXI bus, used to convert timer data
 	);
     xil_printf("Init Done\n\r");
 }

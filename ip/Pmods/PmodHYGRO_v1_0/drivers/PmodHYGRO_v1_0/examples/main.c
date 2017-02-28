@@ -36,7 +36,7 @@
 	#define TIMER_FREQ_HZ XPAR_CPU_M_AXI_DP_FREQ_HZ
 #else
 	#include "sleep.h"
-	#define TIMER_FREQ_HZ XPAR_PS7_UART_1_UART_CLK_FREQ_HZ
+	#define TIMER_FREQ_HZ 100000000
 #endif
 
 PmodHYGRO myDevice;

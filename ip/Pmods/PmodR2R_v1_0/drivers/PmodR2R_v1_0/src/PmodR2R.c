@@ -31,7 +31,6 @@
 **	Parameters:
 **		InstancePtr: A PmodR2R object to start
 **		GPIO_Address: The Base address of the PmodR2R GPIO
-**		SPI_Address: The Base address of the PmodR2R SPI
 **
 **	Return Value:
 **		none

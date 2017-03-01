@@ -1,14 +1,13 @@
 /************************************************************************/
 /*																		*/
-/*	HYGROI2C.h		--		Declaration for HYGROI2C library		 	*/
+/*	PmodR2R.h		--		Declaration for PmodR2R library		 	*/
 /*																		*/
 /************************************************************************/
 /*	Author:		Arthur Brown											*/
 /*	Copyright 2017, Digilent Inc.										*/
 /************************************************************************/
 /*  File Description:													*/
-/*	This file declares the R2R library functions and the constants		*/
-/*	involved.															*/
+/*	This file declares the R2R library functions.															*/
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/
@@ -37,5 +36,5 @@ typedef struct PmodR2R{
 
 	void R2R_begin(PmodR2R* InstancePtr, u32 GPIO_Address);
 	void R2R_writeVoltage(PmodR2R* InstancePtr, double voltage);
-	void R2R_delay(int millis);
+	
 #endif // PmodR2R_H

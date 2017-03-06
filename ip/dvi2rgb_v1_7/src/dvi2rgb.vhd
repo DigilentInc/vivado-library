@@ -119,7 +119,10 @@ signal aRst_int, pRst_int : std_logic;
 
 signal pData : std_logic_vector(23 downto 0);
 signal pVDE, pHSync, pVSync : std_logic;
-
+-- set KEEP attribute so that synthesis does not optimize this register
+-- in case we want to connect it to an inserted ILA debug core
+attribute KEEP : string;
+attribute KEEP of pEyeSize: signal is "TRUE";
 begin
 
 ResetActiveLow: if not kRstActiveHigh generate

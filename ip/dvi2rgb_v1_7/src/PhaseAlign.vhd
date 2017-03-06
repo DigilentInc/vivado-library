@@ -315,7 +315,8 @@ begin
    end if;
 end process FSM_Flags;
 
-FSM_NextState: process (pState, pBlankBegin, pTimeoutOvf, pCtlTknOvf, pDelayOvf, pDelayFastOvf, pDelayWaitOvf, pDelayCenter, pFoundEyeFlag, pTknFlagQ)
+FSM_NextState: process (pState, pBlankBegin, pTimeoutOvf, pCtlTknOvf, pDelayOvf, pDelayFastOvf, pDelayWaitOvf,
+pEyeOpenCnt, pDelayCenter, pFoundEyeFlag, pTknFlagQ)
 begin
 
    pStateNxt <= pState;  --default is to stay in current state

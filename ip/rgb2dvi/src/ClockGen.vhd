@@ -68,6 +68,11 @@ end component ResetBridge;
 signal PixelClkInX1, PixelClkInX5, FeedbackClk : std_logic;
 signal aLocked_int, pLocked, pRst, pLockWasLost : std_logic;
 signal pLocked_q : std_logic_vector(2 downto 0) := (others => '1');
+
+attribute CLOCK_BUFFER_TYPE : string;
+attribute CLOCK_BUFFER_TYPE of PixelClkInX5: signal is "NONE";
+attribute CLOCK_BUFFER_TYPE of PixelClkInX1: signal is "NONE";
+
 begin
 
 -- We need a reset bridge to use the asynchronous aRst signal to reset our circuitry

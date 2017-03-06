@@ -1,32 +1,58 @@
+/***************************************************************************/
+/*                                                                         */
+/*	main.c		--		Definition for Pmod TC1 demo	 	               */
+/*                                                                         */
+/***************************************************************************/
+/*	Author:		Arthur Brown											   */
+/*	Copyright 2017, Digilent Inc.										   */
+/***************************************************************************/
+/*  File Description:													   */
+/*	This file defines a demonstration for the use of the Pmod Thermocouple */
+/*  IP core. Temperature data in Fahrenheit is streamed out over UART to a */
+/*  serial terminal such as TeraTerm twice per second.                     */
+/*																		   */
+/*   UART TYPE   BAUD RATE                        						   */
+/*   uartns550   9600													   */
+/*   uartlite    Configurable only in HW design							   */
+/*   ps7_uart    115200 (configured by bootrom/bsp)						   */
+/*																		   */
+/***************************************************************************/
+/*  Revision History:													   */
+/*	02/28/2017(ArtVVB): validated										   */
+/***************************************************************************/
+
+
+#include "PmodTC1.h"
 #include "xparameters.h"
 #include "xil_cache.h"
-#include "PmodTC1.h"
-#include <stdio.h>
-#include "platform.h"
 #include "xil_printf.h"
-#ifdef XPAR_MICROBLAZE_ID
-#include "microblaze_sleep.h"
+#ifdef __MICROBLAZE__
+	#include "microblaze_sleep.h"
+	//(deprecated in Vivado 2016.4)
+#else
+	#include "sleep.h"
 #endif
 
 void DemoInitialize();
 void DemoRun();
+void DemoCleanup();
+void EnableCaches();
+void DisableCaches();
+void DemoSleep(int millis);
 
 PmodTC1 myDevice;
 
 int main(void)
 {
-	Xil_ICacheEnable();
-	Xil_DCacheEnable();
-
 	DemoInitialize();
 	DemoRun();
+	DemoCleanup();
 	return 0;
 }
 
 void DemoInitialize()
 {
-	init_platform();
-
+	EnableCaches();
     TC1_begin(&myDevice, XPAR_PMODTC1_0_AXI_LITE_SPI_BASEADDR);
 }
 
@@ -34,22 +60,58 @@ void DemoInitialize()
 void DemoRun()
 {
 	double celsius, fahrenheit;
-	xil_printf("starting...\n\r");
+	xil_printf("Starting Pmod TC1 Demo...\n\r");
 
     while(1)
     {
     	celsius = TC1_getTemp(&myDevice);
-    	fahrenheit = TC1_celToFar(celsius);
-		xil_printf("\n\r\n\r");
-		xil_printf("Temperature: %d.%d deg C\n\r", (int)celsius, (int)(celsius*100)%100);
-		xil_printf("Temperature: %d.%d deg F\n\r", (int)fahrenheit, (int)(fahrenheit*100)%100);
-#ifdef XPAR_MICROBLAZE_ID
-		MB_Sleep(500);
-#else
-		sleep(1);
-#endif
+    	fahrenheit = TC1_tempC2F(celsius);
+		xil_printf("Temperature: %d.%d deg F   %d.%d deg C\n\r",
+			(int)(fahrenheit),
+			(int)(fahrenheit*100)%100,
+			(int)(celsius),
+			(int)(celsius*100)%100
+		);
+		DemoSleep(500);
     }
+}
 
+
+void DemoCleanup()
+{
     TC1_end(&myDevice);
-    cleanup_platform();
+	DisableCaches();
+}
+
+void DemoSleep(int millis)
+{
+#ifdef __MICROBLAZE__
+	MB_Sleep(millis);
+#else
+	usleep(1000 * millis);//delay for param microseconds
+#endif
+}
+
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+	Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+	Xil_ICacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+	Xil_DCacheDisable();
+#endif
+#endif
 }

@@ -14,6 +14,7 @@
 /*  Revision History:													*/
 /*																		*/
 /*	01/30/2017(ArtVVB): created											*/
+/*	02/21/2017(ArtVVB): validated										*/
 /*																		*/
 /************************************************************************/
 
@@ -25,7 +26,7 @@
 #include "xstatus.h"
 #include "xiic_l.h"
 #include "xiic.h"
-#include "xparameters.h"
+#include "xtmrctr.h"
 
 /* ------------------------------------------------------------ */
 /*					Definitions									*/
@@ -79,6 +80,8 @@
 
 typedef struct PmodHYGRO{
 	XIic HYGROIic;
+	XTmrCtr HYGROTimer;
+	u32 clockFreqHz;
 	u8 chipAddr;
 	u8 currentRegister;
 	u8 recvbytes;
@@ -88,12 +91,14 @@ typedef struct PmodHYGRO{
 #endif
 }PmodHYGRO;
 
-void HYGRO_begin(PmodHYGRO* InstancePtr, u32 IIC_Address, u8 Chip_Address);
+void HYGRO_begin(PmodHYGRO* InstancePtr, u32 IIC_Address, u8 Chip_Address, u32 TMR_Address, UINTPTR TMR_DeviceId, u32 TMR_SysClockFreqHz);
 void HYGRO_end(PmodHYGRO* InstancePtr);
+void HYGRO_TimerInit(XTmrCtr* TMRInstancePtr, XTmrCtr_Config* TMRConfigPtr);
 int HYGRO_IICInit(XIic *IicInstancePtr);
-void HYGRO_ReadIIC(PmodHYGRO* InstancePtr, u8 reg, u8 *Data, int nData, int conversion_delay_us);
+void HYGRO_ReadIIC(PmodHYGRO* InstancePtr, u8 reg, u8 *Data, int nData, u32 conversion_delay_ms);
 void HYGRO_WriteIIC(PmodHYGRO* InstancePtr, u8 reg, u8 *Data, int nData);
 int HYGRO_SetupInterruptSystem(PmodHYGRO* InstancePtr, u32 interruptDeviceID, u32 interruptID, void* SendHandler,  void* ReceiveHandler);
+void HYGRO_DelayMillis(PmodHYGRO* InstancePtr, u32 millis);
 
 float HYGRO_getTemperature(PmodHYGRO *InstancePtr);
 float HYGRO_getHumidity(PmodHYGRO *InstancePtr);

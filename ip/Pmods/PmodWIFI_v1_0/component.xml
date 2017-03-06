@@ -3853,7 +3853,6 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodWIFI_v1_0</xilinx:displayName>
-      <xilinx:definitionSource>IPI</xilinx:definitionSource>
       <xilinx:coreRevision>25</xilinx:coreRevision>
       <xilinx:coreCreationDateTime>2016-08-22T16:54:23Z</xilinx:coreCreationDateTime>
       <xilinx:tags>

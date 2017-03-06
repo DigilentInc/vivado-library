@@ -1,36 +1,20 @@
 /************************************************************************/
 /*																		*/
-/* PmodTC1.c	--		Template driver for a Pmod which uses SPI		*/
+/*	PmodTC1.c		--		Definitions for the PmodTC1 library		 	*/
 /*																		*/
 /************************************************************************/
-/*	Author:		Mikel Skreen											*/
-/*	Copyright 2016, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+/*	Author:		Arthur Brown											*/
+/*	Copyright 2017, Digilent Inc.										*/
 /************************************************************************/
 /*  File Description:													*/
-/*																		*/
 /*	This file contains a basic library in order to read temperature 	*/
-/*  from Digilent's PmodTC1.											*/
+/*  from Digilent's Pmod TC1 thermocouple								*/
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*  06/02/2016(MikelS):  Created										*/
+/*  06/02/2016(MikelS): Created											*/
+/*	03/01/2017(ArtVVB): Validated for Vivado 2015.4						*/
 /*																		*/
 /************************************************************************/
 
@@ -268,6 +252,6 @@ double TC1_getAMBTemp(PmodTC1* InstancePtr){
 **  Description:
 **   	converts a temperature in celsius to farenheit
 */
-double TC1_celToFar(double celsius){
+double TC1_tempC2F(double celsius){
 	return (celsius * 1.8) + 32;
 }

@@ -187,7 +187,7 @@
       <spirit:portMaps>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>cfgclk</spirit:name>
+            <spirit:name>CFGCLK</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>cfgclk</spirit:name>
@@ -195,7 +195,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>cfgmclk</spirit:name>
+            <spirit:name>CFGMCLK</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>cfgmclk</spirit:name>
@@ -203,7 +203,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>di</spirit:name>
+            <spirit:name>DI</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>di</spirit:name>
@@ -211,7 +211,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>eos</spirit:name>
+            <spirit:name>EOS</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>eos</spirit:name>
@@ -219,7 +219,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>preq</spirit:name>
+            <spirit:name>PREQ</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>preq</spirit:name>
@@ -243,7 +243,7 @@
       <spirit:portMaps>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>cfgclk</spirit:name>
+            <spirit:name>CFGCLK</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>cfgclk</spirit:name>
@@ -251,7 +251,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>cfgmclk</spirit:name>
+            <spirit:name>CFGMCLK</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>cfgmclk</spirit:name>
@@ -259,7 +259,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>clk</spirit:name>
+            <spirit:name>CLK</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>clk</spirit:name>
@@ -267,7 +267,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>eos</spirit:name>
+            <spirit:name>EOS</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>eos</spirit:name>
@@ -275,7 +275,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>gsr</spirit:name>
+            <spirit:name>GSR</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>gsr</spirit:name>
@@ -283,7 +283,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>gts</spirit:name>
+            <spirit:name>GTS</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>gts</spirit:name>
@@ -291,7 +291,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>keyclearb</spirit:name>
+            <spirit:name>KEYCLEARB</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>keyclearb</spirit:name>
@@ -299,7 +299,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>pack</spirit:name>
+            <spirit:name>PACK</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>pack</spirit:name>
@@ -307,7 +307,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>preq</spirit:name>
+            <spirit:name>PREQ</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>preq</spirit:name>
@@ -315,15 +315,7 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>userdoneo</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>usrdoneo</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>usrclkts</spirit:name>
+            <spirit:name>USRCCLKTS</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>usrcclkts</spirit:name>
@@ -331,7 +323,15 @@
         </spirit:portMap>
         <spirit:portMap>
           <spirit:logicalPort>
-            <spirit:name>usrdonets</spirit:name>
+            <spirit:name>USRDONEO</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>usrdoneo</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>USRDONETS</spirit:name>
           </spirit:logicalPort>
           <spirit:physicalPort>
             <spirit:name>usrdonets</spirit:name>
@@ -974,12 +974,8 @@
   <spirit:memoryMaps>
     <spirit:memoryMap>
       <spirit:name>aximm</spirit:name>
-      <spirit:displayName>AXI Register Map</spirit:displayName>
-      <spirit:description>Memory Map for aximm</spirit:description>
       <spirit:addressBlock>
         <spirit:name>MEM0</spirit:name>
-        <spirit:displayName>MEM0</spirit:displayName>
-        <spirit:description>Register Block</spirit:description>
         <spirit:baseAddress spirit:format="long">0</spirit:baseAddress>
         <spirit:range spirit:format="long" spirit:minimum="256" spirit:rangeType="long">4096</spirit:range>
         <spirit:width spirit:format="long">32</spirit:width>
@@ -995,1316 +991,6 @@
             <spirit:value spirit:id="ADDRBLOCKPARAM_VALUE.AXIMM.MEM0.OFFSET_HIGH_PARAM">C_S_AXI4_HIGHADDR</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
-        <spirit:register>
-          <spirit:name>SRR</spirit:name>
-          <spirit:displayName>Software Reset Register</spirit:displayName>
-          <spirit:description>Software Reset Register</spirit:description>
-          <spirit:addressOffset>0x40</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>write-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>Reset</spirit:name>
-            <spirit:displayName>AXI Quad SPI Reset</spirit:displayName>
-            <spirit:description>The only allowed operation on this register is a write of 0x0000000a, which resets the AXI Quad SPI core.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">32</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>write-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SRR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPICR</spirit:name>
-          <spirit:displayName>SPI Control Register</spirit:displayName>
-          <spirit:description>SPI Control Register</spirit:description>
-          <spirit:addressOffset>0x60</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-write</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x180</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>LOOP</spirit:name>
-            <spirit:displayName>Loopback Mode</spirit:displayName>
-            <spirit:description>Local loopback mode
-Enables local loopback operation and is functional only in standard SPI master mode.
-When set to:   0 - Normal operation.   1 - Loopback mode. The transmitter output is internally connected to the receiver input. The receiver and transmitter operate normally, except that received data (from remote slave) is ignored.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>SPE</spirit:name>
-            <spirit:displayName>SPI System Enable</spirit:displayName>
-            <spirit:description>SPI system enable
-When set to:
-  0 - SPI system disabled. Both master and slave outputs are in 3-state and slave inputs are ignored.
-  1 - SPI system enabled. Master outputs active (for example, IO0 (MOSI) and SCK in idle state) and slave outputs become active if SS becomes asserted. The master starts transferring when transmit data is available.
-</spirit:description>
-            <spirit:bitOffset>1</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Master</spirit:name>
-            <spirit:displayName>Master</spirit:displayName>
-            <spirit:description>Master (SPI master mode)
-Setting this bit configures the SPI device as a master or a slave.
-When set to:
-  0 - Slave configuration.
-  1 - Master configuration.
-In dual/quad SPI mode only the master mode of the core is allowed.
-Standard Slave mode is not supported for SCK ratio = 2
-</spirit:description>
-            <spirit:bitOffset>2</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPOL</spirit:name>
-            <spirit:displayName>Clock Polarity</spirit:displayName>
-            <spirit:description>Clock polarity
-Setting this bit defines clock polarity.
-When set to:
-  0 - Active-High clock; SCK idles Low.
-  1 - Active-Low clock; SCK idles High.
-</spirit:description>
-            <spirit:bitOffset>3</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPHA</spirit:name>
-            <spirit:displayName>Clock Phase</spirit:displayName>
-            <spirit:description>Clock phase
-Setting this bit selects one of two fundamentally different transfer formats.
-</spirit:description>
-            <spirit:bitOffset>4</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>TX_FIFO_Reset</spirit:name>
-            <spirit:displayName>Transmit FIFO reset</spirit:displayName>
-            <spirit:description>Transmit FIFO reset
-When written to 1, this bit forces a reset of the transmit FIFO to the empty condition. One AXI clock cycle after reset, this bit is again set to 0.
-When set to:   0 - Transmit FIFO normal operation.   1 - Reset transmit FIFO pointer
-</spirit:description>
-            <spirit:bitOffset>5</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>RX_FIFO_Reset</spirit:name>
-            <spirit:displayName>Receive FIFO reset</spirit:displayName>
-            <spirit:description>Receive FIFO reset
-When written to 1, this bit forces a reset of the receive FIFO to the empty condition. One AXI clock cycle after reset, this bit is again set to 0.
-When set to:   0 - Receive FIFO normal operation.   1 - Reset receive FIFO pointer.
-</spirit:description>
-            <spirit:bitOffset>6</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Manual_Slave_Select_Assertion_Enable</spirit:name>
-            <spirit:displayName>Manual Slave Select Assertion Enable</spirit:displayName>
-            <spirit:description>Manual slave select assertion enable
-This bit forces the data in the slave select register to be asserted on the slave select output anytime the device is configured as a master and the device is enabled (SPE asserted).
-This bit has no effect on slave operation.
-When set to:   0 - Slave select output asserted by master core logic.   1 - Slave select output follows data in slave select register. The manual slave assertion mode is supported in standard SPI mode only.
-</spirit:description>
-            <spirit:bitOffset>7</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Master_Transaction_Inhibit</spirit:name>
-            <spirit:displayName>Master_Transaction_Inhibit</spirit:displayName>
-            <spirit:description>Master transaction inhibit
-This bit inhibits master transactions.
-This bit has no effect on slave operation.
-When set to:   0 - Master transactions enabled.   1 - Master transactions disabled. This bit immediately inhibits the transaction. Setting this bit while transfer is in progress would result in unpredictable outcome
-</spirit:description>
-            <spirit:bitOffset>8</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>LSB_First</spirit:name>
-            <spirit:displayName>LSB First</spirit:displayName>
-            <spirit:description>LSB first
-This bit selects LSB first data transfer format.
-The default transfer format is MSB first.
-When set to:
-  0 - MSB first transfer format.
-  1 - LSB first transfer format.
-In Dual/Quad SPI mode, only the MSB first mode of the core is allowed.
-</spirit:description>
-            <spirit:bitOffset>9</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SPICR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPISR</spirit:name>
-          <spirit:displayName>SPI Status Register</spirit:displayName>
-          <spirit:description>SPI Status Register</spirit:description>
-          <spirit:addressOffset>0x64</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0A5</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>RX_Empty</spirit:name>
-            <spirit:displayName>Receive Empty</spirit:displayName>
-            <spirit:description>Receive Empty.
-When a receive FIFO exists, this bit is set High when the receive FIFO is empty. The occupancy of the FIFO is decremented with each FIFO read operation.
-Note: When FIFOs do not exist, this bit is set High when the receive register has been read (this option is available only in standard SPI mode). This bit is cleared at the end of a successful SPI transfer. For dual/quad SPI mode, the FIFO is always present in the core.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>RX_Full</spirit:name>
-            <spirit:displayName>Receive Full</spirit:displayName>
-            <spirit:description>Receive full.
-When a receive FIFO exists, this bit is set High when the receive FIFO is full. The occupancy of the FIFO is incremented with the completion of each SPI transaction.
-Note: When FIFOs do not exist, this bit is set High when an SPI transfer has completed (this option is available only in standard SPI mode). Rx_Empty and Rx_Full are complements in this case
-</spirit:description>
-            <spirit:bitOffset>1</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>TX_Empty</spirit:name>
-            <spirit:displayName>Transmit Empty</spirit:displayName>
-            <spirit:description>Transmit empty.
-When a transmit FIFO exists, this bit is set to High when the transmit FIFO is empty. This bit goes High as soon as the TX FIFO becomes empty. While this bit is High, the last byte of the data that is to be transmitted would still be in the pipeline.
-The occupancy of the FIFO is decremented with the completion of each SPI transfer.
-Note: When FIFOs do not exist, this bit is set with the completion of an SPI transfer (this option is available only in standard SPI mode). Either with or without FIFOs, this bit is cleared on an AXI write to the FIFO or transmit register. For Dual/Quad SPI mode, the FIFO is always present in the core.
-</spirit:description>
-            <spirit:bitOffset>2</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>TX_Full</spirit:name>
-            <spirit:displayName>Transmit Full</spirit:displayName>
-            <spirit:description>Transmit full.
-When a transmit FIFO exists, this bit is set High when the transmit FIFO is full.
-Note: When FIFOs do not exist, this bit is set High when an AXI write to the transmit register has been made (this option is available only in standard SPI mode). This bit is cleared when the SPI transfer is completed
-</spirit:description>
-            <spirit:bitOffset>3</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>MODF</spirit:name>
-            <spirit:displayName>Mode-fault error flag</spirit:displayName>
-            <spirit:description>Mode-fault error flag.
-This flag is set if the SS signal goes active while the SPI device is configured as a master. MODF is automatically cleared by reading the SPISR. 
-A Low-to-High MODF transition generates a single-cycle strobe interrupt.   0 - No error.   1 - Error condition detected
-</spirit:description>
-            <spirit:bitOffset>4</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_Mode_Select</spirit:name>
-            <spirit:displayName>Slave Mode Select</spirit:displayName>
-            <spirit:description>Slave_Mode_Select flag.
-This flag is asserted when the core is configured in slave mode. Slave_Mode_Select is activated as soon as the master SPI core asserts the chip select pin for the core.
-1 - Default in standard mode.
-0 - Asserted when core configured in slave mode and selected by external SPI master.
-</spirit:description>
-            <spirit:bitOffset>5</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPOL_CPHA_Error</spirit:name>
-            <spirit:displayName>CPOL_CPHA_Error</spirit:displayName>
-            <spirit:description>CPOL_CPHA_Error flag.
-When set to:   0 - Default.   1 - The CPOL and CPHA are set to 01 or 10. When the SPI memory is chosen as either Winbond, Micron or Spansion, and CPOL and CPHA are configured as 01 or 10, this bit is set.
-These memories support CPOL=CPHA mode in 00 or in 11 mode. CPOL_CPHA_Error flag is only applicable when the core is configured either in dual or quad mode in legacy or enhanced mode AXI4 interface
-</spirit:description>
-            <spirit:bitOffset>6</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_mode_error</spirit:name>
-            <spirit:displayName>Slave mode error</spirit:displayName>
-            <spirit:description>Slave mode error flag.
-When set to:   1 - This bit is set when the core is configured with dual or quad SPI mode and the master is set to 0 in the control register (SPICR).   0 - Master mode is set in the control register (SPICR). Note: Quad SPI mode, only the master mode of the core is allowed. Slave mode error flag is only applicable when the core is configured either in dual or qu ad mode in legacy or enhanced AXI4 mode interface
-</spirit:description>
-            <spirit:bitOffset>7</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>MSB_Error</spirit:name>
-            <spirit:displayName>MSB Error</spirit:displayName>
-            <spirit:description>MSB error flag.
-When set to:   0 - Default.   1 - This bit is set when the core is configured to transfer the SPI transactions in either dual or quad SPI mode and LSB first bit is set in the control register (SPICR). Note: In dual/quad SPI mode, only the MSB first mode of the core is allowed. MSB error flag is only applicable when the core is configured either in dual or quad mode in legacy or enhanced mode AXI4 interface
-</spirit:description>
-            <spirit:bitOffset>8</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Loopback_Error</spirit:name>
-            <spirit:displayName>Loopback Error</spirit:displayName>
-            <spirit:description>Loopback error flag.
-When set to:   0 - Default. The loopback bit in the control register is at default state.   1 - When the SPI command, address, and data bits are set to be transferred in other than standard SPI protocol mode and this bit is set in control register (SPICR). Note: Loopback is only allowed when the core is configured in standard mode. Other modes setting of the bit causes an error and the interrupt bit is set in legacy or enhanced mode AXI4 interface
-</spirit:description>
-            <spirit:bitOffset>9</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Command_Error</spirit:name>
-            <spirit:displayName>Command Error</spirit:displayName>
-            <spirit:description>Command error flag.
-When set to:   0 - Default.   1 - When the core is configured in dual/quad SPI mode and the first entry in the SPI DTR FIFO (after reset) do not match with the supported command list for the particular memory, this bit is set. Note: Command error is only applicable when the core is configured either in dual or quad mode in legacy or enhanced mode AXI4 interface.
-</spirit:description>
-            <spirit:bitOffset>10</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SPISR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPI_DTR</spirit:name>
-          <spirit:displayName>SPI Data Transmit Register</spirit:displayName>
-          <spirit:description>SPI Data Transmit Register</spirit:description>
-          <spirit:addressOffset>0x68</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>write-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>TX_Data</spirit:name>
-            <spirit:displayName>TX_Data</spirit:displayName>
-            <spirit:description>SPI Transmit Data.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_NUM_TRANSFER_BITS&apos;)))">8</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>write-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SPI_DTR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPI_DRR</spirit:name>
-          <spirit:displayName>SPI Data Receive Register</spirit:displayName>
-          <spirit:description>SPI Data Receive Register</spirit:description>
-          <spirit:addressOffset>0x6C</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>RX_Data</spirit:name>
-            <spirit:displayName>Receive Data</spirit:displayName>
-            <spirit:description>SPI Receive Data
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_NUM_TRANSFER_BITS&apos;)))">8</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SPI_DRR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPI_SSR</spirit:name>
-          <spirit:displayName>SPI Slave Select Register</spirit:displayName>
-          <spirit:description>SPI Slave Select Register</spirit:description>
-          <spirit:addressOffset>0x70</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-write</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0xFFFF</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>Selected_Slave</spirit:name>
-            <spirit:displayName>Selected Slave</spirit:displayName>
-            <spirit:description>Active-Low, one-hot encoded slave select
-The slaves are numbered right to left starting at zero with the LSB. The slave numbers correspond to the indexes of signal SS
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_NUM_SS_BITS&apos;)))">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SPI_SSR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPI_TXFIFO_OR</spirit:name>
-          <spirit:displayName>Transmit FIFO Occupancy Register</spirit:displayName>
-          <spirit:description>SPI Transmit FIFO Occupancy Register</spirit:description>
-          <spirit:addressOffset>0x74</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>Occupancy_Value</spirit:name>
-            <spirit:displayName>Occupancy Value</spirit:displayName>
-            <spirit:description>The binary value plus 1 yields the occupancy.
-Bit width is log(FIFO Depth). 
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">32</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.SPI_TXFIFO_OR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>SPI_RXFIFO_OR</spirit:name>
-          <spirit:displayName>Receive FIFO Occupancy Register</spirit:displayName>
-          <spirit:description>SPI Receive FIFO Occupancy Register</spirit:description>
-          <spirit:addressOffset>0x78</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>Occupancy_Value</spirit:name>
-            <spirit:displayName>Occupancy Value</spirit:displayName>
-            <spirit:description>The binary value plus 1 yields the occupancy. 
-Bit width is log(FIFO Depth). 
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">32</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>DGIER</spirit:name>
-          <spirit:displayName>Device Global Interrupt Enable Register</spirit:displayName>
-          <spirit:description>Device Global Interrupt Enable Register</spirit:description>
-          <spirit:addressOffset>0x1C</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-write</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>GIE</spirit:name>
-            <spirit:displayName>Global Interrupt Enable</spirit:displayName>
-            <spirit:description>Global Interrupt Enable.
-Allows passing all individually enabled interrupts to the interrupt controller.
-When set to:   0 - Disabled.   1 - Enabled. 
-</spirit:description>
-            <spirit:bitOffset>31</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.DGIER" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>IPISR</spirit:name>
-          <spirit:displayName>IP Interrupt Status Register</spirit:displayName>
-          <spirit:description>IP Interrupt Status Register</spirit:description>
-          <spirit:addressOffset>0x20</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-write</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>MODF</spirit:name>
-            <spirit:displayName>Mode Fault Error</spirit:displayName>
-            <spirit:description>Mode-fault error.
-This interrupt is generated if the SS signal goes active while the SPI device is configured as a master. This bit is set immediately on SS going active.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_MODF</spirit:name>
-            <spirit:displayName>Slave Mode Fault Error</spirit:displayName>
-            <spirit:description>Slave mode-fault error.
-This interrupt is generated if the SS signal goes active while the SPI device is configured as a slave, but is not enabled.
-This bit is set immediately on SS going active and continually set if SS is active and the device is not enabled
-</spirit:description>
-            <spirit:bitOffset>1</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DTR_Empty</spirit:name>
-            <spirit:displayName>Data transmit register/FIFO empty</spirit:displayName>
-            <spirit:description>Data transmit register/FIFO empty.
-It is set when the last byte of data has been transferred out to the external flash memory.
-In the context of the M68HC11 reference manual, when configured without FIFOs, this interrupt is equivalent in information content to the complement of the SPI transfer complete flag (SPIF ) interrupt bit.
-In master mode if this bit is set to 1, no more SPI transfers are permitted
-</spirit:description>
-            <spirit:bitOffset>2</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DTR_Underrun</spirit:name>
-            <spirit:displayName>Data transmit register/FIFO underrun</spirit:displayName>
-            <spirit:description>Data transmit register/FIFO underrun.
-This bit is set at the end of a SPI element transfer by a one-clock period strobe to the interrupt register when data is requested from an empty transmit register/FIFO by the SPI core logic to perform a SPI transfer.
-This can occur only when the SPI device is configured as a slave in standard SPI configuration and is enabled by the SPE bit as set. All zeros are loaded in the shift register and transmitted by the slave in an under-run condition
-</spirit:description>
-            <spirit:bitOffset>3</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DRR_Full</spirit:name>
-            <spirit:displayName>Data receive register/FIFO full</spirit:displayName>
-            <spirit:description>Data receive register/FIFO full.
-Without FIFOs, this bit is set at the end of a SPI element transfer by a one-clock period strobe to the interrupt register (An element can be a byte, half-word, or word depending on the value of Transfer Width).
-With FIFOs, this bit is set at the end of the SPI element transfer, when the receive FIFO has been completely filled by a one-clock period strobe to the interrupt register.
-</spirit:description>
-            <spirit:bitOffset>4</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DRR_Overrun</spirit:name>
-            <spirit:displayName>Data receive register/FIFO overrun</spirit:displayName>
-            <spirit:description>Data receive register/FIFO overrun.
-This bit is set by a one-clock period strobe to the interrupt register when an attempt to write data to a full receive register or FIFO is made by the SPI core logic to complete a SPI transfer.
-This can occur when the SPI device is in either master or slave mode (in standard SPI mode) or if the IP is configured in SPI master mode (dual or quad SPI mode).
-</spirit:description>
-            <spirit:bitOffset>5</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>TXFIFO_Half_Empty</spirit:name>
-            <spirit:displayName>Transmit FIFO half empty</spirit:displayName>
-            <spirit:description>Transmit FIFO half empty.
-In standard SPI configuration, IPISR Bit[6] is the transmit FIFO half-empty interrupt. 
-In dual or quad SPI configuration, based on the FIFO depth, this bit is set at half-empty condition.
-Note: This interrupt exists only if the AXI Quad SPI core is configured with FIFOs (In standard, dual or quad SPI mode).
-</spirit:description>
-            <spirit:bitOffset>6</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_Select_Mode</spirit:name>
-            <spirit:displayName>Slave Select Mode</spirit:displayName>
-            <spirit:description>Slave select mode.
-The assertion of this bit is applicable only when the core is configured in slave mode in standard SPI configuration. 
-This bit is set when the other SPI master core selects the core by asserting the slave select line. This bit is set by a one-clock period strobe to the interrupt register.
-Note: This bit is applicable only in standard SPI slave mode
-</spirit:description>
-            <spirit:bitOffset>7</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DRR_Not_Empty</spirit:name>
-            <spirit:displayName>DRR Not Empty</spirit:displayName>
-            <spirit:description>DRR not empty.
-The assertion of this bit is applicable only in the case where FIFO Depth is 16 or 256 and the core is configured in slave mode and standard SPI mode. This bit is set when the DRR FIFO receives the first data value during the SPI transaction.
-This bit is set by a one-clock period strobe to the interrupt register when the core receives the first data beat.
-Note: The assertion of this bit is applicable only when the FIFO Depth parameter is 16 or 256 and the core is configured in slave mode in standard SPI mode. When FIFO Depth is set to 0, this bit always returns 0. This bit has no significance in dual/quad mode
-</spirit:description>
-            <spirit:bitOffset>8</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPOL_CPHA_Error</spirit:name>
-            <spirit:displayName>CPOL_CPHA Error</spirit:displayName>
-            <spirit:description>CPOL_CPHA error.
-This flag is asserted when:
-  The core is configured in either dual or quad SPI mode and
-  The CPOL - CPHA control register bits are set to 01 or 10.
-In standard SPI mode, this bit is always in default state.
-</spirit:description>
-            <spirit:bitOffset>9</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_Mode_Error</spirit:name>
-            <spirit:displayName>I/O mode instruction Error</spirit:displayName>
-            <spirit:description>I/O mode instruction error.
-This flag is asserted when:
-  The core is configured in either dual or quad SPI mode and
-  The core is configured in master = 0 in control register (SPICR(2)).
-In standard SPI mode, this bit is always in default state.
-</spirit:description>
-            <spirit:bitOffset>10</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>MSB_Error</spirit:name>
-            <spirit:displayName>MSB Error</spirit:displayName>
-            <spirit:description>MSB error.
-This flag is asserted when:
-  The core is configured in either dual or quad SPI mode and
-  The LSB First bit in the control register (SPICR) is set to 1.
-In standard SPI mode, this bit is always in default state.
-</spirit:description>
-            <spirit:bitOffset>11</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Loopback_Error</spirit:name>
-            <spirit:displayName>Loopback Error</spirit:displayName>
-            <spirit:description>Loopback error.
-This flag is asserted when:
-  The core is configured in dual or quad SPI transfer mode and
-  The LOOP bit is set in control register (SPICR(0)).
-In standard SPI mode, this bit is always in default state.
-</spirit:description>
-            <spirit:bitOffset>12</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Command_Error</spirit:name>
-            <spirit:displayName>Command Error</spirit:displayName>
-            <spirit:description>Command error.
-This flag is asserted when:   The core is configured in dual/quad SPI mode and   The first entry in the SPI DTR FIFO (after reset) does not match with the supported command list for particular memory. When the SPI command in DTR FIFO does not match with the internal supported command list, the core completes the SPI transactions in standard SPI format. This bit is set to show this behavior of the core.
-In standard SPI mode this bit is always in default state.
-</spirit:description>
-            <spirit:bitOffset>13</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:modifiedWriteValue>oneToToggle</spirit:modifiedWriteValue>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.IPISR" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>IPIER</spirit:name>
-          <spirit:displayName>IP Interrupt Enable Register</spirit:displayName>
-          <spirit:description>IP Interrupt Enable Register</spirit:description>
-          <spirit:addressOffset>0x28</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-write</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>MODF</spirit:name>
-            <spirit:displayName>Mode-fault error flag</spirit:displayName>
-            <spirit:description>Mode-fault error flag.
-  0 - Disabled.
-  1 - Enabled.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_MODF</spirit:name>
-            <spirit:displayName>Slave mode-fault error flag</spirit:displayName>
-            <spirit:description>Slave mode-fault error flag.
-  0 - Disabled.
-  1 - Enabled.
-</spirit:description>
-            <spirit:bitOffset>1</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DTR_Empty</spirit:name>
-            <spirit:displayName>Data transmit register/FIFO empty</spirit:displayName>
-            <spirit:description>Data transmit register/FIFO empty.
-  0 - Disabled.
-  1 - Enabled.
-</spirit:description>
-            <spirit:bitOffset>2</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DTR_Underrun</spirit:name>
-            <spirit:displayName>Data transmit FIFO underrun</spirit:displayName>
-            <spirit:description>Data transmit FIFO underrun.
-  0 - Disabled.
-  1 - Enabled.
-</spirit:description>
-            <spirit:bitOffset>3</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DRR_Full</spirit:name>
-            <spirit:displayName>Data receive register/FIFO full</spirit:displayName>
-            <spirit:description>Data receive register/FIFO full.
-  0 - Disabled.
-  1 - Enabled.
-</spirit:description>
-            <spirit:bitOffset>4</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DRR_Overrun</spirit:name>
-            <spirit:displayName>Receive FIFO overrun</spirit:displayName>
-            <spirit:description>Receive FIFO overrun.
-  0 - Disabled.
-  1 - Enabled.
-</spirit:description>
-            <spirit:bitOffset>5</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>TX_FIFO_Half_Empty</spirit:name>
-            <spirit:displayName>Transmit FIFO half empty</spirit:displayName>
-            <spirit:description>Transmit FIFO half empty.   0 - Disabled.   1 - Enabled. Note: This bit is meaningful only if the AXI Quad SPI core is configured with FIFOs.
-</spirit:description>
-            <spirit:bitOffset>6</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_Select_Mode</spirit:name>
-            <spirit:displayName>Slave_Select_Mode</spirit:displayName>
-            <spirit:description>Slave_Select_Mode.   0 - Disabled.   1 - Enabled. This bit is applicable only when the core is configured in slave mode by selecting the active-Low status on spisel.
-In master mode, setting this bit has no effect.
-</spirit:description>
-            <spirit:bitOffset>7</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>DRR_Not_Empty</spirit:name>
-            <spirit:displayName>DRR_Not_Empty</spirit:displayName>
-            <spirit:description>DRR_Not_Empty.   0 - Disabled.   1 - Enabled. Note: The setting of this bit is applicable only when FIFO Depth is set to 1 and the core is configured in slave mode of standard SPI mode.
-If FIFO Depth is set to 0, the setting of this bit has no effect. This is allowed only in standard SPI configuration. It means this bit is not set in the IPIER register. Therefore, this bit should only be used when FIFO Depth is set to 1 and when the core is configured in slave mode.
-This bit has no significance in dual or quad mode.
-</spirit:description>
-            <spirit:bitOffset>8</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPOL_CPHA_Error</spirit:name>
-            <spirit:displayName>CPOL_CPHA error</spirit:displayName>
-            <spirit:description>CPOL_CPHA error.   0 - Disabled.   1 - Enabled. This bit is applicable only when the core is configured in dual or quad SPI mode.
-</spirit:description>
-            <spirit:bitOffset>9</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Slave_Mode_Error</spirit:name>
-            <spirit:displayName>Slave_Mode_Error</spirit:displayName>
-            <spirit:description>I/O mode instruction error.   0 - Disabled.   1 - Enabled. This bit is applicable only when the core is configured in dual or quad SPI mode.
-</spirit:description>
-            <spirit:bitOffset>10</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>MSB_Error</spirit:name>
-            <spirit:displayName>MSB_Error</spirit:displayName>
-            <spirit:description>MSB_Error.   0 - Disabled.   1 - Enabled. This bit is applicable only when the core is configured in dual or quad SPI mode.
-</spirit:description>
-            <spirit:bitOffset>11</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Loopback_Error</spirit:name>
-            <spirit:displayName>Loopback Error</spirit:displayName>
-            <spirit:description>Loopback Error.   0 - Disabled.   1 - Enabled. This bit is applicable only when the core is configured in dual or quad SPI mode.
-</spirit:description>
-            <spirit:bitOffset>12</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Command_Error</spirit:name>
-            <spirit:displayName>Command_Error</spirit:displayName>
-            <spirit:description>Command_Error.   0 - Disabled.   1 - Enabled. This bit is applicable only when the core is configured in dual or quad SPI mode.
-</spirit:description>
-            <spirit:bitOffset>13</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.IPIER" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=0)">true</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>XIP_Config_Reg</spirit:name>
-          <spirit:displayName>XIP Configuration Register</spirit:displayName>
-          <spirit:description>XIP Configuration Register</spirit:description>
-          <spirit:addressOffset>0x60</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-write</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x0</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>CPHA</spirit:name>
-            <spirit:displayName>CPHA</spirit:displayName>
-            <spirit:description>CPHA
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPOL</spirit:name>
-            <spirit:displayName>CPOL</spirit:displayName>
-            <spirit:description>CPOL
-</spirit:description>
-            <spirit:bitOffset>1</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-write</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.XIP_Config_Reg" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=1)">false</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
-        <spirit:register>
-          <spirit:name>XIP_Status_Reg</spirit:name>
-          <spirit:displayName>XIP Status Register</spirit:displayName>
-          <spirit:description>XIP Status Register</spirit:description>
-          <spirit:addressOffset>0x64</spirit:addressOffset>
-          <spirit:size spirit:format="long">32</spirit:size>
-          <spirit:volatile>true</spirit:volatile>
-          <spirit:access>read-only</spirit:access>
-          <spirit:reset>
-            <spirit:value spirit:format="long">0x1</spirit:value>
-          </spirit:reset>
-          <spirit:field>
-            <spirit:name>RX_Empty</spirit:name>
-            <spirit:displayName>Receiver Empty</spirit:displayName>
-            <spirit:description>Receiver Empty.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>RX_Full</spirit:name>
-            <spirit:displayName>Receiver Full</spirit:displayName>
-            <spirit:description>Receiver Full.
-</spirit:description>
-            <spirit:bitOffset>1</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>Master_MODF</spirit:name>
-            <spirit:displayName>Master Mode Fault</spirit:displayName>
-            <spirit:description>Master mode fault. This bit is set to 1 if the spisel line is deasserted.
-</spirit:description>
-            <spirit:bitOffset>2</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>CPOL_CPHA_Error</spirit:name>
-            <spirit:displayName>CPOL CPHA Error</spirit:displayName>
-            <spirit:description>CPOL_CPHA Error.
-</spirit:description>
-            <spirit:bitOffset>3</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:field>
-            <spirit:name>AXI_Transaction_Error</spirit:name>
-            <spirit:displayName>AXI Transaction Error</spirit:displayName>
-            <spirit:description>AXI Transaction Error.
-</spirit:description>
-            <spirit:bitOffset>0</spirit:bitOffset>
-            <spirit:bitWidth spirit:format="long">1</spirit:bitWidth>
-            <spirit:volatile>true</spirit:volatile>
-            <spirit:access>read-only</spirit:access>
-            <spirit:writeValueConstraint>
-              <spirit:minimum>0</spirit:minimum>
-              <spirit:maximum>0</spirit:maximum>
-            </spirit:writeValueConstraint>
-            <spirit:testable spirit:testConstraint="unconstrained">false</spirit:testable>
-          </spirit:field>
-          <spirit:vendorExtensions>
-            <xilinx:registerInfo>
-              <xilinx:enablement>
-                <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="REGISTER_ENABLEMENT.AXIMM.MEM0.XIP_Status_Reg" xilinx:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_XIP_MODE&apos;))=1)">false</xilinx:isEnabled>
-              </xilinx:enablement>
-            </xilinx:registerInfo>
-          </spirit:vendorExtensions>
-        </spirit:register>
         <spirit:vendorExtensions>
           <xilinx:addressBlockInfo>
             <xilinx:enablement>
@@ -2316,6 +1002,43 @@ This bit has no significance in dual or quad mode.
     </spirit:memoryMap>
   </spirit:memoryMaps>
   <spirit:model>
+    <spirit:views>
+      <spirit:view>
+        <spirit:name>xilinx_veriloginstantiationtemplate</spirit:name>
+        <spirit:displayName>Verilog Instantiation Template</spirit:displayName>
+        <spirit:envIdentifier>verilogSource:vivado.xilinx.com:synthesis.template</spirit:envIdentifier>
+        <spirit:language>verilog</spirit:language>
+        <spirit:fileSetRef>
+          <spirit:localName>xilinx_veriloginstantiationtemplate_view_fileset</spirit:localName>
+        </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>customizationCRC</spirit:name>
+            <spirit:value>60b4fd4d</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>customizationCRCversion</spirit:name>
+            <spirit:value>5</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>boundaryCRC</spirit:name>
+            <spirit:value>2e7b79ed</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>boundaryCRCversion</spirit:name>
+            <spirit:value>1</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>GENtimestamp</spirit:name>
+            <spirit:value>Wed Feb 15 01:15:50 UTC 2017</spirit:value>
+          </spirit:parameter>
+          <spirit:parameter>
+            <spirit:name>StaleAtRelink</spirit:name>
+            <spirit:value>false</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
+      </spirit:view>
+    </spirit:views>
     <spirit:ports>
       <spirit:port>
         <spirit:name>ext_spi_clk</spirit:name>
@@ -2324,7 +1047,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2339,7 +1062,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2361,7 +1084,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2383,7 +1106,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2405,7 +1128,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2431,7 +1154,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2453,7 +1176,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2475,7 +1198,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2498,7 +1221,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2524,7 +1247,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2546,7 +1269,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2568,7 +1291,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2591,7 +1314,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2610,7 +1333,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2629,7 +1352,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2655,7 +1378,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2677,7 +1400,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2699,7 +1422,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2722,7 +1445,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2745,7 +1468,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2764,7 +1487,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -2783,7 +1506,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2809,7 +1532,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2835,7 +1558,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2861,7 +1584,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2887,7 +1610,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2913,7 +1636,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2935,7 +1658,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2961,7 +1684,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -2987,7 +1710,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3009,7 +1732,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3031,7 +1754,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3054,7 +1777,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3080,7 +1803,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3102,7 +1825,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3124,7 +1847,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3146,7 +1869,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3169,7 +1892,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3192,7 +1915,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3211,7 +1934,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3230,7 +1953,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3256,7 +1979,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3282,7 +2005,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3308,7 +2031,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3334,7 +2057,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3360,7 +2083,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3382,7 +2105,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3408,7 +2131,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3434,7 +2157,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3456,7 +2179,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3478,7 +2201,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3501,7 +2224,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3524,7 +2247,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3547,7 +2270,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3566,7 +2289,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3585,7 +2308,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3604,7 +2327,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3626,7 +2349,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3648,7 +2371,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3667,7 +2390,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3689,7 +2412,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3711,7 +2434,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3730,7 +2453,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3752,7 +2475,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3774,7 +2497,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3793,7 +2516,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3812,7 +2535,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3834,7 +2557,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3853,7 +2576,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3872,7 +2595,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3894,7 +2617,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3916,7 +2639,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3935,7 +2658,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -3958,7 +2681,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -3984,7 +2707,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic_vector</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4003,7 +2726,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4022,7 +2745,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4041,7 +2764,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4060,7 +2783,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4079,7 +2802,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4098,7 +2821,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4120,7 +2843,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4142,7 +2865,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4164,7 +2887,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4186,7 +2909,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4208,7 +2931,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4230,7 +2953,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4252,7 +2975,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
           <spirit:driver>
@@ -4274,7 +2997,7 @@ This bit has no significance in dual or quad mode.
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>std_logic</spirit:typeName>
-              <spirit:viewNameRef>dummy_view</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_veriloginstantiationtemplate</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
@@ -4289,10 +3012,6 @@ This bit has no significance in dual or quad mode.
       <spirit:modelParameter spirit:dataType="string">
         <spirit:name>C_FAMILY</spirit:name>
         <spirit:value spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_FAMILY">artix7</spirit:value>
-      </spirit:modelParameter>
-      <spirit:modelParameter spirit:dataType="integer">
-        <spirit:name>C_SELECT_XPM</spirit:name>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_SELECT_XPM">0</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="string">
         <spirit:name>C_SUB_FAMILY</spirit:name>
@@ -4421,11 +3140,6 @@ This bit has no significance in dual or quad mode.
       <spirit:enumeration>16</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
-      <spirit:name>choice_list_6727dfa6</spirit:name>
-      <spirit:enumeration>1</spirit:enumeration>
-      <spirit:enumeration>0</spirit:enumeration>
-    </spirit:choice>
-    <spirit:choice>
       <spirit:name>choice_list_8112d406</spirit:name>
       <spirit:enumeration>8</spirit:enumeration>
       <spirit:enumeration>16</spirit:enumeration>
@@ -4469,6 +3183,19 @@ This bit has no significance in dual or quad mode.
       <spirit:enumeration spirit:text="Quad">2</spirit:enumeration>
     </spirit:choice>
   </spirit:choices>
+  <spirit:fileSets>
+    <spirit:fileSet>
+      <spirit:name>xilinx_veriloginstantiationtemplate_view_fileset</spirit:name>
+      <spirit:file>
+        <spirit:name>PmodMTDS_axi_quad_spi_0_0.vho</spirit:name>
+        <spirit:userFileType>vhdlTemplate</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>PmodMTDS_axi_quad_spi_0_0.veo</spirit:name>
+        <spirit:userFileType>verilogTemplate</spirit:userFileType>
+      </spirit:file>
+    </spirit:fileSet>
+  </spirit:fileSets>
   <spirit:description>SPI Interface for SPI Based Slave</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
@@ -4808,15 +3535,11 @@ This bit has no significance in dual or quad mode.
         </xilinx:parameterInfo>
       </spirit:vendorExtensions>
     </spirit:parameter>
-    <spirit:parameter>
-      <spirit:name>C_SELECT_XPM</spirit:name>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_SELECT_XPM" spirit:choiceRef="choice_list_6727dfa6" spirit:order="40">0</spirit:value>
-    </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
     <xilinx:coreExtensions>
       <xilinx:displayName>AXI Quad SPI</xilinx:displayName>
-      <xilinx:coreRevision>8</xilinx:coreRevision>
+      <xilinx:coreRevision>6</xilinx:coreRevision>
       <xilinx:configElementInfos>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Async_Clk" xilinx:valueSource="propagated"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.C_FIFO_DEPTH" xilinx:valueSource="user"/>
@@ -4827,13 +3550,13 @@ This bit has no significance in dual or quad mode.
       </xilinx:configElementInfos>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2016.2</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="f49dfcd0"/>
-      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="dc9b6954"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="1846031c"/>
+      <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="e81c2ebc"/>
+      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="004fc8b6"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="c2669611"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="04146070"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="57c680b3"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="c295e3f7"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="c834ce4e"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="445290b5"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

@@ -84,7 +84,7 @@ int RTCC_IICInit(XIic *IicInstancePtr);
 void RTCC_ReadIIC(PmodRTCC* InstancePtr, u8 reg, u8 *Data, int nData);
 void RTCC_WriteIIC(PmodRTCC* InstancePtr, u8 reg, u8 *Data, int nData);
 int RTCC_SetupInterruptSystem(PmodRTCC* InstancePtr, u32 interruptDeviceID, u32 interruptID, void* SendHandler,  void* ReceiveHandler);
-
+void RTCCI2C_clearPWRFAIL(PmodRTCC *InstancePtr);
 void RTCCI2C_startClock(PmodRTCC *InstancePtr);
 void RTCCI2C_stopClock(PmodRTCC *InstancePtr);
 void RTCCI2C_enableAlarm(u8 dest, u8 config,PmodRTCC *InstancePtr);

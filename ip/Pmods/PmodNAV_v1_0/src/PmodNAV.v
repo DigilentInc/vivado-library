@@ -1,14 +1,15 @@
 //Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2015.4 (win64) Build 1412921 Wed Nov 18 09:43:45 MST 2015
-//Date        : Wed Mar 09 18:07:30 2016
-//Host        : WK116 running 64-bit major release  (build 9200)
+//Date        : Tue Mar 21 08:35:02 2017
+//Host        : WK115 running 64-bit major release  (build 9200)
 //Command     : generate_target PmodNAV.bd
 //Design      : PmodNAV
 //Purpose     : IP block netlist
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
+(* CORE_GENERATION_INFO = "PmodNAV,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=PmodNAV,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=18,numReposBlks=18,numNonXlnxBlks=1,numHierBlks=0,maxHierDepth=0,synth_mode=Global}" *) (* HW_HANDOFF = "PmodNAV.hwdef" *) 
 module PmodNAV
    (AXI_LITE_GPIO_araddr,
     AXI_LITE_GPIO_arready,
@@ -44,6 +45,7 @@ module PmodNAV
     AXI_LITE_SPI_wready,
     AXI_LITE_SPI_wstrb,
     AXI_LITE_SPI_wvalid,
+    GPIO_Interrupt,
     Pmod_out_pin10_i,
     Pmod_out_pin10_o,
     Pmod_out_pin10_t,
@@ -68,6 +70,8 @@ module PmodNAV
     Pmod_out_pin9_i,
     Pmod_out_pin9_o,
     Pmod_out_pin9_t,
+    SPI_Interrupt,
+    ext_spi_clk,
     s_axi_aclk,
     s_axi_aresetn);
   input [8:0]AXI_LITE_GPIO_araddr;
@@ -104,6 +108,7 @@ module PmodNAV
   output AXI_LITE_SPI_wready;
   input [3:0]AXI_LITE_SPI_wstrb;
   input AXI_LITE_SPI_wvalid;
+  output GPIO_Interrupt;
   input Pmod_out_pin10_i;
   output Pmod_out_pin10_o;
   output Pmod_out_pin10_t;
@@ -128,6 +133,8 @@ module PmodNAV
   input Pmod_out_pin9_i;
   output Pmod_out_pin9_o;
   output Pmod_out_pin9_t;
+  output SPI_Interrupt;
+  input ext_spi_clk;
   input s_axi_aclk;
   input s_axi_aresetn;
 
@@ -148,38 +155,35 @@ module PmodNAV
   wire AXI_LITE_1_WREADY;
   wire [3:0]AXI_LITE_1_WSTRB;
   wire AXI_LITE_1_WVALID;
-  wire [8:0]S_AXI_1_ARADDR;
-  wire S_AXI_1_ARREADY;
-  wire S_AXI_1_ARVALID;
-  wire [8:0]S_AXI_1_AWADDR;
-  wire S_AXI_1_AWREADY;
-  wire S_AXI_1_AWVALID;
-  wire S_AXI_1_BREADY;
-  wire [1:0]S_AXI_1_BRESP;
-  wire S_AXI_1_BVALID;
-  wire [31:0]S_AXI_1_RDATA;
-  wire S_AXI_1_RREADY;
-  wire [1:0]S_AXI_1_RRESP;
-  wire S_AXI_1_RVALID;
-  wire [31:0]S_AXI_1_WDATA;
-  wire S_AXI_1_WREADY;
-  wire [3:0]S_AXI_1_WSTRB;
-  wire S_AXI_1_WVALID;
-  wire [4:0]axi_gpio_0_GPIO_TRI_I;
-  wire [4:0]axi_gpio_0_GPIO_TRI_O;
-  wire [4:0]axi_gpio_0_GPIO_TRI_T;
-  wire axi_quad_spi_0_SPI_0_IO0_I;
-  wire axi_quad_spi_0_SPI_0_IO0_O;
-  wire axi_quad_spi_0_SPI_0_IO0_T;
-  wire axi_quad_spi_0_SPI_0_IO1_I;
-  wire axi_quad_spi_0_SPI_0_IO1_O;
-  wire axi_quad_spi_0_SPI_0_IO1_T;
-  wire axi_quad_spi_0_SPI_0_SCK_I;
-  wire axi_quad_spi_0_SPI_0_SCK_O;
-  wire axi_quad_spi_0_SPI_0_SCK_T;
-  wire axi_quad_spi_0_SPI_0_SS_I;
-  wire [0:0]axi_quad_spi_0_SPI_0_SS_O;
-  wire axi_quad_spi_0_SPI_0_SS_T;
+  wire [8:0]AXI_LITE_GPIO_1_ARADDR;
+  wire AXI_LITE_GPIO_1_ARREADY;
+  wire AXI_LITE_GPIO_1_ARVALID;
+  wire [8:0]AXI_LITE_GPIO_1_AWADDR;
+  wire AXI_LITE_GPIO_1_AWREADY;
+  wire AXI_LITE_GPIO_1_AWVALID;
+  wire AXI_LITE_GPIO_1_BREADY;
+  wire [1:0]AXI_LITE_GPIO_1_BRESP;
+  wire AXI_LITE_GPIO_1_BVALID;
+  wire [31:0]AXI_LITE_GPIO_1_RDATA;
+  wire AXI_LITE_GPIO_1_RREADY;
+  wire [1:0]AXI_LITE_GPIO_1_RRESP;
+  wire AXI_LITE_GPIO_1_RVALID;
+  wire [31:0]AXI_LITE_GPIO_1_WDATA;
+  wire AXI_LITE_GPIO_1_WREADY;
+  wire [3:0]AXI_LITE_GPIO_1_WSTRB;
+  wire AXI_LITE_GPIO_1_WVALID;
+  wire [1:0]axi_gpio_0_gpio_io_o;
+  wire [1:0]axi_gpio_0_gpio_io_t;
+  wire axi_gpio_0_ip2intc_irpt;
+  wire axi_quad_spi_0_io0_o;
+  wire axi_quad_spi_0_io0_t;
+  wire axi_quad_spi_0_io1_o;
+  wire axi_quad_spi_0_io1_t;
+  wire axi_quad_spi_0_ip2intc_irpt;
+  wire axi_quad_spi_0_sck_o;
+  wire axi_quad_spi_0_sck_t;
+  wire [2:0]axi_quad_spi_0_ss_o;
+  wire axi_quad_spi_0_ss_t;
   wire ext_spi_clk_1;
   wire pmod_bridge_0_Pmod_out_PIN10_I;
   wire pmod_bridge_0_Pmod_out_PIN10_O;
@@ -205,8 +209,25 @@ module PmodNAV
   wire pmod_bridge_0_Pmod_out_PIN9_I;
   wire pmod_bridge_0_Pmod_out_PIN9_O;
   wire pmod_bridge_0_Pmod_out_PIN9_T;
+  wire [3:0]pmod_bridge_0_in_bottom_bus_I;
+  wire [3:0]pmod_bridge_0_in_top_bus_I;
   wire s_axi_aclk_1;
   wire s_axi_aresetn_1;
+  wire [3:0]xlconcat_bottom_o_dout;
+  wire [3:0]xlconcat_bottom_t_dout;
+  wire [2:0]xlconcat_ss_i_dout;
+  wire [3:0]xlconcat_top_o_dout;
+  wire [3:0]xlconcat_top_t_dout;
+  wire [0:0]xlslice_ag_ss_i_Dout;
+  wire [0:0]xlslice_ag_ss_o_Dout;
+  wire [0:0]xlslice_alt_ss_i_Dout;
+  wire [0:0]xlslice_alt_ss_o_Dout;
+  wire [1:0]xlslice_gpio_i_Dout;
+  wire [0:0]xlslice_mag_ss_i_Dout;
+  wire [0:0]xlslice_mag_ss_o_Dout;
+  wire [0:0]xlslice_sck_i_Dout;
+  wire [0:0]xlslice_sdo_i_Dout;
+  wire [0:0]xlslice_ss_sdi_i_Dout;
 
   assign AXI_LITE_1_ARADDR = AXI_LITE_SPI_araddr[6:0];
   assign AXI_LITE_1_ARVALID = AXI_LITE_SPI_arvalid;
@@ -217,14 +238,23 @@ module PmodNAV
   assign AXI_LITE_1_WDATA = AXI_LITE_SPI_wdata[31:0];
   assign AXI_LITE_1_WSTRB = AXI_LITE_SPI_wstrb[3:0];
   assign AXI_LITE_1_WVALID = AXI_LITE_SPI_wvalid;
-  assign AXI_LITE_GPIO_arready = S_AXI_1_ARREADY;
-  assign AXI_LITE_GPIO_awready = S_AXI_1_AWREADY;
-  assign AXI_LITE_GPIO_bresp[1:0] = S_AXI_1_BRESP;
-  assign AXI_LITE_GPIO_bvalid = S_AXI_1_BVALID;
-  assign AXI_LITE_GPIO_rdata[31:0] = S_AXI_1_RDATA;
-  assign AXI_LITE_GPIO_rresp[1:0] = S_AXI_1_RRESP;
-  assign AXI_LITE_GPIO_rvalid = S_AXI_1_RVALID;
-  assign AXI_LITE_GPIO_wready = S_AXI_1_WREADY;
+  assign AXI_LITE_GPIO_1_ARADDR = AXI_LITE_GPIO_araddr[8:0];
+  assign AXI_LITE_GPIO_1_ARVALID = AXI_LITE_GPIO_arvalid;
+  assign AXI_LITE_GPIO_1_AWADDR = AXI_LITE_GPIO_awaddr[8:0];
+  assign AXI_LITE_GPIO_1_AWVALID = AXI_LITE_GPIO_awvalid;
+  assign AXI_LITE_GPIO_1_BREADY = AXI_LITE_GPIO_bready;
+  assign AXI_LITE_GPIO_1_RREADY = AXI_LITE_GPIO_rready;
+  assign AXI_LITE_GPIO_1_WDATA = AXI_LITE_GPIO_wdata[31:0];
+  assign AXI_LITE_GPIO_1_WSTRB = AXI_LITE_GPIO_wstrb[3:0];
+  assign AXI_LITE_GPIO_1_WVALID = AXI_LITE_GPIO_wvalid;
+  assign AXI_LITE_GPIO_arready = AXI_LITE_GPIO_1_ARREADY;
+  assign AXI_LITE_GPIO_awready = AXI_LITE_GPIO_1_AWREADY;
+  assign AXI_LITE_GPIO_bresp[1:0] = AXI_LITE_GPIO_1_BRESP;
+  assign AXI_LITE_GPIO_bvalid = AXI_LITE_GPIO_1_BVALID;
+  assign AXI_LITE_GPIO_rdata[31:0] = AXI_LITE_GPIO_1_RDATA;
+  assign AXI_LITE_GPIO_rresp[1:0] = AXI_LITE_GPIO_1_RRESP;
+  assign AXI_LITE_GPIO_rvalid = AXI_LITE_GPIO_1_RVALID;
+  assign AXI_LITE_GPIO_wready = AXI_LITE_GPIO_1_WREADY;
   assign AXI_LITE_SPI_arready = AXI_LITE_1_ARREADY;
   assign AXI_LITE_SPI_awready = AXI_LITE_1_AWREADY;
   assign AXI_LITE_SPI_bresp[1:0] = AXI_LITE_1_BRESP;
@@ -233,6 +263,7 @@ module PmodNAV
   assign AXI_LITE_SPI_rresp[1:0] = AXI_LITE_1_RRESP;
   assign AXI_LITE_SPI_rvalid = AXI_LITE_1_RVALID;
   assign AXI_LITE_SPI_wready = AXI_LITE_1_WREADY;
+  assign GPIO_Interrupt = axi_gpio_0_ip2intc_irpt;
   assign Pmod_out_pin10_o = pmod_bridge_0_Pmod_out_PIN10_O;
   assign Pmod_out_pin10_t = pmod_bridge_0_Pmod_out_PIN10_T;
   assign Pmod_out_pin1_o = pmod_bridge_0_Pmod_out_PIN1_O;
@@ -249,16 +280,8 @@ module PmodNAV
   assign Pmod_out_pin8_t = pmod_bridge_0_Pmod_out_PIN8_T;
   assign Pmod_out_pin9_o = pmod_bridge_0_Pmod_out_PIN9_O;
   assign Pmod_out_pin9_t = pmod_bridge_0_Pmod_out_PIN9_T;
-  assign S_AXI_1_ARADDR = AXI_LITE_GPIO_araddr[8:0];
-  assign S_AXI_1_ARVALID = AXI_LITE_GPIO_arvalid;
-  assign S_AXI_1_AWADDR = AXI_LITE_GPIO_awaddr[8:0];
-  assign S_AXI_1_AWVALID = AXI_LITE_GPIO_awvalid;
-  assign S_AXI_1_BREADY = AXI_LITE_GPIO_bready;
-  assign S_AXI_1_RREADY = AXI_LITE_GPIO_rready;
-  assign S_AXI_1_WDATA = AXI_LITE_GPIO_wdata[31:0];
-  assign S_AXI_1_WSTRB = AXI_LITE_GPIO_wstrb[3:0];
-  assign S_AXI_1_WVALID = AXI_LITE_GPIO_wvalid;
-  assign ext_spi_clk_1 = s_axi_aclk;
+  assign SPI_Interrupt = axi_quad_spi_0_ip2intc_irpt;
+  assign ext_spi_clk_1 = ext_spi_clk;
   assign pmod_bridge_0_Pmod_out_PIN10_I = Pmod_out_pin10_i;
   assign pmod_bridge_0_Pmod_out_PIN1_I = Pmod_out_pin1_i;
   assign pmod_bridge_0_Pmod_out_PIN2_I = Pmod_out_pin2_i;
@@ -270,39 +293,38 @@ module PmodNAV
   assign s_axi_aclk_1 = s_axi_aclk;
   assign s_axi_aresetn_1 = s_axi_aresetn;
   PmodNAV_axi_gpio_0_0 axi_gpio_0
-       (.gpio_io_i(axi_gpio_0_GPIO_TRI_I[3:0]),
-        .gpio_io_o(axi_gpio_0_GPIO_TRI_O[3:0]),
-        .gpio_io_t(axi_gpio_0_GPIO_TRI_T[3:0]),
-        .gpio2_io_i(axi_gpio_0_GPIO_TRI_I[4]),
-        .gpio2_io_o(axi_gpio_0_GPIO_TRI_O[4]),
-        .gpio2_io_t(axi_gpio_0_GPIO_TRI_T[4]),
+       (.gpio_io_i(xlslice_gpio_i_Dout),
+        .gpio_io_o(axi_gpio_0_gpio_io_o),
+        .gpio_io_t(axi_gpio_0_gpio_io_t),
+        .ip2intc_irpt(axi_gpio_0_ip2intc_irpt),
         .s_axi_aclk(s_axi_aclk_1),
-        .s_axi_araddr(S_AXI_1_ARADDR),
+        .s_axi_araddr(AXI_LITE_GPIO_1_ARADDR),
         .s_axi_aresetn(s_axi_aresetn_1),
-        .s_axi_arready(S_AXI_1_ARREADY),
-        .s_axi_arvalid(S_AXI_1_ARVALID),
-        .s_axi_awaddr(S_AXI_1_AWADDR),
-        .s_axi_awready(S_AXI_1_AWREADY),
-        .s_axi_awvalid(S_AXI_1_AWVALID),
-        .s_axi_bready(S_AXI_1_BREADY),
-        .s_axi_bresp(S_AXI_1_BRESP),
-        .s_axi_bvalid(S_AXI_1_BVALID),
-        .s_axi_rdata(S_AXI_1_RDATA),
-        .s_axi_rready(S_AXI_1_RREADY),
-        .s_axi_rresp(S_AXI_1_RRESP),
-        .s_axi_rvalid(S_AXI_1_RVALID),
-        .s_axi_wdata(S_AXI_1_WDATA),
-        .s_axi_wready(S_AXI_1_WREADY),
-        .s_axi_wstrb(S_AXI_1_WSTRB),
-        .s_axi_wvalid(S_AXI_1_WVALID));
+        .s_axi_arready(AXI_LITE_GPIO_1_ARREADY),
+        .s_axi_arvalid(AXI_LITE_GPIO_1_ARVALID),
+        .s_axi_awaddr(AXI_LITE_GPIO_1_AWADDR),
+        .s_axi_awready(AXI_LITE_GPIO_1_AWREADY),
+        .s_axi_awvalid(AXI_LITE_GPIO_1_AWVALID),
+        .s_axi_bready(AXI_LITE_GPIO_1_BREADY),
+        .s_axi_bresp(AXI_LITE_GPIO_1_BRESP),
+        .s_axi_bvalid(AXI_LITE_GPIO_1_BVALID),
+        .s_axi_rdata(AXI_LITE_GPIO_1_RDATA),
+        .s_axi_rready(AXI_LITE_GPIO_1_RREADY),
+        .s_axi_rresp(AXI_LITE_GPIO_1_RRESP),
+        .s_axi_rvalid(AXI_LITE_GPIO_1_RVALID),
+        .s_axi_wdata(AXI_LITE_GPIO_1_WDATA),
+        .s_axi_wready(AXI_LITE_GPIO_1_WREADY),
+        .s_axi_wstrb(AXI_LITE_GPIO_1_WSTRB),
+        .s_axi_wvalid(AXI_LITE_GPIO_1_WVALID));
   PmodNAV_axi_quad_spi_0_0 axi_quad_spi_0
        (.ext_spi_clk(ext_spi_clk_1),
-        .io0_i(axi_quad_spi_0_SPI_0_IO0_I),
-        .io0_o(axi_quad_spi_0_SPI_0_IO0_O),
-        .io0_t(axi_quad_spi_0_SPI_0_IO0_T),
-        .io1_i(axi_quad_spi_0_SPI_0_IO1_I),
-        .io1_o(axi_quad_spi_0_SPI_0_IO1_O),
-        .io1_t(axi_quad_spi_0_SPI_0_IO1_T),
+        .io0_i(xlslice_ss_sdi_i_Dout),
+        .io0_o(axi_quad_spi_0_io0_o),
+        .io0_t(axi_quad_spi_0_io0_t),
+        .io1_i(xlslice_sdo_i_Dout),
+        .io1_o(axi_quad_spi_0_io1_o),
+        .io1_t(axi_quad_spi_0_io1_t),
+        .ip2intc_irpt(axi_quad_spi_0_ip2intc_irpt),
         .s_axi_aclk(s_axi_aclk_1),
         .s_axi_araddr(AXI_LITE_1_ARADDR),
         .s_axi_aresetn(s_axi_aresetn_1),
@@ -322,28 +344,19 @@ module PmodNAV
         .s_axi_wready(AXI_LITE_1_WREADY),
         .s_axi_wstrb(AXI_LITE_1_WSTRB),
         .s_axi_wvalid(AXI_LITE_1_WVALID),
-        .sck_i(axi_quad_spi_0_SPI_0_SCK_I),
-        .sck_o(axi_quad_spi_0_SPI_0_SCK_O),
-        .sck_t(axi_quad_spi_0_SPI_0_SCK_T),
-        .ss_i(1'b0),
-        .ss_o(1'b0),
-        .ss_t(1'b0));
+        .sck_i(xlslice_sck_i_Dout),
+        .sck_o(axi_quad_spi_0_sck_o),
+        .sck_t(axi_quad_spi_0_sck_t),
+        .ss_i(xlconcat_ss_i_dout),
+        .ss_o(axi_quad_spi_0_ss_o),
+        .ss_t(axi_quad_spi_0_ss_t));
   PmodNAV_pmod_bridge_0_0 pmod_bridge_0
-       (.in0_I(axi_gpio_0_GPIO_TRI_I[3]),
-        .in0_O(axi_gpio_0_GPIO_TRI_O[3]),
-        .in0_T(axi_gpio_0_GPIO_TRI_T[3]),
-        .in1_I(axi_quad_spi_0_SPI_0_IO0_I),
-        .in1_O(axi_quad_spi_0_SPI_0_IO0_O),
-        .in1_T(axi_quad_spi_0_SPI_0_IO0_T),
-        .in2_I(axi_quad_spi_0_SPI_0_IO1_I),
-        .in2_O(axi_quad_spi_0_SPI_0_IO1_O),
-        .in2_T(axi_quad_spi_0_SPI_0_IO1_T),
-        .in3_I(axi_quad_spi_0_SPI_0_SCK_I),
-        .in3_O(axi_quad_spi_0_SPI_0_SCK_O),
-        .in3_T(axi_quad_spi_0_SPI_0_SCK_T),
-        .in_bottom_bus_I({axi_gpio_0_GPIO_TRI_I[2:0],axi_gpio_0_GPIO_TRI_I[4]}),
-        .in_bottom_bus_O({axi_gpio_0_GPIO_TRI_O[2:0],axi_gpio_0_GPIO_TRI_O[4]}),
-        .in_bottom_bus_T({axi_gpio_0_GPIO_TRI_T[2:0],axi_gpio_0_GPIO_TRI_T[4]}),
+       (.in_bottom_bus_I(pmod_bridge_0_in_bottom_bus_I),
+        .in_bottom_bus_O(xlconcat_bottom_o_dout),
+        .in_bottom_bus_T(xlconcat_bottom_t_dout),
+        .in_top_bus_I(pmod_bridge_0_in_top_bus_I),
+        .in_top_bus_O(xlconcat_top_o_dout),
+        .in_top_bus_T(xlconcat_top_t_dout),
         .out0_I(pmod_bridge_0_Pmod_out_PIN1_I),
         .out0_O(pmod_bridge_0_Pmod_out_PIN1_O),
         .out0_T(pmod_bridge_0_Pmod_out_PIN1_T),
@@ -368,4 +381,61 @@ module PmodNAV
         .out7_I(pmod_bridge_0_Pmod_out_PIN10_I),
         .out7_O(pmod_bridge_0_Pmod_out_PIN10_O),
         .out7_T(pmod_bridge_0_Pmod_out_PIN10_T));
+  PmodNAV_xlconcat_0_3 xlconcat_bottom_o
+       (.In0(axi_gpio_0_gpio_io_o),
+        .In1(xlslice_mag_ss_o_Dout),
+        .In2(xlslice_alt_ss_o_Dout),
+        .dout(xlconcat_bottom_o_dout));
+  PmodNAV_xlconcat_0_2 xlconcat_bottom_t
+       (.In0(axi_gpio_0_gpio_io_t),
+        .In1(axi_quad_spi_0_ss_t),
+        .In2(axi_quad_spi_0_ss_t),
+        .dout(xlconcat_bottom_t_dout));
+  PmodNAV_xlconcat_0_4 xlconcat_ss_i
+       (.In0(xlslice_ag_ss_i_Dout),
+        .In1(xlslice_mag_ss_i_Dout),
+        .In2(xlslice_alt_ss_i_Dout),
+        .dout(xlconcat_ss_i_dout));
+  PmodNAV_xlconcat_0_1 xlconcat_top_o
+       (.In0(xlslice_ag_ss_o_Dout),
+        .In1(axi_quad_spi_0_io0_o),
+        .In2(axi_quad_spi_0_io1_o),
+        .In3(axi_quad_spi_0_sck_o),
+        .dout(xlconcat_top_o_dout));
+  PmodNAV_xlconcat_0_0 xlconcat_top_t
+       (.In0(axi_quad_spi_0_ss_t),
+        .In1(axi_quad_spi_0_io0_t),
+        .In2(axi_quad_spi_0_io1_t),
+        .In3(axi_quad_spi_0_sck_t),
+        .dout(xlconcat_top_t_dout));
+  PmodNAV_xlslice_0_0 xlslice_ag_ss_i
+       (.Din(pmod_bridge_0_in_top_bus_I),
+        .Dout(xlslice_ag_ss_i_Dout));
+  PmodNAV_xlslice_8_0 xlslice_ag_ss_o
+       (.Din(axi_quad_spi_0_ss_o),
+        .Dout(xlslice_ag_ss_o_Dout));
+  PmodNAV_xlslice_0_9 xlslice_alt_ss_i
+       (.Din(pmod_bridge_0_in_bottom_bus_I),
+        .Dout(xlslice_alt_ss_i_Dout));
+  PmodNAV_xlslice_8_2 xlslice_alt_ss_o
+       (.Din(axi_quad_spi_0_ss_o),
+        .Dout(xlslice_alt_ss_o_Dout));
+  PmodNAV_xlslice_0_6 xlslice_gpio_i
+       (.Din(pmod_bridge_0_in_bottom_bus_I),
+        .Dout(xlslice_gpio_i_Dout));
+  PmodNAV_xlslice_0_8 xlslice_mag_ss_i
+       (.Din(pmod_bridge_0_in_bottom_bus_I),
+        .Dout(xlslice_mag_ss_i_Dout));
+  PmodNAV_xlslice_8_1 xlslice_mag_ss_o
+       (.Din(axi_quad_spi_0_ss_o),
+        .Dout(xlslice_mag_ss_o_Dout));
+  PmodNAV_xlslice_0_5 xlslice_sck_i
+       (.Din(pmod_bridge_0_in_top_bus_I),
+        .Dout(xlslice_sck_i_Dout));
+  PmodNAV_xlslice_0_4 xlslice_sdo_i
+       (.Din(pmod_bridge_0_in_top_bus_I),
+        .Dout(xlslice_sdo_i_Dout));
+  PmodNAV_xlslice_0_3 xlslice_ss_sdi_i
+       (.Din(pmod_bridge_0_in_top_bus_I),
+        .Dout(xlslice_ss_sdi_i_Dout));
 endmodule

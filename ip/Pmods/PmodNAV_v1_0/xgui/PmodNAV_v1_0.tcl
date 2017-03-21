@@ -11,6 +11,8 @@ proc init_gui { IPINST PROJECT_PARAM.ARCHITECTURE PROJECT_PARAM.BOARD } {
   set c_family ${PROJECT_PARAM.ARCHITECTURE}
   set board ${PROJECT_PARAM.BOARD}
   set Component_Name [ ipgui::add_param  $IPINST  -parent  $IPINST  -name Component_Name ]
+
+
   add_board_tab $IPINST
 }
 

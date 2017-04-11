@@ -3,24 +3,8 @@
 /* PmodJSTK.c	--		driver for the PmodJSTK							*/
 /*																		*/
 /************************************************************************/
-/*	Author:		Samuel Lowe										*/
+/*	Author:		Samuel Lowe										        */
 /*	Copyright 2015, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
@@ -29,22 +13,16 @@
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	06/01/2016(SamL): Created
+/*	06/01/2016(SamL): Created											*/
+/*	04/10/2017(ArtVVB): Validated										*/
 /*																		*/
 /************************************************************************/
 
 /***************************** Include Files *******************************/
 #include "PmodJSTK.h"
 
- 
+/**************************** Global Variables *****************************/
 
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-
-/************************** Function Definitions ***************************/
 XSpi_Config JSTKConfig =
 {
 	0,
@@ -59,13 +37,16 @@ XSpi_Config JSTKConfig =
 	0,
 	0
 };
+
+/************************** Function Definitions ***************************/
+
 /* ------------------------------------------------------------ */
-/***	void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address)
+/***	void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 CpuClkFreqHz)
 **
 **	Parameters:
 **		InstancePtr: A PmodJSTK object to start
-**		SPI_Address: The Base address of the PmodJSTK SPI
-**
+**		SPI_Address: The base address of the PmodJSTK SPI
+**		CpuClkFreqHz: The speed of the cpu, used to calculate delays
 **	Return Value:
 **		none
 **
@@ -75,14 +56,15 @@ XSpi_Config JSTKConfig =
 **	Description:
 **		Initialize the PmodJSTK.
 */
-void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address)
+void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 CpuClkFreqHz)
 {
 	JSTKConfig.BaseAddress=SPI_Address;
 	JSTK_SPIInit(&InstancePtr->JSTKSpi);
+	InstancePtr->ItersPerUSec = CpuClkFreqHz / 1000000;
 }
 
 /* ------------------------------------------------------------ */
-/***	JSTK_end(void)
+/***	void JSTK_end(PmodJSTK* InstancePtr)
 **
 **	Parameters:
 **		InstancePtr		- PmodJSTK object to stop
@@ -101,13 +83,13 @@ void JSTK_end(PmodJSTK* InstancePtr){
 }
 
 /* ------------------------------------------------------------ */
-/***	JSTK_SPIInit
+/***	int JSTK_SPIInit(XSpi *SpiInstancePtr)
 **
 **	Parameters:
-**		none
+**		XSpi *SpiInstancePtr: a pointer to the joystick spi device
 **
 **	Return Value:
-**		none
+**		int Status: success or failure
 **
 **	Errors:
 **		none
@@ -151,158 +133,63 @@ int JSTK_SPIInit(XSpi *SpiInstancePtr){
 
 }
 
-
-
-
 /* ------------------------------------------------------------ */
-/***	void JSTK_setLeds(PmodJSTK* InstancePtr, u8 ledst)
+/***	void JSTK_transfer(PmodJSTK* InstancePtr)
 **
 **	Parameters:
 **		InstancePtr: A PmodJSTK object to start
-**		ledst: the desired state of the LEDs
+**		InstancePtr->led: the state to set the leds to
 **
-**	Return Value:
-**		none
+**	Return Values:
+**		InstancePtr->X: the y axis position of the joystick
+**		InstancePtr->Y: the x axis position of the joystick
+**		InstancePtr->btn: the state of the push buttons
 **
 **	Errors:
 **		none
 **
 **	Description:
-**		Sets the 2 user LEDs on the board
-*/
-void JSTK_setLeds(PmodJSTK* InstancePtr, u8 ledSt)
-{
-	u8 recv[5];
-	//load buffer to send led data
-	recv[0] |= 0x80;
-	recv[0] |= ledSt;
-	JSTK_getData(InstancePtr, recv);
-}
-
-/* ------------------------------------------------------------ */
-/***	void JSTK_getX(PmodJSTK* InstancePtr)
-**
-**	Parameters:
-**		InstancePtr: A PmodJSTK object to start
-**
-**	Return Value:
-**		u16 xPos: The 16 bit representation of the x-axis
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Gets the x-axis position from the PmodJSTK.
-*/
-u16 JSTK_getX(PmodJSTK* InstancePtr)
-{
-	u16 xPos;
-	u8 recv[5] = {0};
-	JSTK_getData(InstancePtr, recv);
-
-	xPos = recv[2];
-	xPos |= (recv[3] << 8);
-
-	return xPos;
-}
-
-/* ------------------------------------------------------------ */
-/***	void JSTK_getY(PmodJSTK* InstancePtr)
-**
-**	Parameters:
-**		InstancePtr: A PmodJSTK object to start
-**
-**	Return Value:
-**		u16 yPos: The 16 bit representation of the x-axis
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Gets the y-axis position from the PmodJSTK.
-*/
-u16 JSTK_getY(PmodJSTK* InstancePtr)
-{
-	u16 yPos;
-	u8 recv[5] = {0};
-
-	JSTK_getData(InstancePtr, recv);
-
-	yPos = recv[0];
-	yPos |= (recv[1] << 8);
-
-	return yPos;
-}
-
-/* ------------------------------------------------------------ */
-/***	void JSTK_getBtn(PmodJSTK* InstancePtr)
-**
-**	Parameters:
-**		InstancePtr: A PmodJSTK object to start
-**
-**	Return Value:
-**		u8 btn: The 8 bit representation of the buttons which are in the
-**		0th and 1st positions
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Gets the push button states of the PmodJSTK
-*/
-u8 JSTK_getBtn(PmodJSTK* InstancePtr)
-{
-	u8 recv[5] = {0};
-	JSTK_getData(InstancePtr, recv);
-
-	return recv[4];
-}
-
-/* ------------------------------------------------------------ */
-/***	void JSTK_getData(PmodJSTK* InstancePtr)
-**
-**	Parameters:
-**		InstancePtr: A PmodJSTK object to start
-**		recv: A byte array to act as the receive and send buffer
-**
-**	Return Value:
-**		none
-**
-**	Errors:
-**		need to implement microsecond delay in both microblaze and zynq
-**
-**	Description:
+**		Sets the leds
+**		Gets the x and y positions of the joystick
 **		Gets the push button states of the PmodJSTK
 **
 **	Problems:
 **		Setting the chip select low through SetSlaveSelectReg isnt working so
 **		the function now uses XilOut
 */
-void JSTK_getData(PmodJSTK* InstancePtr, u8* recv){
+void JSTK_transfer(PmodJSTK* InstancePtr){
 
 	//In order to correctly communicate with the Pmod, there needs to be a small delay between
 	//each spi read
+	u8 recv[5] = {0};
+	recv[0] = 0x80 | InstancePtr->led;
 
+//	XSpi_SetSlaveSelect(&InstancePtr->JSTKSpi, 1);
 	XSpi_SetSlaveSelectReg(&InstancePtr->JSTKSpi,	&InstancePtr->JSTKSpi.SlaveSelectReg);
-	delay(20);
+	JSTK_delay(InstancePtr, 20);
 	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[0], &recv[0], 1);
-	delay(20);
+	JSTK_delay(InstancePtr, 20);
 	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[1], &recv[1], 1);
-	delay(20);
+	JSTK_delay(InstancePtr, 20);
 	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[2], &recv[2], 1);
-	delay(20);
+	JSTK_delay(InstancePtr, 20);
 	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[3], &recv[3], 1);
-	delay(20);
+	JSTK_delay(InstancePtr, 20);
 	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[4], &recv[4], 1);
 
+
 //	XSpi_SetSlaveSelectReg(&InstancePtr->JSTKSpi,	&InstancePtr->JSTKSpi.SlaveSelectMask);
+//	XSpi_SetSlaveSelect(&InstancePtr->JSTKSpi, 0);
 	//above doesn't seem to work so manually set it in memory
 	Xil_Out32(InstancePtr->JSTKSpi.BaseAddr+0x70, 1);
 
+	InstancePtr->btn = (recv[4] >> 1) & 0x3;
+	InstancePtr->Y = (recv[3] << 8) | recv[2];
+	InstancePtr->X = (recv[1] << 8) | recv[0];
 }
 
 /* ------------------------------------------------------------ */
-/***	void delaya(int micros)
+/***	void JSTK_delay(int micros)
 **
 **	Parameters:
 **		micros: amount of microseconds to delay
@@ -314,14 +201,16 @@ void JSTK_getData(PmodJSTK* InstancePtr, u8* recv){
 **		none
 **
 **	Description:
-**		delays for a given amount of microseconds. Adapted from sleep and MB_Sleep
+**		Delays for a given amount of microseconds. Adapted from sleep and MB_Sleep
+**
+**	Problems:
+**		none
 */
-void delay(int micros){
+void JSTK_delay(PmodJSTK *InstancePtr, int micros){
 	int i;
-
-#ifdef XPAR_MICROBLAZE_ID
-	for(i = 0; i < (ITERS_PER_USEC*micros); i++){
-			asm("");
+#ifdef __MICROBLAZE__
+	for(i = 0; i < (InstancePtr->ItersPerUSec*micros); i++){
+		asm("");
 	}
 #else
 	usleep(micros);

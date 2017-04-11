@@ -1,83 +1,116 @@
-/******************************************************************************
-*
-* Copyright (C) 2009 - 2014 Xilinx, Inc.  All rights reserved.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* Use of the Software is limited solely to applications:
-* (a) running on a Xilinx device, or
-* (b) that interact with a Xilinx device through a bus or interconnect.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-* OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-* Except as contained in this notice, the name of the Xilinx shall not be used
-* in advertising or otherwise to promote the sale, use or other dealings in
-* this Software without prior written authorization from Xilinx.
-*
-******************************************************************************/
+/************************************************************************/
+/*                                                                      */
+/* PmodJSTK.h   --      demonstration main for the PmodJSTK             */
+/*                                                                      */
+/************************************************************************/
+/*  Author:     Samuel Lowe                                             */
+/*  Copyright 2015-2017, Digilent Inc.                                  */
+/************************************************************************/
+/*  Module Description:                                                 */
+/*                                                                      */
+/*    This file contains code for running a demonstration of the        */
+/*    Pmod Joystick when used with the PmodJSTK IP core.                */
+/*                                                                      */
+/*    The joystick X and Y data is sent over UART to a serial terminal  */
+/*    - such as TeraTerm - at 115200 baud 10 times per second.          */
+/*    The status of the two push buttons on the Pmod joystick are       */
+/*    displayed on the two leds.                                        */
+/*                                                                      */
+/************************************************************************/
+/*  Revision History:                                                   */
+/*                                                                      */
+/*  06/01/2016(SamL): Created                                           */
+/*  04/07/2017(ArtVVB): Validated                                       */
+/*                                                                      */
+/************************************************************************/
 
-/*
- * helloworld.c: simple test application
- *
- * This application configures UART 16550 to baud rate 9600.
- * PS7 UART (Zynq) is not initialized by this application, since
- * bootrom/bsp configures it to baud rate 115200
- * 
- * ------------------------------------------------
- * | UART TYPE   BAUD RATE                        |
- * ------------------------------------------------
- *   uartns550   9600
- *   uartlite    Configurable only in HW design
- *   ps7_uart    115200 (configured by bootrom/bsp)
- */
-
-#include <stdio.h>
-#include "platform.h"
 #include "PmodJSTK.h"
 #include "xparameters.h"
 #include "xil_printf.h"
+#include "xil_cache.h"
+#ifdef __MICROBLAZE__
+    #include "microblaze_sleep.h"
+    //(deprecated in Vivado 2016.4)
+#else
+    #include "sleep.h"
+#endif
 
-
+void DemoInitialize();
+void DemoRun();
+void DemoCleanup();
+void DemoEnableCaches();
+void DemoDisableCaches();
+void DemoSleep();
 
 PmodJSTK joystick;
 
-
+#ifdef __MICROBLAZE__
+    #define CPU_CLOCK_FREQ_HZ (XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000000)
+#else
+    #define CPU_CLOCK_FREQ_HZ (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 1000000)
+#endif
 
 int main()
 {
-	u16 Ydata;
-	u16 Xdata;
-
-    init_platform();
-
-    //init joystick
-    JSTK_begin(&joystick, XPAR_PMODJSTK_0_AXI_LITE_SPI_BASEADDR);
-
-    xil_printf("\n\rJoystick Demo\n");
-
-    JSTK_setLeds(&joystick, 0x00);
-
-    while(1){
-    	Ydata = JSTK_getY(&joystick);
-    	Xdata = JSTK_getX(&joystick);
-    	xil_printf("\n\rX: %d     Y: %d",Xdata, Ydata);
-    	delay(100000);
-    }
-
-    cleanup_platform();
+    DemoInitialize();
+    DemoRun();
+    DemoCleanup();
     return 0;
+}
+
+void DemoInitialize()
+{
+    DemoEnableCaches();
+    JSTK_begin(&joystick, XPAR_PMODJSTK_0_AXI_LITE_SPI_BASEADDR, CPU_CLOCK_FREQ_HZ);
+}
+
+void DemoRun()
+{
+    xil_printf("Joystick Demo\n\r");
+
+    joystick.led = 0;
+    while (1) {
+        JSTK_transfer(&joystick); // capture and send all data
+        joystick.led = joystick.btn; // set the leds equal to the buttons, button 1 will turn on led 1
+        xil_printf("X:%d Y:%d\n\r", joystick.X, joystick.Y); // print the status of the joystick
+        DemoSleep(100); // delay for 100ms
+    }
+}
+
+void DemoCleanup()
+{
+    DemoDisableCaches();
+}
+
+void DemoSleep(int millis)
+{
+#ifdef __MICROBLAZE__
+    MB_Sleep(millis);
+#else
+    usleep(1000 * millis);//delay for param microseconds
+#endif
+}
+
+void DemoEnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DemoDisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheDisable();
+#endif
+#endif
 }

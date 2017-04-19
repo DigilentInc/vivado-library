@@ -4,23 +4,7 @@
 /*																		*/
 /************************************************************************/
 /*	Author:		Samuel Lowe`											*/
-/*	Copyright 2016, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+/*	Copyright 2016-2017, Digilent Inc.									*/
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
@@ -30,16 +14,14 @@
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	06/9/2016(SamL): Created 											*/
+/*	06/09/2016(SamL): Created 											*/
+/*	04/19/2019(ArtVVB): Validated for 2015.4							*/
 /*																		*/
 /************************************************************************/
 
 /***************************** Include Files *******************************/
 #include "PmodGPIO.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 /************************** Function Definitions ***************************/
 
 /* ------------------------------------------------------------ */
@@ -60,9 +42,10 @@
 **	Description:
 **		Initialize the PmodGPIO and set the tristate
 */
-void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap)
+void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap, u32 cpuClockFreqHz)
 {
 	InstancePtr->GPIO_addr=GPIO_Address;
+	InstancePtr->cpuClockFreqHz=cpuClockFreqHz;
 	Xil_Out32(InstancePtr->GPIO_addr+4, bitmap);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc.
 }
 
@@ -70,7 +53,7 @@ void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap)
 /***	void GPIO_getPins(PmodGPIO* InstancePtr)
 **
 **	Parameters:
-**		InstancePtr: A PmodGPIO object to use
+**		InstancePtr: A PmodGPIO object to read from
 **
 **	Return Value:
 **		data: An 8 bit representation of the GPIO pins
@@ -81,8 +64,8 @@ void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap)
 **	Description:
 **		Reads the 8 states of the GPIO pins and returns them in an 8 bit number
 */
-u8 GPIO_getPins(PmodGPIO* InstancePtr){
-
+u8 GPIO_getPins(PmodGPIO* InstancePtr)
+{
 	u32 data = 0;
 	data = Xil_In32(InstancePtr->GPIO_addr);
 
@@ -93,7 +76,7 @@ u8 GPIO_getPins(PmodGPIO* InstancePtr){
 /***	void GPIO_setPins(PmodGPIO* InstancePtr, u8 value)
 **
 **	Parameters:
-**		InstancePtr: A PmodGPIO object to start
+**		InstancePtr: A PmodGPIO object to write to
 **		value: The 8 bit number that will be assigned to the output
 **
 **	Return Value:
@@ -105,17 +88,16 @@ u8 GPIO_getPins(PmodGPIO* InstancePtr){
 **	Description:
 **		Sets all 8 outputs at once
 */
-void GPIO_setPins(PmodGPIO* InstancePtr, u8 value){
-
+void GPIO_setPins(PmodGPIO* InstancePtr, u8 value)
+{
 	Xil_Out32(InstancePtr->GPIO_addr, value);
-
 }
 
 /* ------------------------------------------------------------ */
 /***	u8 GPIO_getPin(PmodGPIO* InstancePtr, u8 pinNumber)
 **
 **	Parameters:
-**		InstancePtr: A PmodGPIO object to start
+**		InstancePtr: A PmodGPIO object to read from
 **		pinNumber: number of Pmod pin to read from (1-8)
 **
 **	Return Value:
@@ -127,8 +109,8 @@ void GPIO_setPins(PmodGPIO* InstancePtr, u8 value){
 **	Description:
 **		Sets all 8 outputs at once
 */
-u8 GPIO_getPin(PmodGPIO* InstancePtr, u8 pinNumber){
-
+u8 GPIO_getPin(PmodGPIO* InstancePtr, u8 pinNumber)
+{
 	u32 data = 0;
 	data = Xil_In32(InstancePtr->GPIO_addr);
 	data = data & (1<<(pinNumber-1));
@@ -143,7 +125,7 @@ u8 GPIO_getPin(PmodGPIO* InstancePtr, u8 pinNumber){
 /***	void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value)
 **
 **	Parameters:
-**		InstancePtr: A PmodGPIO object to start
+**		InstancePtr: A PmodGPIO object to write to
 **		pinNumber: number of Pmod pin to write to (1-8)
 **		Value: Value to write to the pin
 **
@@ -156,8 +138,8 @@ u8 GPIO_getPin(PmodGPIO* InstancePtr, u8 pinNumber){
 **	Description:
 **		Initialize the PmodGPIO.
 */
-void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value){
-
+void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value)
+{
 	u32 data = 0;
 
 	data = Xil_In32(InstancePtr->GPIO_addr);
@@ -171,9 +153,10 @@ void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value){
 }
 
 /* ------------------------------------------------------------ */
-/***	void delay(int micros)
+/***	void GPIO_delay(int micros)
 **
 **	Parameters:
+**		InstancePtr: A PmodGPIO object containing the cpu clock frequency
 **		micros: amount of microseconds to delay
 **
 **	Return Value:
@@ -185,16 +168,14 @@ void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value){
 **	Description:
 **		delays for a given amount of microseconds. Adapted from sleep and MB_Sleep
 */
-void delay(int micros){
+void GPIO_delay(PmodGPIO *InstancePtr, int micros)
+{
 	int i;
-
-#ifdef XPAR_MICROBLAZE_ID
-	for(i = 0; i < (ITERS_PER_USEC*micros); i++){
+#ifdef __MICROBLAZE__
+	for(i = 0; i < (InstancePtr->cpuClockFreqHz*micros); i++){
 			asm("");
 	}
 #else
 	usleep(micros);
 #endif
 }
-
-

@@ -4,23 +4,7 @@
 /*																		*/
 /************************************************************************/
 /*	Author:		Samuel Lowe`											*/
-/*	Copyright 2016, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+/*	Copyright 2016-2017, Digilent Inc.									*/
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
@@ -31,6 +15,7 @@
 /*  Revision History:													*/
 /*																		*/
 /*	06/9/2016(SamL): Created 											*/
+/*	04/19/2019(ArtVVB): Validated for 2015.4							*/
 /*																		*/
 /************************************************************************/
 /*  Baud Rates:															*/
@@ -40,45 +25,90 @@
 /*																		*/
 /************************************************************************/
 
-
 #include <stdio.h>
-#include "platform.h"
 #include "xil_printf.h"
 #include "PmodGPIO.h"
+#include "xil_cache.h"
 
 PmodGPIO myDevice;
 
+#ifdef __MICROBLAZE__
+	#define CPU_CLK_FREQ_HZ   (XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000000)
+#else
+	#define CPU_CLK_FREQ_HZ     (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 1000000)
+#endif
+
+void DemoInitialize();
+void DemoRun();
+void DemoCleanup();
+void EnableCaches();
+void DisableCaches();
 
 int main()
 {
-    init_platform();
+	DemoInitialize();
+	DemoRun();
+	DemoCleanup();
+    return 0;
+}
 
+void DemoInitialize()
+{
+	EnableCaches();
+    GPIO_begin(&myDevice, XPAR_PMODGPIO_0_AXI_LITE_GPIO_BASEADDR, 0x00, CPU_CLK_FREQ_HZ);
+}
+
+void DemoRun()
+{
     int count = 0;
     int i = 0;
-
     print("GPIO Output Demo\n\r");
-
-    GPIO_begin(&myDevice, XPAR_PMODGPIO_0_AXI_LITE_GPIO_BASEADDR, 0x00);
-
-    while(1){
-
+	
+    while(1)
+	{
     	GPIO_setPin(&myDevice, count, 1);
-    	if(count >= 8){
+    	if(count >= 8)
+		{
     		count = 0;
-    		for(i = 0;i < 4; i++){
+    		for(i = 0; i < 4; i++)
+			{
 				GPIO_setPins(&myDevice, 0xFF);
-				delay(300000);
+				GPIO_delay(&myDevice, 300000);
 				GPIO_setPins(&myDevice, 0x00);
-				delay(300000);
+				GPIO_delay(&myDevice, 300000);
     		}
     	}
     	else
     		count ++;
-
-    	delay(200000);
-
+    	GPIO_delay(&myDevice, 200000);
     }
+}
 
-    cleanup_platform();
-    return 0;
+void DemoCleanup()
+{
+	DisableCaches();
+}
+
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheDisable();
+#endif
+#endif
 }

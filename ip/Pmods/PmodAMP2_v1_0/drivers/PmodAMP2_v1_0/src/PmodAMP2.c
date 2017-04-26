@@ -1,20 +1,49 @@
-
+/************************************************************************/
+/*																		*/
+/*	PmodAMP2.c		--		Definitions for the PmodAMP2 library		*/
+/*																		*/
+/************************************************************************/
+/*	Author:		Arthur Brown											*/
+/*	Copyright 2017, Digilent Inc.										*/
+/************************************************************************/
+/*  File Description:													*/
+/*	This file defines the AMP2 library functions to initialize, start, 	*/
+/* 	and stop the IP core.												*/
+/*																		*/
+/************************************************************************/
+/*  Revision History:													*/
+/*																		*/
+/*	04/26/2017(ArtVVB): Validated										*/
+/*																		*/
+/************************************************************************/
 
 /***************************** Include Files *******************************/
 #include "PmodAMP2.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+/**************************** Global Variables *****************************/
+XTmrCtr_Config tmr_config = {
+		0,
+		0,
+		100000000
+};
+XGpio_Config gpio_config = {
+		0,
+		0,
+		0,
+		0
+};
+
 /************************** Function Definitions ***************************/
 
+
 /* ------------------------------------------------------------ */
-/***	void AMP2_begin(PmodAMP2* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
+/***	void AMP2_begin(PmodAMP2 *InstancePtr, u32 PwmBaseAddress, u32 GpioBaseAddress, u32 TmrBaseAddress)
 **
 **	Parameters:
-**		InstancePtr: A PmodAMP2 object to start
-**		GPIO_Address: The Base address of the PmodAMP2 GPIO
-**		SPI_Address: The Base address of the PmodAMP2 SPI
+**		InstancePtr: 	 A PmodAMP2 object to initialize
+**		PwmBaseAddress:  The base address of the PmodAMP2 PWM
+**		GpioBaseAddress: The base address of the PmodAMP2 GPIO
+**		TmrBaseAddress:  The base address of the PmodAMP2 Timer
 **
 **	Return Value:
 **		none
@@ -25,123 +54,127 @@
 **	Description:
 **		Initialize the PmodAMP2.
 */
-void AMP2_begin(PmodAMP2* InstancePtr, u32 GPIO_Address, u32 PWM_Address)
+void AMP2_begin(PmodAMP2 *InstancePtr, u32 PwmBaseAddress, u32 GpioBaseAddress, u32 TmrBaseAddress)
 {
-	InstancePtr->GPIO_addr=GPIO_Address;
-	InstancePtr->PWM_addr=PWM_Address;
-	Xil_Out32(InstancePtr->GPIO_addr+4, 0b000);
-	Xil_Out32(InstancePtr->GPIO_addr, 0b101);
-	Xil_Out32(InstancePtr->PWM_addr+8, 0xf);
-	Xil_Out32(InstancePtr->PWM_addr+4, 4096);
+	InstancePtr->PWM_BaseAddress = PwmBaseAddress;
+	AMP2_gpioSetup(&InstancePtr->gpio, GpioBaseAddress);
+
+	if (XST_SUCCESS != AMP2_timerSetup(&InstancePtr->timer, TmrBaseAddress))
+		xil_printf("timer setup failed\n\r");
+
+	PWM_Set_Period(InstancePtr->PWM_BaseAddress, AMP2_PWM_PERIOD);
+	PWM_Set_Duty(InstancePtr->PWM_BaseAddress, 0, 0);
 }
 
-void AMP2_setPWM(PmodAMP2* InstancePtr,int duty){
-	Xil_Out32(InstancePtr->PWM_addr, duty);
+/* ------------------------------------------------------------ */
+/***	void AMP2_timerSetup(XTmrCtr *TmrInstancePtr, u32 TmrBaseAddress)
+**
+**	Parameters:
+**		TmrInstancePtr: The Pmod AMP2's AXI Timer object
+**		TmrBaseAddress: The base address of the PmodAMP2 Timer
+**
+**	Return Value:
+**		status: XST_SUCCESS if initialization was successful, failure code otherwise
+**
+**	Errors:
+**		none
+**
+**	Description:
+**		Initialize the PmodAMP2 Timer IP.
+*/
+
+int AMP2_timerSetup(XTmrCtr *TmrInstancePtr, u32 TmrBaseAddress)
+{
+	int status;
+//	status = XTmrCtr_Initialize(
+//			TmrInstancePtr,
+//			TmrDeviceID
+//	);
+	tmr_config.BaseAddress = TmrBaseAddress;
+	XTmrCtr_CfgInitialize(TmrInstancePtr, &tmr_config, tmr_config.BaseAddress);
+
+//	if(status != XST_SUCCESS)
+//		return XST_FAILURE;
+
+	XTmrCtr_SetResetValue(
+			TmrInstancePtr,
+			0,
+			0xFFFFFFFF-AMP2_PWM_PERIOD
+	);
+	XTmrCtr_SetOptions(
+			TmrInstancePtr,
+			0,
+			XTC_INT_MODE_OPTION | XTC_AUTO_RELOAD_OPTION
+	);
+	return XST_SUCCESS;
 }
 
-void AMP2_setPWMPeriod(PmodAMP2* InstancePtr,int period){
-	Xil_Out32(InstancePtr->PWM_addr+4, period);
+/* ------------------------------------------------------------ */
+/***	void AMP2_gpioSetup(XGpio *GpioInstancePtr, u32 GpioBaseAddress)
+**
+**	Parameters:
+**		GpioInstancePtr: The Pmod AMP2's AXI Gpio object
+**		GpioBaseAddress: The base address of the PmodAMP2 Gpio
+**
+**	Return Value:
+**		none
+**
+**	Errors:
+**		none
+**
+**	Description:
+**		Initialize the PmodAMP2 GPIO IP.
+*/
+void AMP2_gpioSetup(XGpio *GpioInstancePtr, u32 GpioBaseAddress)
+{
+	gpio_config.BaseAddress = GpioBaseAddress;
+	XGpio_CfgInitialize(GpioInstancePtr, &gpio_config, gpio_config.BaseAddress);
+
+	XGpio_SetDataDirection(GpioInstancePtr, 1, 0b000);
+	XGpio_DiscreteWrite(GpioInstancePtr, 1, 0b101);
 }
 
-int AMP2_setupInterrupt(PmodAMP2* InstancePtr, u32 interruptID, void* handlerFunction){
 
-	int Result;
-
-#ifdef XPAR_XINTC_NUM_INSTANCES
-	INTC *IntcInstancePtr = &InstancePtr->intc;
-	/*
-	 * Initialize the interrupt controller driver so that it's ready to use.
-	 * specify the device ID that was generated in xparameters.h
-	 */
-	Result = XIntc_Initialize(IntcInstancePtr, interruptID);
-	if (Result != XST_SUCCESS) {
-		return Result;
-	}
-
-	/* Hook up interrupt service routine */
-	XIntc_Connect(IntcInstancePtr, interruptID,
-		      (Xil_ExceptionHandler)handlerFunction, InstancePtr);
-
-	/* Enable the interrupt vector at the interrupt controller */
-
-	XIntc_Enable(IntcInstancePtr, interruptID);
-
-	/*
-	 * Start the interrupt controller such that interrupts are recognized
-	 * and handled by the processor
-	 */
-	Result = XIntc_Start(IntcInstancePtr, XIN_REAL_MODE);
-	if (Result != XST_SUCCESS) {
-		return Result;
-	}
-	/*
-	 * Initialize the exception table and register the interrupt
-	 * controller handler with the exception table
-	 */
-	Xil_ExceptionInit();
-
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
-
-	/* Enable non-critical exceptions */
-	Xil_ExceptionEnable();
-
-#endif
-#ifdef XPAR_SCUGIC_0_DEVICE_ID
-	INTC *IntcInstancePtr = &InstancePtr->intc;
-	XScuGic_Config *IntcConfig;
-
-	/*
-	 * Initialize the interrupt controller driver so that it is ready to
-	 * use.
-	 */
-	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
-	if (NULL == IntcConfig) {
-		return XST_FAILURE;
-	}
-
-	Result = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig,
-					IntcConfig->CpuBaseAddress);
-	if (Result != XST_SUCCESS) {
-		return XST_FAILURE;
-	}
-
-	XScuGic_SetPriorityTriggerType(IntcInstancePtr, interruptID,
-					0xA0, 0x3);
-
-	/*
-	 * Connect the interrupt handler that will be called when an
-	 * interrupt occurs for the device.
-	 */
-	Result = XScuGic_Connect(IntcInstancePtr, interruptID,
-				 (Xil_ExceptionHandler)handlerFunction, InstancePtr);
-	if (Result != XST_SUCCESS) {
-		return Result;
-	}
-
-	/*
-	 * Enable the interrupt for the GPIO device.
-	 */
-	XScuGic_Enable(IntcInstancePtr, interruptID);
-
-	/*
-	 * Enable the GPIO channel interrupts so that push button can be
-	 * detected and enable interrupts for the GPIO device
-	 */
+/* ------------------------------------------------------------ */
+/***	void AMP2_stop(PmodAMP2 *InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodAMP2 object to halt
+**
+**	Return Value:
+**		none
+**
+**	Errors:
+**		none
+**
+**	Description:
+**		Stops the timer and PWM of the AMP2
+*/
+void AMP2_stop(PmodAMP2 *InstancePtr)
+{
+	XTmrCtr_Stop(&InstancePtr->timer, 0);
+	PWM_Disable(InstancePtr->PWM_BaseAddress);
+}
 
 
-	/*
-	 * Initialize the exception table and register the interrupt
-	 * controller handler with the exception table
-	 */
-	Xil_ExceptionInit();
-
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
-
-	/* Enable non-critical exceptions */
-	Xil_ExceptionEnable();
-
-#endif
-return 0;
+/* ------------------------------------------------------------ */
+/***	void AMP2_start(PmodAMP2 *InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodAMP2 object to start
+**
+**	Return Value:
+**		none
+**
+**	Errors:
+**		none
+**
+**	Description:
+**		Starts the timer and PWM of the AMP2
+*/
+void AMP2_start(PmodAMP2 *InstancePtr)
+{
+	XTmrCtr_Reset(&InstancePtr->timer, 0);
+	XTmrCtr_Start(&InstancePtr->timer, 0);
+	PWM_Enable(InstancePtr->PWM_BaseAddress);
 }

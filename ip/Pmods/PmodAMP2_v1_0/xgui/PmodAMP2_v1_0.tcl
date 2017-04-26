@@ -63,6 +63,84 @@ proc validate_PARAM_VALUE.C_AXI_LITE_GPIO_HIGHADDR { PARAM_VALUE.C_AXI_LITE_GPIO
 	return true
 }
 
+proc update_PARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH { PARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH } {
+	# Procedure called to update C_AXI_LITE_TIMER_DATA_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH { PARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH } {
+	# Procedure called to validate C_AXI_LITE_TIMER_DATA_WIDTH
+	return true
+}
+
+proc update_PARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH { PARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH } {
+	# Procedure called to update C_AXI_LITE_TIMER_ADDR_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH { PARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH } {
+	# Procedure called to validate C_AXI_LITE_TIMER_ADDR_WIDTH
+	return true
+}
+
+proc update_PARAM_VALUE.C_AXI_LITE_TIMER_BASEADDR { PARAM_VALUE.C_AXI_LITE_TIMER_BASEADDR } {
+	# Procedure called to update C_AXI_LITE_TIMER_BASEADDR when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_TIMER_BASEADDR { PARAM_VALUE.C_AXI_LITE_TIMER_BASEADDR } {
+	# Procedure called to validate C_AXI_LITE_TIMER_BASEADDR
+	return true
+}
+
+proc update_PARAM_VALUE.C_AXI_LITE_TIMER_HIGHADDR { PARAM_VALUE.C_AXI_LITE_TIMER_HIGHADDR } {
+	# Procedure called to update C_AXI_LITE_TIMER_HIGHADDR when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_TIMER_HIGHADDR { PARAM_VALUE.C_AXI_LITE_TIMER_HIGHADDR } {
+	# Procedure called to validate C_AXI_LITE_TIMER_HIGHADDR
+	return true
+}
+
+
+proc update_PARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH { PARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH } {
+	# Procedure called to update C_AXI_LITE_PWM_DATA_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH { PARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH } {
+	# Procedure called to validate C_AXI_LITE_PWM_DATA_WIDTH
+	return true
+}
+
+proc update_PARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH { PARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH } {
+	# Procedure called to update C_AXI_LITE_PWM_ADDR_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH { PARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH } {
+	# Procedure called to validate C_AXI_LITE_PWM_ADDR_WIDTH
+	return true
+}
+
+proc update_PARAM_VALUE.C_AXI_LITE_PWM_BASEADDR { PARAM_VALUE.C_AXI_LITE_PWM_BASEADDR } {
+	# Procedure called to update C_AXI_LITE_PWM_BASEADDR when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_PWM_BASEADDR { PARAM_VALUE.C_AXI_LITE_PWM_BASEADDR } {
+	# Procedure called to validate C_AXI_LITE_PWM_BASEADDR
+	return true
+}
+
+proc update_PARAM_VALUE.C_AXI_LITE_PWM_HIGHADDR { PARAM_VALUE.C_AXI_LITE_PWM_HIGHADDR } {
+	# Procedure called to update C_AXI_LITE_PWM_HIGHADDR when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.C_AXI_LITE_PWM_HIGHADDR { PARAM_VALUE.C_AXI_LITE_PWM_HIGHADDR } {
+	# Procedure called to validate C_AXI_LITE_PWM_HIGHADDR
+	return true
+}
+
+
+
+
+
+
 proc update_PARAM_VALUE.C_AXI_LITE_SPI_DATA_WIDTH { PARAM_VALUE.C_AXI_LITE_SPI_DATA_WIDTH } {
 	# Procedure called to update C_AXI_LITE_SPI_DATA_WIDTH when any of the dependent parameters in the arguments change
 }
@@ -109,6 +187,30 @@ proc update_MODELPARAM_VALUE.C_AXI_LITE_GPIO_ADDR_WIDTH { MODELPARAM_VALUE.C_AXI
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.C_AXI_LITE_GPIO_ADDR_WIDTH}] ${MODELPARAM_VALUE.C_AXI_LITE_GPIO_ADDR_WIDTH}
 }
+
+
+proc update_MODELPARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH { MODELPARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH PARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH}] ${MODELPARAM_VALUE.C_AXI_LITE_PWM_DATA_WIDTH}
+}
+
+proc update_MODELPARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH { MODELPARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH PARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH}] ${MODELPARAM_VALUE.C_AXI_LITE_PWM_ADDR_WIDTH}
+}
+
+
+proc update_MODELPARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH { MODELPARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH PARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH}] ${MODELPARAM_VALUE.C_AXI_LITE_TIMER_DATA_WIDTH}
+}
+
+proc update_MODELPARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH { MODELPARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH PARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH}] ${MODELPARAM_VALUE.C_AXI_LITE_TIMER_ADDR_WIDTH}
+}
+
+
 
 proc update_MODELPARAM_VALUE.C_AXI_LITE_SPI_DATA_WIDTH { MODELPARAM_VALUE.C_AXI_LITE_SPI_DATA_WIDTH PARAM_VALUE.C_AXI_LITE_SPI_DATA_WIDTH } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value

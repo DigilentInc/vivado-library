@@ -1,3 +1,24 @@
+/*************************************************************************/
+/*                                                                       */
+/*     PmodTMP3.h --     PmodTMP3 Library                                */
+/*                                                                       */
+/*************************************************************************/
+/*     Author: Arthur Brown                                              */
+/*     Copyright 2016, Digilent Inc.                                     */
+/*************************************************************************/
+/*  Module Description:                                                  */
+/*                                                                       */
+/*            This file contains code for running a demonstration of the */
+/*            PmodTMP3 when used with the PmodTMP3 IP core.              */
+/*                                                                       */
+/*************************************************************************/
+/*  Revision History:                                                    */
+/*                                                                       */
+/*            6/9/2016(ABrown): Created                                  */
+/* 			  5/8/2017(jPeyron): updated                                 */
+/*                                                                       */
+/*************************************************************************/
+
 
 #ifndef PMODTMP3_H
 #define PMODTMP3_H
@@ -8,34 +29,17 @@
 #include "xstatus.h"
 #include "xiic_l.h"
 #include "xiic.h"
-#include "xparameters.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 /* ------------------------------------------------------------ */
 /*					Definitions									*/
 /* ------------------------------------------------------------ */
-#define bool u8
-#define true 1
-#define false 0
 
-#ifdef XPAR_XINTC_NUM_INSTANCES
- #include "xintc.h"
- #define INTC		XIntc
- #define INTC_HANDLER	XIntc_InterruptHandler
-#else
-#ifdef XPAR_SCUGIC_0_DEVICE_ID
- #include "xscugic.h"
- #define INTC		XScuGic
- #define INTC_HANDLER	XScuGic_InterruptHandler
-#else
-#define NO_IRPT 1
-#endif
-#endif
 
-#ifdef XPAR_MICROBLAZE_ID
-	#define ITERS_PER_USEC   (XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000000)
-#else
-	#define ITERS_PER_USEC     (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 1000000)
-#endif
+
+
 /* ------------------------------------------------------------ */
 /*		Register addresses Definitions							*/
 /* ------------------------------------------------------------ */
@@ -92,24 +96,18 @@ typedef struct PmodTMP3{
 	u8 currentRegister;
 	u8 recvbytes;
 	u8* recv;
-#ifndef NO_IRPT
-	INTC intc;
-#endif
+	u32 ItersPerUSec;
 }PmodTMP3;
 
-void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address);
+void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address, u32 CpuClkFreqHz);
 void TMP3_end(PmodTMP3* InstancePtr);
-int TMP3_IICInit(XIic *IicInstancePtr);
+int  TMP3_IICInit(XIic *IicInstancePtr);
 void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData);
 void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData);
-int TMP3_SetupInterruptSystem(PmodTMP3* InstancePtr, u32 interruptDeviceID, u32 interruptID, void* SendHandler,  void* ReceiveHandler);
-
 void TMP3_config(PmodTMP3 *InstancePtr, u8 configuration);
 double TMP3_getTemp(PmodTMP3 *InstancePtr);
-
 double TMP3_FtoC(double tempF);
 double TMP3_CtoF(double tempC);
-
-void TMP3_delay(int micros);
+void TMP3_delay(PmodTMP3* InstancePtr, int micros );
 
 #endif // PMODTMP3_H

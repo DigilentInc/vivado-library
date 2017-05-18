@@ -1,11 +1,29 @@
+/*************************************************************************/
+/*                                                                       */
+/*     PmodTMP3.c --     PmodTMP3 Library                                */
+/*                                                                       */
+/*************************************************************************/
+/*     Author: Arthur Brown                                              */
+/*     Copyright 2016, Digilent Inc.                                     */
+/*************************************************************************/
+/*  Module Description:                                                  */
+/*                                                                       */
+/*            This file contains code for running a demonstration of the */
+/*            PmodTMP3 when used with the PmodTMP3 IP core.              */
+/*                                                                       */
+/*************************************************************************/
+/*  Revision History:                                                    */
+/*                                                                       */
+/*            6/9/2016(ABrown): Created                                  */
+/* 			  5/8/2017(jPeyron): updated                                 */
+/*                                                                       */
+/*************************************************************************/
 
 
 /***************************** Include Files *******************************/
 #include "PmodTMP3.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+
 /************************** Function Definitions ***************************/
 XIic_Config TMP3_Config =
 {
@@ -16,7 +34,7 @@ XIic_Config TMP3_Config =
 	2
 
 };
-static void StatusHandler(PmodTMP3 *InstancePtr);
+
 /* ------------------------------------------------------------ */
 /***	void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address)
 **
@@ -34,9 +52,10 @@ static void StatusHandler(PmodTMP3 *InstancePtr);
 **	Description:
 **		Initialize the PmodTMP3.
 */
-void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address)
+void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address, u32 CpuClkFreqHz)
 {
 	TMP3_Config.BaseAddress=IIC_Address;
+	InstancePtr->ItersPerUSec = CpuClkFreqHz;
 	InstancePtr->chipAddr=Chip_Address;
 	TMP3_IICInit(&InstancePtr->TMP3Iic);
 	XIic_SetAddress(&InstancePtr->TMP3Iic, XII_ADDR_TO_SEND_TYPE, InstancePtr->chipAddr);
@@ -58,7 +77,7 @@ void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address)
 **		Stops the device
 */
 void TMP3_end(PmodTMP3* InstancePtr){
-	//XIic_Stop(&InstancePtr->TMP3Iic);
+	XIic_Stop(&InstancePtr->TMP3Iic);
 }
 
 /* ------------------------------------------------------------ */
@@ -129,19 +148,12 @@ void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData)
 		return;
 	}
 	if (InstancePtr->currentRegister!=reg){
-		//XIic_MasterSend(&InstancePtr->TMP3Iic, &reg, 1);
+
 		XIic_Send(InstancePtr->TMP3Iic.BaseAddress, InstancePtr->chipAddr, &reg, 1, XII_REPEATED_START_OPTION);
 		InstancePtr->currentRegister=reg;
-	}//else{
-		//XIic_MasterRecv(&InstancePtr->TMP3Iic, Data, nData);
-	//}
+	}
 	XIic_Recv(InstancePtr->TMP3Iic.BaseAddress, InstancePtr->chipAddr, Data, nData, XIIC_STOP);
 
-
-	//XIic_MasterSend(&InstancePtr->TMP3Iic, &reg, 2);
-	//InstancePtr->recvbytes=nData+1;
-	//InstancePtr->recv=Data;
-	//XIic_MasterRecv(&InstancePtr->TMP3Iic, Data, nData);
 
 	Status = XIic_Stop(&InstancePtr->TMP3Iic);
 	if (Status != XST_SUCCESS) {
@@ -184,11 +196,7 @@ void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData)
 	}
 	XIic_Send(InstancePtr->TMP3Iic.BaseAddress, InstancePtr->chipAddr, out, nData+1, XIIC_STOP);
 
-	//XIic_MasterSend(&InstancePtr->TMP3Iic, out, nData+1);
 
-	//XIic_DynMasterSend(&InstancePtr->TMP3Iic, out, nData+1);
-
-	//while(XIic_IsIicBusy(&InstancePtr->TMP3Iic));
 
 	Status = XIic_Stop(&InstancePtr->TMP3Iic);
 	if (Status != XST_SUCCESS) {
@@ -197,136 +205,7 @@ void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData)
 
 }
 
-/* ------------------------------------------------------------ */
-/*  TMP3_SetupInterruptSystem()
-**
-**  Parameters:
-**	  InstancePtr: PmodTMP3 object to get data from
-**	  interruptDeviceID: Device ID of the interrupt controller
-**	  interruptID: The vector ID of the TMP3 I2C interrupt
-**
-**  Return Value:
-**    A status indicating XST_SUCCESS or a value that is contained in
-**		xstatus.h.
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This function sets up the interrupt system for the example.  The processing
-** 	  contained in this function assumes the hardware system was built with
-** 	  and interrupt controller.
-**
-*****************************************************************************/
-int TMP3_SetupInterruptSystem(PmodTMP3* InstancePtr, u32 interruptDeviceID, u32 interruptID, void* SendHandler,  void* ReceiveHandler)
-{
-	int Result;
 
-#ifdef XPAR_XINTC_NUM_INSTANCES
-	INTC *IntcInstancePtr = &InstancePtr->intc;
-	/*
-	 * Initialize the interrupt controller driver so that it's ready to use.
-	 * specify the device ID that was generated in xparameters.h
-	 */
-	Result = XIntc_Initialize(IntcInstancePtr, interruptDeviceID);
-	if (Result != XST_SUCCESS) {
-		return Result;
-	}
-
-	/* Hook up interrupt service routine */
-	XIntc_Connect(IntcInstancePtr, interruptID,
-		      (Xil_ExceptionHandler)XIic_InterruptHandler, &InstancePtr->TMP3Iic);
-
-	/* Enable the interrupt vector at the interrupt controller */
-
-	XIntc_Enable(IntcInstancePtr, interruptID);
-
-	/*
-	 * Start the interrupt controller such that interrupts are recognized
-	 * and handled by the processor
-	 */
-	Result = XIntc_Start(IntcInstancePtr, XIN_REAL_MODE);
-	if (Result != XST_SUCCESS) {
-		return Result;
-	}
-	XIic_SetSendHandler(&InstancePtr->TMP3Iic, InstancePtr, (XIic_Handler)SendHandler);
-	XIic_SetRecvHandler(&InstancePtr->TMP3Iic, InstancePtr, (XIic_Handler)ReceiveHandler);
-
-	/*
-	 * Initialize the exception table and register the interrupt
-	 * controller handler with the exception table
-	 */
-	Xil_ExceptionInit();
-
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
-
-	/* Enable non-critical exceptions */
-	Xil_ExceptionEnable();
-
-#endif
-#ifdef XPAR_SCUGIC_0_DEVICE_ID
-	INTC *IntcInstancePtr = &InstancePtr->intc;
-	XScuGic_Config *IntcConfig;
-
-	/*
-	 * Initialize the interrupt controller driver so that it is ready to
-	 * use.
-	 */
-	IntcConfig = XScuGic_LookupConfig(interruptDeviceID);
-	if (NULL == IntcConfig) {
-		return XST_FAILURE;
-	}
-
-	Result = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig,
-					IntcConfig->CpuBaseAddress);
-	if (Result != XST_SUCCESS) {
-		return XST_FAILURE;
-	}
-
-	XScuGic_SetPriorityTriggerType(IntcInstancePtr, interruptID,
-					0xA0, 0x3);
-
-	/*
-	 * Connect the interrupt handler that will be called when an
-	 * interrupt occurs for the device.
-	 */
-	Result = XScuGic_Connect(IntcInstancePtr, interruptID,
-				 (Xil_ExceptionHandler)XIic_InterruptHandler, &InstancePtr->TMP3Iic);
-	if (Result != XST_SUCCESS) {
-		return Result;
-	}
-
-	/*
-	 * Enable the interrupt for the device.
-	 */
-	XScuGic_Enable(IntcInstancePtr, interruptID);
-
-
-	XIic_SetSendHandler(&InstancePtr->TMP3Iic, InstancePtr, (XIic_Handler)SendHandler);
-	XIic_SetRecvHandler(&InstancePtr->TMP3Iic, InstancePtr, (XIic_Handler)ReceiveHandler);
-	XIic_SetStatusHandler(&InstancePtr->TMP3Iic, InstancePtr, (XIic_Handler)StatusHandler);
-
-	/*
-	 * Initialize the exception table and register the interrupt
-	 * controller handler with the exception table
-	 */
-	Xil_ExceptionInit();
-
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
-
-	/* Enable non-critical exceptions */
-	Xil_ExceptionEnable();
-
-#endif
-
-	return XST_SUCCESS;
-}
-
-static void StatusHandler(PmodTMP3 *InstancePtr){
-	xil_printf("status\r\n");
-}
 
 /* ------------------------------------------------------------ */
 /***	void TMP3_config(PmodTMP3 *InstancePtr, u8 configuration)
@@ -437,10 +316,11 @@ double TMP3_CtoF(double tempC) {
 }
 
 /* ------------------------------------------------------------ */
-/***	void TMP3_delay(int micros)
+/***	void TMP3_delay(PmodTMP3* InstancePtr,int micros)
 **
 **	Parameters:
 **		micros: the number of microseconds to delay for
+**      InstancePtr: A PmodTMP3 object to start
 **
 **	Return Value:
 **		none
@@ -451,12 +331,11 @@ double TMP3_CtoF(double tempC) {
 **	Description:
 **		Delays the processor for a number of microseconds
 */
-void TMP3_delay(int micros) {
+void TMP3_delay(PmodTMP3* InstancePtr, int micros ) {
 	int i;
-
-#ifdef XPAR_MICROBLAZE_ID
-	for(i = 0; i < (ITERS_PER_USEC*micros); i++){
-			asm("");
+#ifdef __MICROBLAZE__
+	for(i = 0; i < ((InstancePtr->ItersPerUSec*micros))/4; i++){
+		asm("");
 	}
 #else
 	usleep(micros);

@@ -1,5 +1,5 @@
 
 
 proc generate {drv_handle} {
-	xdefine_include_file $drv_handle "xparameters.h" "PmodAMP2" "NUM_INSTANCES" "DEVICE_ID"  "PWM_AXI_BASEADDR" "PWM_AXI_HIGHADDR" "GPIO_AXI_BASEADDR" "GPIO_AXI_HIGHADDR"
+	xdefine_include_file $drv_handle "xparameters.h" "PmodAMP2" "NUM_INSTANCES" "DEVICE_ID"  "AXI_LITE_PWM_BASEADDR" "AXI_LITE_PWM_HIGHADDR" "AXI_LITE_GPIO_BASEADDR" "AXI_LITE_GPIO_HIGHADDR" "AXI_LITE_TIMER_BASEADDR" "AXI_LITE_TIMER_HIGHADDR"
 }

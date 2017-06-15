@@ -1,3 +1,4 @@
+
 -------------------------------------------------------------------------------
 --
 -- File: rgb2dvi.vhd
@@ -63,7 +64,11 @@ entity rgb2dvi is
       kGenerateSerialClk : boolean := true;
       kClkPrimitive : string := "PLL"; -- "MMCM" or "PLL" to instantiate, if kGenerateSerialClk true
       kClkRange : natural := 1;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)      
-      kRstActiveHigh : boolean := true); --true, if active-high; false, if active-low
+      kRstActiveHigh : boolean := true;  --true, if active-high; false, if active-low
+      kD0Swap : boolean := false;  -- P/N Swap Options
+      kD1Swap : boolean := false;
+      kD2Swap : boolean := false;
+      kClkSwap : boolean := false); 
    Port (
       -- DVI 1.0 TMDS video interface
       TMDS_Clk_p : out std_logic;
@@ -91,9 +96,11 @@ type dataOut_t is array (2 downto 0) of std_logic_vector(7 downto 0);
 type dataOutRaw_t is array (2 downto 0) of std_logic_vector(9 downto 0);
 signal pDataOut : dataOut_t;
 signal pDataOutRaw : dataOutRaw_t;
+signal pDataOutRaw_q : dataOutRaw_t;
 signal pVde, pC0, pC1 : std_logic_vector(2 downto 0);
 signal aRst_int, aPixelClkLckd : std_logic;
 signal PixelClkIO, SerialClkIO, aRstLck, pRstLck : std_logic;
+signal pClkOut : std_logic_vector(9 downto 0);
 begin
 
 ResetActiveLow: if not kRstActiveHigh generate
@@ -148,7 +155,7 @@ ClockSerializer: entity work.OutputSERDES
       sDataOut_p => TMDS_Clk_p,
       sDataOut_n => TMDS_Clk_n,
       --Encoded parallel data (raw)
-      pDataOut => "1111100000",      
+      pDataOut => pClkOut,      
       aRst => pRstLck);
 
 DataEncoders: for i in 0 to 2 generate
@@ -172,9 +179,35 @@ DataEncoders: for i in 0 to 2 generate
          sDataOut_p => TMDS_Data_p(i),
          sDataOut_n => TMDS_Data_n(i),
          --Encoded parallel data (raw)
-         pDataOut => pDataOutRaw(i),
+         pDataOut => pDataOutRaw_q(i),
          aRst => pRstLck);      
 end generate DataEncoders;
+
+-- Swap each bit
+D0_direct: if kD0Swap = false generate
+    pDataOutRaw_q(0) <= pDataOutRaw(0);
+end generate;
+D0_reverse: if kD0Swap = true generate
+    pDataOutRaw_q(0) <= not pDataOutRaw(0);
+end generate;
+D1_direct: if kD1Swap = false generate
+    pDataOutRaw_q(1) <= pDataOutRaw(1);
+end generate;
+D1_reverse: if kD1Swap = true generate
+    pDataOutRaw_q(1) <= not pDataOutRaw(1);
+end generate;
+D2_direct: if kD2Swap = false generate
+    pDataOutRaw_q(2) <= pDataOutRaw(2);
+end generate;
+D2_reverse: if kD2Swap = true generate
+    pDataOutRaw_q(2) <= not pDataOutRaw(2);
+end generate;
+Clk_direct: if kClkSwap = false generate
+    pClkOut <= "1111100000";
+end generate;
+Clk_reverse: if kClkSwap = true generate
+    pClkOut <= "0000011111";
+end generate;
 
 -- DVI Output conform DVI 1.0
 -- except that it sends blank pixel during blanking

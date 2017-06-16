@@ -3,7 +3,7 @@
   <spirit:vendor>digilentinc.com</spirit:vendor>
   <spirit:library>ip</spirit:library>
   <spirit:name>rgb2dvi</spirit:name>
-  <spirit:version>1.3</spirit:version>
+  <spirit:version>1.4</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>TMDS</spirit:name>
@@ -258,7 +258,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>542eb3d7</spirit:value>
+            <spirit:value>503b84a4</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -272,21 +272,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>1d4cb5c3</spirit:value>
-          </spirit:parameter>
-        </spirit:parameters>
-      </spirit:view>
-      <spirit:view>
-        <spirit:name>xilinx_implementation</spirit:name>
-        <spirit:displayName>Implementation</spirit:displayName>
-        <spirit:envIdentifier>:vivado.xilinx.com:implementation</spirit:envIdentifier>
-        <spirit:fileSetRef>
-          <spirit:localName>xilinx_implementation_view_fileset</spirit:localName>
-        </spirit:fileSetRef>
-        <spirit:parameters>
-          <spirit:parameter>
-            <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>3de9f5b0</spirit:value>
+            <spirit:value>4b6100b9</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -661,9 +647,9 @@
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>xgui/rgb2dvi_v1_3.tcl</spirit:name>
+        <spirit:name>xgui/rgb2dvi_v1_4.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_1adb3bb6</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_dd565ffd</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -672,16 +658,6 @@
       <spirit:file>
         <spirit:name>docs/rgb2dvi.pdf</spirit:name>
         <spirit:userFileType>pdf</spirit:userFileType>
-      </spirit:file>
-    </spirit:fileSet>
-    <spirit:fileSet>
-      <spirit:name>xilinx_implementation_view_fileset</spirit:name>
-      <spirit:file>
-        <spirit:name>utils/board/board.xit</spirit:name>
-        <spirit:userFileType>xit</spirit:userFileType>
-        <spirit:userFileType>USED_IN_board</spirit:userFileType>
-        <spirit:userFileType>USED_IN_implementation</spirit:userFileType>
-        <spirit:userFileType>USED_IN_synthesis</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
@@ -718,6 +694,13 @@
       <spirit:name>kClkRange</spirit:name>
       <spirit:displayName>TMDS clock range</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choice_pairs_c59fad91">1</spirit:value>
+	  <spirit:vendorExtensions>
+        <xilinx:parameterInfo>
+          <xilinx:enablement>
+            <xilinx:isEnabled xilinx:resolve="dependent" xilinx:dependency="$kGenerateSerialClk">true</xilinx:isEnabled>
+          </xilinx:enablement>
+        </xilinx:parameterInfo>
+      </spirit:vendorExtensions>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>TMDS_BOARD_INTERFACE</spirit:name>
@@ -725,22 +708,22 @@
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kD0Swap</spirit:name>
-      <spirit:displayName>D0 swap</spirit:displayName>
+      <spirit:displayName>Data0</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kD0Swap">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kD1Swap</spirit:name>
-      <spirit:displayName>D1 swap</spirit:displayName>
+      <spirit:displayName>Data1</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kD1Swap">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kD2Swap</spirit:name>
-      <spirit:displayName>D2 swap</spirit:displayName>
+      <spirit:displayName>Data2</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kD2Swap">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>kClkSwap</spirit:name>
-      <spirit:displayName>CLK swap</spirit:displayName>
+      <spirit:displayName>Clock</spirit:displayName>
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkSwap">false</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
@@ -759,27 +742,29 @@
       <xilinx:displayName>RGB to DVI Video Encoder (Source)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.1</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.2</xilinx:canUpgradeFrom>
+        <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.3</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2017-06-15T11:17:04Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2017-06-16T11:39:43Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="xilinx.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.1_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.2_ARCHIVE_LOCATION">D:/vivado-library/ip/rgb2dvi_v1_2</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.3_ARCHIVE_LOCATION">c:/git/vivado-library/ip/rgb2dvi</xilinx:tag>
+        <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.4_ARCHIVE_LOCATION">c:/git/vivado-library/ip/rgb2dvi</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2017.1</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="117e5632"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="58ff7353"/>
+      <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="264d38a0"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="171f950d"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="16681a3c"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="5c0772e1"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="700affea"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="b3eb8274"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

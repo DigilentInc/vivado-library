@@ -28,15 +28,15 @@ extern "C" {
 
 /***************************** Include Files *********************************/
 #include "xspi.h"
+#include "intc.h"
+#include "xstatus.h"
+#include "xparameters.h"
+
 #ifdef XPAR_INTC_0_DEVICE_ID
 #include "xintc.h"
 #else
 #include "xscugic.h"
 #endif
-
-#include "intc.h"
-#include "xstatus.h"
-#include "xparameters.h"
 
 #define SF3_MANUFACTURER_ID 0x20
 

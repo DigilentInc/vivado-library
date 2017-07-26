@@ -29,6 +29,7 @@
 #include "xparameters.h"
 #include "PmodSF3.h"
 #include "intc.h"
+#include "xil_cache.h"
 
 #ifdef XPAR_INTC_0_DEVICE_ID
 #define SF3_SPI_INT_ADDR	XPAR_MICROBLAZE_0_AXI_INTC_PMODSF3_0_QSPI_INTERRUPT_INTR

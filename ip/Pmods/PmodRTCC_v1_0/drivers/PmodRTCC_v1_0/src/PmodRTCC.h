@@ -1,116 +1,108 @@
+/************************************************************************/
+/*                                                                      */
+/*	main.c --     Declaration for PmodRTCC Driver                     	*/
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/*     	Author: Lynn England                                            */
+/*     	Copyright 2016-17, Digilent Inc.                                */
+/*                                                                      */
+/************************************************************************/
+/*  Module Description:                                                 */
+/*                                                                      */
+/*      This file contains definitions for the Pmod Real Time		 	*/
+/* 		Clock & Calendar driver.                      					*/
+/*                                                                      */
+/************************************************************************/
+/*  Revision History:                                                   */
+/*            12/08/2016(lengland): Created                             */
+/*            08/07/2017(artvvb): Validated for Vivado 2015.4			*/
+/*                                                                      */
+/************************************************************************/
 
 #ifndef PMODRTCC_H
 #define PMODRTCC_H
 
+/* ------------------------------------------------------------ */
+/*					Include Files								*/
+/* ------------------------------------------------------------ */
 
-/****************** Include Files ********************/
 #include "xil_types.h"
 #include "xstatus.h"
 #include "xiic_l.h"
 #include "xiic.h"
-#include "xparameters.h"
 
 /* ------------------------------------------------------------ */
 /*					Definitions									*/
-/* ------------------------------------------------------------ */
-#define bool u8
-#define true 1
-#define false 0
-
-//available source/destination
-#define RTCC_RTCC    0x01    // real- time clock
-#define RTCC_ALM0    0x02    // alarm 0
-#define RTCC_ALM1    0x03    // alarm 1
-#define RTCC_PWRD    0x04    // power-down time-stamp
-#define RTCC_PWRU    0x05    // power-up time-stamp
-
-//alarm configuration bits
-#define RTCC_ALM_POL 0x80
-#define RTCC_ALMC2  0x40
-#define RTCC_ALMC1  0x20
-#define RTCC_ALMC0  0x10
-
-//AM/PM
-#define RTCC_AM 0
-#define RTCC_PM 1
-
-
-#ifdef XPAR_XINTC_NUM_INSTANCES
- #include "xintc.h"
- #define INTC		XIntc
- #define INTC_HANDLER	XIntc_InterruptHandler
-#else
-#ifdef XPAR_SCUGIC_0_DEVICE_ID
- #include "xscugic.h"
- #define INTC		XScuGic
- #define INTC_HANDLER	XScuGic_InterruptHandler
-#else
-#define NO_IRPT 1
-#endif
-#endif
-/* ------------------------------------------------------------ */
-/*		Register addresses Definitions							*/
-/* ------------------------------------------------------------ */
-
-/* ------------------------------------------------------------ */
-/*				Bit masks Definitions							*/
-/* ------------------------------------------------------------ */
-
-
-/* ------------------------------------------------------------ */
-/*				Parameters Definitions							*/
-/* ------------------------------------------------------------ */
-
-
-
-/* ------------------------------------------------------------ */
-/*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
 typedef struct PmodRTCC{
 	XIic RTCCIic;
 	u8 chipAddr;
 	u8 currentRegister;
-	u8 recvbytes;
-	u8* recv;
-#ifndef NO_IRPT
-	INTC intc;
-#endif
-}PmodRTCC;
+} PmodRTCC;
+
+typedef enum RTCC_Target {
+	RTCC_TARGET_RTCC = 0,	// real- time clock
+	RTCC_TARGET_ALM0,		// alarm 0
+	RTCC_TARGET_ALM1,		// alarm 1
+	RTCC_TARGET_PWRD,		// power-down time-stamp
+	RTCC_TARGET_PWRU		// power-up time-stamp
+} RTCC_Target;
+
+typedef enum RTCC_AMPM {
+	RTCC_AM = 0,
+	RTCC_PM
+} RTCC_AMPM;
+
+/* ------------------------------------------------------------ */
+/*				Bit Masks Definitions							*/
+/* ------------------------------------------------------------ */
+
+//alarm configuration bits
+#define RTCC_ALM_POL 0x80
+#define RTCC_ALMC2   0x40
+#define RTCC_ALMC1   0x20
+#define RTCC_ALMC0   0x10
+
+/* ------------------------------------------------------------ */
+/*					Procedure Declarations						*/
+/* ------------------------------------------------------------ */
 
 void RTCC_begin(PmodRTCC* InstancePtr, u32 IIC_Address, u8 Chip_Address);
+u32  RTCC_IICInit(XIic *IicInstancePtr);
 void RTCC_end(PmodRTCC* InstancePtr);
-int RTCC_IICInit(XIic *IicInstancePtr);
 void RTCC_ReadIIC(PmodRTCC* InstancePtr, u8 reg, u8 *Data, int nData);
 void RTCC_WriteIIC(PmodRTCC* InstancePtr, u8 reg, u8 *Data, int nData);
-int RTCC_SetupInterruptSystem(PmodRTCC* InstancePtr, u32 interruptDeviceID, u32 interruptID, void* SendHandler,  void* ReceiveHandler);
-void RTCCI2C_clearPWRFAIL(PmodRTCC *InstancePtr);
-void RTCCI2C_startClock(PmodRTCC *InstancePtr);
-void RTCCI2C_stopClock(PmodRTCC *InstancePtr);
-void RTCCI2C_enableAlarm(u8 dest, u8 config,PmodRTCC *InstancePtr);
-void RTCCI2C_disableAlarm(u8 dest,PmodRTCC *InstancePtr);
-void RTCCI2C_alarmOff(u8 dest, PmodRTCC *InstancePtr);
-unsigned int RTCCI2C_checkFlag(u8 src, PmodRTCC *InstancePtr);
-void RTCCI2C_enableVbat(PmodRTCC *InstancePtr);
-void RTCCI2C_disableVbat(PmodRTCC *InstancePtr);
-bool RTCCI2C_checkVbat(PmodRTCC *InstancePtr);
-u8 RTCCI2C_getSec(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getMin(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getHour(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getAmPm(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getDay(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getDate(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getMonth(u8 src, PmodRTCC *InstancePtr);
-u8 RTCCI2C_getYear(PmodRTCC *InstancePtr);
-void RTCCI2C_setSec(u8 dest, u8 value, PmodRTCC *InstancePtr);
-void RTCCI2C_setMin(u8 dest, u8 value, PmodRTCC *InstancePtr);
-void RTCCI2C_setHour12(u8 dest, u8 value, u8 ampm, PmodRTCC *InstancePtr);
-void RTCCI2C_setHour24(u8 dest, u8 value, PmodRTCC *InstancePtr);
-void RTCCI2C_setDay(u8 dest, u8 value, PmodRTCC *InstancePtr);
-void RTCCI2C_setDate(u8 dest, u8 value, PmodRTCC *InstancePtr);
-void RTCCI2C_setMonth(u8 dest, u8 value, PmodRTCC *InstancePtr);
-void RTCCI2C_setYear(u8 value, PmodRTCC *InstancePtr);
+void RTCC_clearPWRFAIL(PmodRTCC *InstancePtr);
+void RTCC_startClock(PmodRTCC *InstancePtr);
+void RTCC_stopClock(PmodRTCC *InstancePtr);
 
+void RTCC_enableAlarm(PmodRTCC *InstancePtr, RTCC_Target dest, u8 config);
+void RTCC_disableAlarm(PmodRTCC *InstancePtr, RTCC_Target dest);
+void RTCC_alarmOff(PmodRTCC *InstancePtr, RTCC_Target dest);
+u8 RTCC_checkFlag(PmodRTCC *InstancePtr, RTCC_Target src);
 
+void RTCC_enableVbat(PmodRTCC *InstancePtr);
+void RTCC_disableVbat(PmodRTCC *InstancePtr);
+u8 RTCC_checkVbat(PmodRTCC *InstancePtr);
+
+u8 RTCC_getSec(PmodRTCC *InstancePtr, RTCC_Target src);
+u8 RTCC_getMin(PmodRTCC *InstancePtr, RTCC_Target src);
+u8 RTCC_getHour(PmodRTCC *InstancePtr, RTCC_Target src);
+u8 RTCC_getDay(PmodRTCC *InstancePtr, RTCC_Target src);
+u8 RTCC_getDate(PmodRTCC *InstancePtr, RTCC_Target src);
+u8 RTCC_getMonth(PmodRTCC *InstancePtr, RTCC_Target src);
+u8 RTCC_getYear(PmodRTCC *InstancePtr);
+RTCC_AMPM RTCC_getAmPm(PmodRTCC *InstancePtr, RTCC_Target src);
+
+void RTCC_setSec(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value);
+void RTCC_setMin(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value);
+void RTCC_setHour12(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value, RTCC_AMPM ampm);
+void RTCC_setHour24(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value);
+void RTCC_setDay(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value);
+void RTCC_setDate(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value);
+void RTCC_setMonth(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value);
+void RTCC_setYear(PmodRTCC *InstancePtr, u8 value);
 
 #endif // PMODRTCC_H

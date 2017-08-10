@@ -1,26 +1,7 @@
 /************************************************************************/
 /*																		*/
-/* PmodJSTK2.c	--		driver for the PmodJSTK2							*/
+/* PmodJSTK2.c	--		Driver source for the PmodJSTK2					*/
 /*																		*/
-/************************************************************************/
-/*	Author:		Samuel Lowe										*/
-/*	Copyright 2015, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
@@ -29,14 +10,14 @@
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
-/*	06/01/2016(SamL): Created
+/*	06/01/2016(SamL): Created											*/
+/*	08/10/2017(ArtVVB): Validated for Vivado 2015.4						*/
 /*																		*/
 /************************************************************************/
 
 /***************************** Include Files *******************************/
+
 #include "PmodJSTK2.h"
-
-
 
 /************************** Function Definitions ***************************/
 XSpi_Config JSTK2Config =
@@ -55,64 +36,61 @@ XSpi_Config JSTK2Config =
 };
 
 /* ------------------------------------------------------------ */
-/***	void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address)
+/***	void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address, u32 cpuClockFreqHz)
 **
 **	Parameters:
-**		InstancePtr: A PmodJSTK2 object to start
-**		SPI_Address: The Base address of the PmodJSTK2 SPI
+**		InstancePtr: 	A PmodJSTK2 object to start
+**		SPI_Address: 	The base address of the PmodJSTK2 SPI Device
+**		GPIO_Address: 	The base address of the PmodJSTK2 Chip-Select GPIO Device
+**		cpuClockFreqHz: The clock speed of the processor, used to scale JSTK2_delay in microblaze implementations
 **
 **	Return Value:
 **		none
 **
-**	Errors:
-**		none
-**
 **	Description:
-**		Initialize the PmodJSTK2.
+**		Initialize the JSTK2 IP
 */
-void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address)
+void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address, u32 cpuClockFreqHz)
 {
 	JSTK2Config.BaseAddress=SPI_Address;
-	JSTK2_SPIInit(&InstancePtr->JSTK2Spi);
+	InstancePtr->ItersPerUSec = cpuClockFreqHz / 1000000;
+	InstancePtr->GpioAddr = GPIO_Address;
+	JSTK2_SPIInit(&InstancePtr->SpiDevice);
+	Xil_Out32(InstancePtr->GpioAddr+4, 0b0);
+	Xil_Out32(InstancePtr->GpioAddr, 0b1);
 }
 
 /* ------------------------------------------------------------ */
 /***	JSTK2_end(void)
 **
 **	Parameters:
-**		InstancePtr		- PmodJSTK2 object to stop
+**		InstancePtr		- PmodJSTK2 device to stop
 **
 **	Return Value:
 **		none
 **
-**	Errors:
-**		none
-**
 **	Description:
-**		Stops the device
+**		Clean up the JSTK2
 */
-void JSTK2_end(PmodJSTK2* InstancePtr){
-	XSpi_Stop(&InstancePtr->JSTK2Spi);
+void JSTK2_end(PmodJSTK2* InstancePtr)
+{
+	XSpi_Stop(&InstancePtr->SpiDevice);
 }
 
 /* ------------------------------------------------------------ */
-/***	JSTK2_SPIInit
+/***	int JSTK2_SPIInit(XSpi *SpiInstancePtr)
 **
 **	Parameters:
-**		none
+**		SpiInstancePtr: JSTK2 SPI driver device to initialize
 **
 **	Return Value:
-**		none
-**
-**	Errors:
-**		none
+**		XST_SUCCESS or XST_FAILURE
 **
 **	Description:
 **		Initializes the PmodJSTK2 SPI.
-
 */
-
-int JSTK2_SPIInit(XSpi *SpiInstancePtr){
+int JSTK2_SPIInit(XSpi *SpiInstancePtr)
+{
 	int Status;
 
 	Status = XSpi_CfgInitialize(SpiInstancePtr, &JSTK2Config, JSTK2Config.BaseAddress);
@@ -120,118 +98,51 @@ int JSTK2_SPIInit(XSpi *SpiInstancePtr){
 		return XST_FAILURE;
 	}
 
-
-
 	Status = XSpi_SetOptions(SpiInstancePtr, (XSP_MASTER_OPTION) | XSP_MANUAL_SSELECT_OPTION);
 	if (Status != XST_SUCCESS) {
 		return XST_FAILURE;
 	}
 
+	//Even though we are generating the CS signal through the GPIO controller, the SPI driver does not work without this statement
 	Status = XSpi_SetSlaveSelect(SpiInstancePtr, 1);
 	if (Status != XST_SUCCESS) {
 		return XST_FAILURE;
 	}
 
-	/*
-	 * Start the SPI driver so that the device is enabled.
-	 */
+	//Start the SPI driver so that the device is enabled.
 	XSpi_Start(SpiInstancePtr);
 
-	/*
-	 * Disable Global interrupt to use polled mode operation
-	 */
+	//Disable Global interrupt to use polled mode operation
 	XSpi_IntrGlobalDisable(SpiInstancePtr);
 
 	return XST_SUCCESS;
-
 }
 
-
-
-
 /* ------------------------------------------------------------ */
-/***	void JSTK2_setLeds(PmodJSTK2* InstancePtr, u8 ledst)
+/***	void JSTK2_setLedRGB(PmodJSTK2* InstancePtr, u8 red, u8 green, u8 blue)
 **
 **	Parameters:
 **		InstancePtr: A PmodJSTK2 object to start
-**		Red: pwm for red led (0-255)
+**		Red:   pwm for red led (0-255)
 **		Green: pwm for green led (0-255)
 **		Blue:  pwm for blue led (0-255)
 **
 **	Return Value:
 **		none
 **
-**	Errors:
-**		none
-**
 **	Description:
-**		Sets the RGB Led on the board
+**		Sets the color of the JSTK2's RGB LED
 */
-void JSTK2_setLed(PmodJSTK2* InstancePtr, u8 red, u8 green, u8 blue)
+void JSTK2_setLedRGB(PmodJSTK2* InstancePtr, u8 red, u8 green, u8 blue)
 {
 	u8 recv[5];
 	//load buffer to send led data
-	recv[0] = cmdSetLedRGB;
+	recv[0] = JSTK2_cmdSetLedRGB;
 	recv[1] = red;
 	recv[2] = green;
 	recv[3] = blue;
+	//recv[4] is a dummy byte
 	JSTK2_getData(InstancePtr, recv, 5);
-	delay(100);
-}
-
-/* ------------------------------------------------------------ */
-/***	void JSTK2_getYRaw(PmodJSTK2* InstancePtr)
-**
-**	Parameters:
-**		InstancePtr: A PmodJSTK2 object to start
-**
-**	Return Value:
-**		u16 xPos: The raw 16 bit representation of the x-axis
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Gets the raw y-axis position from the PmodJSTK2.
-*/
-u16 JSTK2_getYRaw(PmodJSTK2* InstancePtr)
-{
-	u16 yPos;
-	u8 recv[5] = {0};
-	JSTK2_getData(InstancePtr, recv, 5);
-
-	yPos = recv[2];
-	yPos |= (recv[3] << 8);
-
-	return yPos;
-}
-
-/* ------------------------------------------------------------ */
-/***	void JSTK2_getXRaw(PmodJSTK2* InstancePtr)
-**
-**	Parameters:
-**		InstancePtr: A PmodJSTK2 object to start
-**
-**	Return Value:
-**		u16 yPos: The raw 16 bit representation of the x-axis
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Gets the raw x-axis position from the PmodJSTK2.
-*/
-u16 JSTK2_getXRaw(PmodJSTK2* InstancePtr)
-{
-	u16 xPos;
-	u8 recv[5] = {0};
-
-	JSTK2_getData(InstancePtr, recv, 5);
-
-	xPos = recv[0];
-	xPos |= (recv[1] << 8);
-
-	return xPos;
 }
 
 /* ------------------------------------------------------------ */
@@ -241,14 +152,16 @@ u16 JSTK2_getXRaw(PmodJSTK2* InstancePtr)
 **		InstancePtr: A PmodJSTK2 object to start
 **
 **	Return Value:
-**		u8 btn: The 8 bit representation of the buttons which are in the
-**		0th and 1st positions
-**
-**	Errors:
-**		none
+**		btn: The 8 bit representation of the buttons which are in the
+**			 0th and 1st positions
 **
 **	Description:
 **		Gets the push button states of the PmodJSTK22
+**		The button states can be accessed from the return value of this function with the following macros:
+**			JSTK2_<bn/bit>Trigger : 1 if the trigger is pressed
+**			JSTK2_<bn/bit>Jstk	  : 1 if the joystick inline button is pressed
+**		In order to test a button state, the following operation is recommended:
+**			if ((Status & JSTK2_bit<a button bit name>) != 0)
 */
 u8 JSTK2_getBtns(PmodJSTK2* InstancePtr)
 {
@@ -258,114 +171,246 @@ u8 JSTK2_getBtns(PmodJSTK2* InstancePtr)
 	return (recv[4] & 0x03);
 }
 
-
+/* ------------------------------------------------------------ */
+/***	u8 JSTK2_getX(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		8 bit representation of the JSTK2 X position
+**
+**	Description:
+**		Captures X axis position data from the JSTK2
+*/
 u8 JSTK2_getX(PmodJSTK2* InstancePtr){
 	u8 recv[7] = {0};
-	recv[0] = cmdGetPosition;
+
+	recv[0] = JSTK2_cmdGetPosition;
 	JSTK2_getData(InstancePtr, recv, 7);
 
 	return recv[5];
 
 }
 
-u8 JSTK2_getY(PmodJSTK2* InstancePtr){
+/* ------------------------------------------------------------ */
+/***	u8 JSTK2_getY(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		8 bit representation of the JSTK2 Y position
+**
+**	Description:
+**		Captures Y axis position data from the JSTK2
+*/
+u8 JSTK2_getY(PmodJSTK2* InstancePtr)
+{
 	u8 recv[7] = {0};
-	recv[0] = cmdGetPosition;
+
+	recv[0] = JSTK2_cmdGetPosition;
 	JSTK2_getData(InstancePtr, recv, 7);
 
 	return recv[6];
-
 }
 
-u8 JSTK2_getStatus(PmodJSTK2* InstancePtr){\
+/* ------------------------------------------------------------ */
+/***	JSTK2_DataPacket JSTK2_getDataPacket(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		A basic data packet containing button states and X and Y position data
+**
+**	Description:
+**		Captures state data from the JSTK2
+*/
+JSTK2_DataPacket JSTK2_getDataPacket(PmodJSTK2* InstancePtr)
+{
+	u8 recv[5] = {0};
+	JSTK2_DataPacket rawdata;
+
+	recv[0] = JSTK2_cmdGetRaw;
+
+	JSTK2_getData(InstancePtr, recv, 5);
+
+	rawdata.XData = recv[0] | (recv[1] << 8);
+	rawdata.YData = recv[2] | (recv[3] << 8);
+	rawdata.Trigger = (recv[4] & JSTK2_bitTrigger) >> JSTK2_bnTrigger;
+	rawdata.Jstk = (recv[4] & JSTK2_bitJstk) >> JSTK2_bnJstk;
+
+	return rawdata;
+}
+
+/* ------------------------------------------------------------ */
+/***	JSTK2_Position JSTK2_getPosition(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		The contents of the position registers of the JSTK2, packed into a JSTK2_Position struct
+**
+**	Description:
+**		Captures the contents of the JSTK2's position registers
+*/
+JSTK2_Position JSTK2_getPosition(PmodJSTK2* InstancePtr)
+{
+	u8 recv[7] = {0};
+	JSTK2_Position data;
+	recv[0] = JSTK2_cmdGetPosition;
+	JSTK2_getData(InstancePtr, recv, 7);
+	data.XData = recv[5];
+	data.YData = recv[6];
+	return data;
+}
+
+/* ------------------------------------------------------------ */
+/***	u8 JSTK2_getStatus(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		The contents of the Status register of the JSTK2
+**
+**	Description:
+**		Captures the contents of the JSTK2's status register, use these macros to access specific bits:
+**			JSTK2_<bn/bit>Calibrating : 1 if JSTK2 is currently undergoing calibration
+**			JSTK2_<bn/bit>LastCal     : 1 if the last calibration operation was successful
+**			JSTK2_<bn/bit>LastFWS     : 1 if the last flash write was successful
+**			JSTK2_<bn/bit>LastFRS     : 1 if the last flash read was successful
+**			JSTK2_<bn/bit>InvertX     : 1 if joystick x axis inversion is enabled
+**			JSTK2_<bn/bit>InvertY     : 1 if joystick y axis inversion is enabled
+**		In order to test a status bit, the following operation is recommended:
+**			if ((Status & JSTK2_bit<a Status bit name>) != 0)
+*/
+u8 JSTK2_getStatus(PmodJSTK2* InstancePtr)
+{
 	u8 recv[6] = {0};
-	recv[0] = cmdGetStatus;
+
+	recv[0] = JSTK2_cmdGetStatus;
 	JSTK2_getData(InstancePtr, recv, 6);
 
 	return recv[5];
 }
 
-
-void JSTK2_setInversion(PmodJSTK2* InstancePtr, u8 invX, u8 invY){
+/* ------------------------------------------------------------ */
+/***	void JSTK2_setInversion(PmodJSTK2* InstancePtr, u8 invX, u8 invY)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**		invX: 1 if the X Axis is to be inverted, 0 otherwise
+**		invY: 1 if the Y Axis is to be inverted, 0 otherwise
+**
+**	Return Value:
+**		None
+**
+**	Description:
+**		Sets the JSTK2's inversion bits, inverting a direction will cause
+**		data returned to go from forward-back mapping to back-forward (255-0 instead of 0-255)
+*/
+void JSTK2_setInversion(PmodJSTK2* InstancePtr, u8 invX, u8 invY)
+{
 	u8 recv[5] = {0};
 
-	recv[0] = cmdSetInversion | ((invX << 1 | invY) & (0x03));
-
+	recv[0] = JSTK2_cmdSetInversion;
+	if (invX != 0)
+		recv[0] |= JSTK2_bitInvertX;
+	if (invY != 0)
+		recv[0] |= JSTK2_bitInvertY;
 	JSTK2_getData(InstancePtr, recv, 5);
-
 }
 
-
-u8 JSTK2_rldFromFlash(PmodJSTK2* InstancePtr){
+/* ------------------------------------------------------------ */
+/***	void JSTK2_startFlashReload(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		None
+**
+**	Description:
+**		Initiates the process to retrieve calibration data in the JSTK2's flash memory
+**		and store it in the JSTK2's RAM
+**
+**		The user should wait at least 100 us after this command
+**		is called before performing any other SPI transactions
+*/
+void JSTK2_startFlashReload(PmodJSTK2* InstancePtr)
+{
 	u8 recv[5] = {0};
 
-	recv[0] = cmdRldFromFlash;
-
+	recv[0] = JSTK2_cmdRldFromFlash;
 	JSTK2_getData(InstancePtr, recv, 5);
 
-	//strongly recommended that the user waits 100 microseconds
-	//after the chip select line goes high in the setCoand
-	//function before performing another SPI operation with this
-	//device.
-
-	delay(100);
-
-	//check if read was successful
-	if(JSTK2_getStatus(InstancePtr) & 0x10) //success
-		return 1;
-	else 									//failure
-		return 0;
-
+	return;
 }
 
-u8 JSTK2_writeFlash(PmodJSTK2* InstancePtr){
+/* ------------------------------------------------------------ */
+/***	void JSTK2_startFlashWrite(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		None
+**
+**	Description:
+**		Initiates the process to store calibration data in the JSTK2's RAM to flash memory
+**
+**		The user should wait at least 5 ms after this command
+**		is called before performing any other SPI transactions
+*/
+void JSTK2_startFlashWrite(PmodJSTK2* InstancePtr)
+{
 	u8 buffer[5] = {0};
-	buffer[0] = cmdWriteFlash;
+	buffer[0] = JSTK2_cmdWriteFlash;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
-	//strongly recommended that the user waits 5 milliseconds
-	//after the chip select line goes high in the setCommand
-	//function before performing another SPI operation with this
-	//device.
-	delay(5000);
-
-	//check if write was successful
-	if(JSTK2_getStatus(InstancePtr) & 0x20) //success
-		return 1;
-	else 									//failure
-		return 0;
-
-
+	return;
 }
 
-
-////calibration stuff
-void JSTK2_calibrate(PmodJSTK2* InstancePtr){
+/* ------------------------------------------------------------ */
+/***	void JSTK2_startCalibration(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		None
+**
+**	Description:
+**		Initiates the calibration process on the JSTK2
+**		The user should wait at least one second after this command
+**		is called to begin polling the status register to determine that calibration is finished.
+*/
+void JSTK2_startCalibration(PmodJSTK2* InstancePtr)
+{
 	u8 buffer[5] = {0};
-	buffer[0] = cmdCalibrate;
-
-
+	buffer[0] = JSTK2_cmdCalibrate;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
-
-
-	//wait until calibration is completed
-	while((JSTK2_getStatus(InstancePtr) >> 7)){
-		xil_printf("\n\rcalibrating...");
-		delay(100000);
-	}
-
-	xil_printf("\n\rCalibration complete");
-
-
 }
 
-////get calibration settings
+/* ------------------------------------------------------------ */
+/***	u16 JSTK2_getCal...(PmodJSTK2* InstancePtr)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**
+**	Return Value:
+**		the specified calibration parameter
+**
+**	Description:
+**		Retrieves a calibration parameter from the JSTK2 onboard RAM.
+*/
 u16 JSTK2_getCalXMin(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalXMin;
+	buffer[0] = JSTK2_cmdGetCalXMin;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -375,7 +420,7 @@ u16 JSTK2_getCalXMin(PmodJSTK2* InstancePtr){
 
 u16 JSTK2_getCalXMax(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalXMax;
+	buffer[0] = JSTK2_cmdGetCalXMax;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -385,7 +430,7 @@ u16 JSTK2_getCalXMax(PmodJSTK2* InstancePtr){
 
 u16 JSTK2_getCalYMin(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalYMin;
+	buffer[0] = JSTK2_cmdGetCalYMin;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -394,7 +439,7 @@ u16 JSTK2_getCalYMin(PmodJSTK2* InstancePtr){
 }
 u16 JSTK2_getCalYMax(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalYMax;
+	buffer[0] = JSTK2_cmdGetCalYMax;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -403,7 +448,7 @@ u16 JSTK2_getCalYMax(PmodJSTK2* InstancePtr){
 }
 u16 JSTK2_getCalXCenMin(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalXCenMin;
+	buffer[0] = JSTK2_cmdGetCalXCenMin;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -412,7 +457,7 @@ u16 JSTK2_getCalXCenMin(PmodJSTK2* InstancePtr){
 }
 u16 JSTK2_getCalXCenMax(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalXCenMax;
+	buffer[0] = JSTK2_cmdGetCalXCenMax;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -421,7 +466,7 @@ u16 JSTK2_getCalXCenMax(PmodJSTK2* InstancePtr){
 }
 u16 JSTK2_getCalYCenMin(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalYCenMin;
+	buffer[0] = JSTK2_cmdGetCalYCenMin;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -430,7 +475,7 @@ u16 JSTK2_getCalYCenMin(PmodJSTK2* InstancePtr){
 }
 u16 JSTK2_getCalYCenMax(PmodJSTK2* InstancePtr){
 	u8 buffer[7] = {0};
-	buffer[0] = cmdGetCalYCenMax;
+	buffer[0] = JSTK2_cmdGetCalYCenMax;
 
 	JSTK2_getData(InstancePtr, buffer, 7);
 
@@ -439,173 +484,170 @@ u16 JSTK2_getCalYCenMax(PmodJSTK2* InstancePtr){
 }
 
 
-//set commands
+/* ------------------------------------------------------------ */
+/***	void JSTK2_setCal...(PmodJSTK2* InstancePtr, u16 ...Cal)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK2 device to interact with
+**		...Cal: the value to set the specified calibration parameter to
+**
+**	Return Value:
+**		none
+**
+**	Description:
+**		Sets a calibration parameter in the JSTK2 onboard RAM.
+*/
 void JSTK2_setCalXMin(PmodJSTK2* InstancePtr, u16 XMinCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXMin;
+	buffer[0] = JSTK2_cmdSetCalXMin;
 	buffer[1] = XMinCal & 0x00FF;
 	buffer[2] = XMinCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalXMax(PmodJSTK2* InstancePtr, u16 XMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXMax;
+	buffer[0] = JSTK2_cmdSetCalXMax;
 	buffer[1] = XMaxCal & 0x00FF;
 	buffer[2] = XMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalYMin(PmodJSTK2* InstancePtr, u16 YMinCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalYMin;
+	buffer[0] = JSTK2_cmdSetCalYMin;
 	buffer[1] = YMinCal & 0x00FF;
 	buffer[2] = YMinCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalYMax(PmodJSTK2* InstancePtr, u16 YMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalYMax;
+	buffer[0] = JSTK2_cmdSetCalYMax;
 	buffer[1] = YMaxCal & 0x00FF;
 	buffer[2] = YMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalXCenMin(PmodJSTK2* InstancePtr, u16 XCenMinCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXCenMin;
+	buffer[0] = JSTK2_cmdSetCalXCenMin;
 	buffer[1] = XCenMinCal & 0x00FF;
 	buffer[2] = XCenMinCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalXCenMax(PmodJSTK2* InstancePtr, u16 XCenMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXCenMax;
+	buffer[0] = JSTK2_cmdSetCalXCenMax;
 	buffer[1] = XCenMaxCal & 0x00FF;
 	buffer[2] = XCenMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalYCenMin(PmodJSTK2* InstancePtr, u16 YCenMinCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalYCenMin;
+	buffer[0] = JSTK2_cmdSetCalYCenMin;
 	buffer[1] = YCenMinCal & 0x00FF;
 	buffer[2] = YCenMinCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalYCenMax(PmodJSTK2* InstancePtr, u16 YCenMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalYCenMax;
+	buffer[0] = JSTK2_cmdSetCalYCenMax;
 	buffer[1] = YCenMaxCal & 0x00FF;
 	buffer[2] = YCenMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalXMinMax(PmodJSTK2* InstancePtr, u16 XMinCal, u16 XMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXMinMax;
+	buffer[0] = JSTK2_cmdSetCalXMinMax;
 	buffer[1] = XMinCal & 0x00FF;
 	buffer[2] = XMinCal >> 8;
 	buffer[3] = XMaxCal & 0x00FF;
 	buffer[4] = XMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalYMinMax(PmodJSTK2* InstancePtr, u16 YMinCal, u16 YMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalYMinMax;
+	buffer[0] = JSTK2_cmdSetCalYMinMax;
 	buffer[1] = YMinCal & 0x00FF;
 	buffer[2] = YMinCal >> 8;
 	buffer[3] = YMaxCal & 0x00FF;
 	buffer[4] = YMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalXCenMinMax(PmodJSTK2* InstancePtr, u16 XCenMinCal, u16 XCenMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXCenMinMax;
+	buffer[0] = JSTK2_cmdSetCalXCenMinMax;
 	buffer[1] = XCenMinCal & 0x00FF;
 	buffer[2] = XCenMinCal >> 8;
 	buffer[3] = XCenMaxCal & 0x00FF;
 	buffer[4] = XCenMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 void JSTK2_setCalYCenMinMax(PmodJSTK2* InstancePtr, u16 YCenMinCal, u16 YCenMaxCal){
 	u8 buffer[5] = {0};
-	buffer[0] = cmdSetCalXCenMinMax;
+	buffer[0] = JSTK2_cmdSetCalXCenMinMax;
 	buffer[1] = YCenMinCal & 0x00FF;
 	buffer[2] = YCenMinCal >> 8;
 	buffer[3] = YCenMaxCal & 0x00FF;
 	buffer[4] = YCenMaxCal >> 8;
 
 	JSTK2_getData(InstancePtr, buffer, 5);
-
 }
 
-
-
-
-
 /* ------------------------------------------------------------ */
-/***	void JSTK2_getData(PmodJSTK2* InstancePtr)
+/***	void JSTK2_getData(PmodJSTK2* InstancePtr, u8* recv, u8 nData)
 **
 **	Parameters:
-**		InstancePtr: A PmodJSTK2 object to start
-**		recv: A byte array to act as the receive and send buffer
+**		InstancePtr: A PmodJSTK2 device to capture from
+**		recv: 		 A byte array to act as the receive and send buffer
+**		nData: 		 The number of bytes to send and receive, recv must be at least this size
 **
 **	Return Value:
 **		none
 **
-**	Errors:
-**		need to implement microsecond delay in both microblaze and zynq
-**
 **	Description:
-**		Gets the push button states of the PmodJSTK2
+**		Manages a SPI transaction with the PmodJSTK2
 **
 **	Problems:
-**		Setting the chip select low through SetSlaveSelectReg isnt working so
-**		the function now uses XilOut
+**		Holding the chip select low between bytes through the qspi driver isn't working
+**		so bit-banging that line with an AXI gpio controller instead
 */
-void JSTK2_getData(PmodJSTK2* InstancePtr, u8* recv, u8 nData){
-
-	//In order to correctly communicate with the Pmod, there needs to be a small delay between
-	//each spi read
+void JSTK2_getData(PmodJSTK2* InstancePtr, u8* recv, u8 nData)
+{
 	int i = 0;
 
-	XSpi_SetSlaveSelectReg(&InstancePtr->JSTK2Spi,	&InstancePtr->JSTK2Spi.SlaveSelectReg);
+	//bring chip select low
+	Xil_Out32(InstancePtr->GpioAddr, 0b0);
 
-	delay(100);
+	JSTK2_delay(InstancePtr, 5); // 15 us delay from cs->low to first byte
 
-	for(i = 0; i < nData; i++){
-		delay(40);
-		XSpi_Transfer(&InstancePtr->JSTK2Spi, &recv[i], &recv[i], 1);
+	for(i = 0; i < nData; i++)
+	{
+		JSTK2_delay(InstancePtr, 10); // 10 us delay between bytes
+		XSpi_Transfer(&InstancePtr->SpiDevice, &recv[i], &recv[i], 1);
 	}
 
-//	XSpi_SetSlaveSelectReg(&InstancePtr->JSTK2Spi,	&InstancePtr->JSTK2Spi.SlaveSelectMask);
-	//above doesn't seem to work so manually set it in memory
-	Xil_Out32(InstancePtr->JSTK2Spi.BaseAddr+0x70, 1);
-	delay(20);
+	JSTK2_delay(InstancePtr, 20); // 20 us delay from last packet to cs->high
+
+	//bring chip select high
+	Xil_Out32(InstancePtr->GpioAddr, 0b1);
+
+	JSTK2_delay(InstancePtr, 25);
 }
 
 /* ------------------------------------------------------------ */
-/***	void delaya(int micros)
+/***	void JSTK2_delay(PmodJSTK2 *InstancePtr, int micros)
 **
 **	Parameters:
+**		InstancePtr: A PmodJSTK2 device containing the scaling parameter
 **		micros: amount of microseconds to delay
 **
 **	Return Value:
@@ -615,22 +657,16 @@ void JSTK2_getData(PmodJSTK2* InstancePtr, u8* recv, u8 nData){
 **		none
 **
 **	Description:
-**		delays for a given amount of microseconds. Adapted from sleep and MB_Sleep
+**		delays for a given amount of microseconds. Microblaze variant adapted from sleep and MB_Sleep
 */
-void delay(int micros){
+void JSTK2_delay(PmodJSTK2 *InstancePtr, int micros) {
 	int i;
 
-#ifdef XPAR_MICROBLAZE_ID
-	for(i = 0; i < (ITERS_PER_USEC*micros); i++){
+#ifdef __MICROBLAZE__
+	for(i = 0; i < (InstancePtr->ItersPerUSec*micros); i++){
 			asm("");
 	}
 #else
 	usleep(micros);
 #endif
 }
-
-
-
-
-
-

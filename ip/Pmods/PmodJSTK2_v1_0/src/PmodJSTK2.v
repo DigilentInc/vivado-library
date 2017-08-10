@@ -1,16 +1,34 @@
 //Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2015.4 (win64) Build 1412921 Wed Nov 18 09:43:45 MST 2015
-//Date        : Wed Mar 23 16:49:14 2016
-//Host        : WK116 running 64-bit major release  (build 9200)
+//Date        : Wed Aug 09 13:26:47 2017
+//Host        : WK115 running 64-bit major release  (build 9200)
 //Command     : generate_target PmodJSTK2.bd
 //Design      : PmodJSTK2
 //Purpose     : IP block netlist
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
+(* CORE_GENERATION_INFO = "PmodJSTK2,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=PmodJSTK2,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=3,numReposBlks=3,numNonXlnxBlks=1,numHierBlks=0,maxHierDepth=0,synth_mode=Global}" *) (* HW_HANDOFF = "PmodJSTK2.hwdef" *) 
 module PmodJSTK2
-   (AXI_LITE_SPI_araddr,
+   (AXI_LITE_GPIO_araddr,
+    AXI_LITE_GPIO_arready,
+    AXI_LITE_GPIO_arvalid,
+    AXI_LITE_GPIO_awaddr,
+    AXI_LITE_GPIO_awready,
+    AXI_LITE_GPIO_awvalid,
+    AXI_LITE_GPIO_bready,
+    AXI_LITE_GPIO_bresp,
+    AXI_LITE_GPIO_bvalid,
+    AXI_LITE_GPIO_rdata,
+    AXI_LITE_GPIO_rready,
+    AXI_LITE_GPIO_rresp,
+    AXI_LITE_GPIO_rvalid,
+    AXI_LITE_GPIO_wdata,
+    AXI_LITE_GPIO_wready,
+    AXI_LITE_GPIO_wstrb,
+    AXI_LITE_GPIO_wvalid,
+    AXI_LITE_SPI_araddr,
     AXI_LITE_SPI_arready,
     AXI_LITE_SPI_arvalid,
     AXI_LITE_SPI_awaddr,
@@ -54,6 +72,23 @@ module PmodJSTK2
     ext_spi_clk,
     s_axi_aclk,
     s_axi_aresetn);
+  input [8:0]AXI_LITE_GPIO_araddr;
+  output AXI_LITE_GPIO_arready;
+  input AXI_LITE_GPIO_arvalid;
+  input [8:0]AXI_LITE_GPIO_awaddr;
+  output AXI_LITE_GPIO_awready;
+  input AXI_LITE_GPIO_awvalid;
+  input AXI_LITE_GPIO_bready;
+  output [1:0]AXI_LITE_GPIO_bresp;
+  output AXI_LITE_GPIO_bvalid;
+  output [31:0]AXI_LITE_GPIO_rdata;
+  input AXI_LITE_GPIO_rready;
+  output [1:0]AXI_LITE_GPIO_rresp;
+  output AXI_LITE_GPIO_rvalid;
+  input [31:0]AXI_LITE_GPIO_wdata;
+  output AXI_LITE_GPIO_wready;
+  input [3:0]AXI_LITE_GPIO_wstrb;
+  input AXI_LITE_GPIO_wvalid;
   input [6:0]AXI_LITE_SPI_araddr;
   output AXI_LITE_SPI_arready;
   input AXI_LITE_SPI_arvalid;
@@ -116,18 +151,31 @@ module PmodJSTK2
   wire AXI_LITE_1_WREADY;
   wire [3:0]AXI_LITE_1_WSTRB;
   wire AXI_LITE_1_WVALID;
-  wire axi_quad_spi_0_SPI_0_IO0_I;
-  wire axi_quad_spi_0_SPI_0_IO0_O;
-  wire axi_quad_spi_0_SPI_0_IO0_T;
-  wire axi_quad_spi_0_SPI_0_IO1_I;
-  wire axi_quad_spi_0_SPI_0_IO1_O;
-  wire axi_quad_spi_0_SPI_0_IO1_T;
-  wire axi_quad_spi_0_SPI_0_SCK_I;
-  wire axi_quad_spi_0_SPI_0_SCK_O;
-  wire axi_quad_spi_0_SPI_0_SCK_T;
-  wire axi_quad_spi_0_SPI_0_SS_I;
-  wire [0:0]axi_quad_spi_0_SPI_0_SS_O;
-  wire axi_quad_spi_0_SPI_0_SS_T;
+  wire [8:0]S_AXI_1_ARADDR;
+  wire S_AXI_1_ARREADY;
+  wire S_AXI_1_ARVALID;
+  wire [8:0]S_AXI_1_AWADDR;
+  wire S_AXI_1_AWREADY;
+  wire S_AXI_1_AWVALID;
+  wire S_AXI_1_BREADY;
+  wire [1:0]S_AXI_1_BRESP;
+  wire S_AXI_1_BVALID;
+  wire [31:0]S_AXI_1_RDATA;
+  wire S_AXI_1_RREADY;
+  wire [1:0]S_AXI_1_RRESP;
+  wire S_AXI_1_RVALID;
+  wire [31:0]S_AXI_1_WDATA;
+  wire S_AXI_1_WREADY;
+  wire [3:0]S_AXI_1_WSTRB;
+  wire S_AXI_1_WVALID;
+  wire [0:0]axi_gpio_0_gpio_io_o;
+  wire [0:0]axi_gpio_0_gpio_io_t;
+  wire axi_quad_spi_0_io0_o;
+  wire axi_quad_spi_0_io0_t;
+  wire axi_quad_spi_0_io1_o;
+  wire axi_quad_spi_0_io1_t;
+  wire axi_quad_spi_0_sck_o;
+  wire axi_quad_spi_0_sck_t;
   wire ext_spi_clk_1;
   wire pmod_bridge_0_Pmod_out_PIN10_I;
   wire pmod_bridge_0_Pmod_out_PIN10_O;
@@ -153,6 +201,10 @@ module PmodJSTK2
   wire pmod_bridge_0_Pmod_out_PIN9_I;
   wire pmod_bridge_0_Pmod_out_PIN9_O;
   wire pmod_bridge_0_Pmod_out_PIN9_T;
+  wire pmod_bridge_0_in0_I;
+  wire pmod_bridge_0_in1_I;
+  wire pmod_bridge_0_in2_I;
+  wire pmod_bridge_0_in3_I;
   wire s_axi_aclk_1;
   wire s_axi_aresetn_1;
 
@@ -165,6 +217,14 @@ module PmodJSTK2
   assign AXI_LITE_1_WDATA = AXI_LITE_SPI_wdata[31:0];
   assign AXI_LITE_1_WSTRB = AXI_LITE_SPI_wstrb[3:0];
   assign AXI_LITE_1_WVALID = AXI_LITE_SPI_wvalid;
+  assign AXI_LITE_GPIO_arready = S_AXI_1_ARREADY;
+  assign AXI_LITE_GPIO_awready = S_AXI_1_AWREADY;
+  assign AXI_LITE_GPIO_bresp[1:0] = S_AXI_1_BRESP;
+  assign AXI_LITE_GPIO_bvalid = S_AXI_1_BVALID;
+  assign AXI_LITE_GPIO_rdata[31:0] = S_AXI_1_RDATA;
+  assign AXI_LITE_GPIO_rresp[1:0] = S_AXI_1_RRESP;
+  assign AXI_LITE_GPIO_rvalid = S_AXI_1_RVALID;
+  assign AXI_LITE_GPIO_wready = S_AXI_1_WREADY;
   assign AXI_LITE_SPI_arready = AXI_LITE_1_ARREADY;
   assign AXI_LITE_SPI_awready = AXI_LITE_1_AWREADY;
   assign AXI_LITE_SPI_bresp[1:0] = AXI_LITE_1_BRESP;
@@ -189,6 +249,15 @@ module PmodJSTK2
   assign Pmod_out_pin8_t = pmod_bridge_0_Pmod_out_PIN8_T;
   assign Pmod_out_pin9_o = pmod_bridge_0_Pmod_out_PIN9_O;
   assign Pmod_out_pin9_t = pmod_bridge_0_Pmod_out_PIN9_T;
+  assign S_AXI_1_ARADDR = AXI_LITE_GPIO_araddr[8:0];
+  assign S_AXI_1_ARVALID = AXI_LITE_GPIO_arvalid;
+  assign S_AXI_1_AWADDR = AXI_LITE_GPIO_awaddr[8:0];
+  assign S_AXI_1_AWVALID = AXI_LITE_GPIO_awvalid;
+  assign S_AXI_1_BREADY = AXI_LITE_GPIO_bready;
+  assign S_AXI_1_RREADY = AXI_LITE_GPIO_rready;
+  assign S_AXI_1_WDATA = AXI_LITE_GPIO_wdata[31:0];
+  assign S_AXI_1_WSTRB = AXI_LITE_GPIO_wstrb[3:0];
+  assign S_AXI_1_WVALID = AXI_LITE_GPIO_wvalid;
   assign ext_spi_clk_1 = ext_spi_clk;
   assign pmod_bridge_0_Pmod_out_PIN10_I = Pmod_out_pin10_i;
   assign pmod_bridge_0_Pmod_out_PIN1_I = Pmod_out_pin1_i;
@@ -200,14 +269,37 @@ module PmodJSTK2
   assign pmod_bridge_0_Pmod_out_PIN9_I = Pmod_out_pin9_i;
   assign s_axi_aclk_1 = s_axi_aclk;
   assign s_axi_aresetn_1 = s_axi_aresetn;
+  PmodJSTK2_axi_gpio_0_0 axi_gpio_0
+       (.gpio_io_i(pmod_bridge_0_in0_I),
+        .gpio_io_o(axi_gpio_0_gpio_io_o),
+        .gpio_io_t(axi_gpio_0_gpio_io_t),
+        .s_axi_aclk(s_axi_aclk_1),
+        .s_axi_araddr(S_AXI_1_ARADDR),
+        .s_axi_aresetn(s_axi_aresetn_1),
+        .s_axi_arready(S_AXI_1_ARREADY),
+        .s_axi_arvalid(S_AXI_1_ARVALID),
+        .s_axi_awaddr(S_AXI_1_AWADDR),
+        .s_axi_awready(S_AXI_1_AWREADY),
+        .s_axi_awvalid(S_AXI_1_AWVALID),
+        .s_axi_bready(S_AXI_1_BREADY),
+        .s_axi_bresp(S_AXI_1_BRESP),
+        .s_axi_bvalid(S_AXI_1_BVALID),
+        .s_axi_rdata(S_AXI_1_RDATA),
+        .s_axi_rready(S_AXI_1_RREADY),
+        .s_axi_rresp(S_AXI_1_RRESP),
+        .s_axi_rvalid(S_AXI_1_RVALID),
+        .s_axi_wdata(S_AXI_1_WDATA),
+        .s_axi_wready(S_AXI_1_WREADY),
+        .s_axi_wstrb(S_AXI_1_WSTRB),
+        .s_axi_wvalid(S_AXI_1_WVALID));
   PmodJSTK2_axi_quad_spi_0_0 axi_quad_spi_0
        (.ext_spi_clk(ext_spi_clk_1),
-        .io0_i(axi_quad_spi_0_SPI_0_IO0_I),
-        .io0_o(axi_quad_spi_0_SPI_0_IO0_O),
-        .io0_t(axi_quad_spi_0_SPI_0_IO0_T),
-        .io1_i(axi_quad_spi_0_SPI_0_IO1_I),
-        .io1_o(axi_quad_spi_0_SPI_0_IO1_O),
-        .io1_t(axi_quad_spi_0_SPI_0_IO1_T),
+        .io0_i(pmod_bridge_0_in1_I),
+        .io0_o(axi_quad_spi_0_io0_o),
+        .io0_t(axi_quad_spi_0_io0_t),
+        .io1_i(pmod_bridge_0_in2_I),
+        .io1_o(axi_quad_spi_0_io1_o),
+        .io1_t(axi_quad_spi_0_io1_t),
         .s_axi_aclk(s_axi_aclk_1),
         .s_axi_araddr(AXI_LITE_1_ARADDR),
         .s_axi_aresetn(s_axi_aresetn_1),
@@ -227,25 +319,23 @@ module PmodJSTK2
         .s_axi_wready(AXI_LITE_1_WREADY),
         .s_axi_wstrb(AXI_LITE_1_WSTRB),
         .s_axi_wvalid(AXI_LITE_1_WVALID),
-        .sck_i(axi_quad_spi_0_SPI_0_SCK_I),
-        .sck_o(axi_quad_spi_0_SPI_0_SCK_O),
-        .sck_t(axi_quad_spi_0_SPI_0_SCK_T),
-        .ss_i(axi_quad_spi_0_SPI_0_SS_I),
-        .ss_o(axi_quad_spi_0_SPI_0_SS_O),
-        .ss_t(axi_quad_spi_0_SPI_0_SS_T));
+        .sck_i(pmod_bridge_0_in3_I),
+        .sck_o(axi_quad_spi_0_sck_o),
+        .sck_t(axi_quad_spi_0_sck_t),
+        .ss_i(1'b0));
   PmodJSTK2_pmod_bridge_0_0 pmod_bridge_0
-       (.in0_I(axi_quad_spi_0_SPI_0_SS_I),
-        .in0_O(axi_quad_spi_0_SPI_0_SS_O),
-        .in0_T(axi_quad_spi_0_SPI_0_SS_T),
-        .in1_I(axi_quad_spi_0_SPI_0_IO0_I),
-        .in1_O(axi_quad_spi_0_SPI_0_IO0_O),
-        .in1_T(axi_quad_spi_0_SPI_0_IO0_T),
-        .in2_I(axi_quad_spi_0_SPI_0_IO1_I),
-        .in2_O(axi_quad_spi_0_SPI_0_IO1_O),
-        .in2_T(axi_quad_spi_0_SPI_0_IO1_T),
-        .in3_I(axi_quad_spi_0_SPI_0_SCK_I),
-        .in3_O(axi_quad_spi_0_SPI_0_SCK_O),
-        .in3_T(axi_quad_spi_0_SPI_0_SCK_T),
+       (.in0_I(pmod_bridge_0_in0_I),
+        .in0_O(axi_gpio_0_gpio_io_o),
+        .in0_T(axi_gpio_0_gpio_io_t),
+        .in1_I(pmod_bridge_0_in1_I),
+        .in1_O(axi_quad_spi_0_io0_o),
+        .in1_T(axi_quad_spi_0_io0_t),
+        .in2_I(pmod_bridge_0_in2_I),
+        .in2_O(axi_quad_spi_0_io1_o),
+        .in2_T(axi_quad_spi_0_io1_t),
+        .in3_I(pmod_bridge_0_in3_I),
+        .in3_O(axi_quad_spi_0_sck_o),
+        .in3_T(axi_quad_spi_0_sck_t),
         .out0_I(pmod_bridge_0_Pmod_out_PIN1_I),
         .out0_O(pmod_bridge_0_Pmod_out_PIN1_O),
         .out0_T(pmod_bridge_0_Pmod_out_PIN1_T),

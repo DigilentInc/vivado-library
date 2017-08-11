@@ -1,54 +1,119 @@
+/************************************************************************/
+/*                                                                      */
+/*     main.c --     PmodACL Example Project                            */
+/*                                                                      */
+/************************************************************************/
+/*                                                                      */
+/*     Author: Thomas Kappenman                                         */
+/*     Copyright 2016-2017, Digilent Inc.                               */
+/*                                                                      */
+/************************************************************************/
+/*  Module Description:                                                 */
+/*          This file contains code for running a demonstration of the  */
+/*          PmodACL2 when used with the PmodACL2 IP core.               */
+/*                                                                      */
+/*          X, Y, and Z acceleration data in units of g are printed to  */
+/*          a serial terminal application ten times per second.         */
+/*          Baud rates to set up this connection should be 115200 for   */
+/*          a Zynq device and whatever the AXI UART LITE IP is          */
+/*          configured for for a Microblaze device - typically 9600 or  */
+/*          115200 baud.                                                */
+/*                                                                      */
+/************************************************************************/
+/*  Revision History:                                                   */
+/*                                                                      */
+/*      03/23/2016(TKappenman): Created                                 */
+/*      08/15/2016(jpeyron): Sleep and Zynq include fixes               */
+/*      08/11/2017(artvvb): Validated for Vivado 2015.4                 */
+/*                                                                      */
+/************************************************************************/
+
 #include "xparameters.h"
-#include "xil_types.h"
-#include "xil_io.h"
+#include "xil_cache.h"
 #include "PmodACL.h"
+
 #include <stdio.h>
-#ifdef XPAR_MICROBLAZE_ID
+
+#ifdef __MICROBLAZE__
 #include "microblaze_sleep.h"
 #else
-#include<sleep.h>
+#include <sleep.h>
 #endif
-#include "xil_cache.h"
 
 void DemoInitialize();
 void DemoRun();
+void DemoCleanup();
+void DemoSleep(u32 millis);
+void EnableCaches();
+void DisableCaches();
 
-PmodACL ACL;
+PmodACL acl;
 
 int main(void)
 {
-	Xil_ICacheEnable();
-
-	DemoInitialize();
-	DemoRun();
-	return 0;
+    DemoInitialize();
+    DemoRun();
+    DemoCleanup();
+    return 0;
 }
 
 void DemoInitialize()
 {
-	ACL_begin(&ACL, XPAR_PMODACL_0_AXI_LITE_GPIO_BASEADDR,XPAR_PMODACL_0_AXI_LITE_SPI_BASEADDR);
-	SetMeasure(&ACL, FALSE);
-	SetGRange(&ACL, PAR_GRANGE_PM4G);
-	SetMeasure(&ACL, TRUE);
-	CalibrateOneAxisGravitational(&ACL, PAR_AXIS_ZP);
+    EnableCaches();
+    ACL_begin(&acl, XPAR_PMODACL_0_AXI_LITE_GPIO_BASEADDR,XPAR_PMODACL_0_AXI_LITE_SPI_BASEADDR);
+    ACL_SetMeasure(&acl, 0);
+    ACL_SetGRange(&acl, ACL_PAR_GRANGE_PM4G);
+    ACL_SetMeasure(&acl, 1);
+    ACL_CalibrateOneAxisGravitational(&acl, ACL_PAR_AXIS_ZP);
+    DemoSleep(1000); // After calibration, some delay is required for the new settings to take effect.
 }
-
 
 void DemoRun()
 {
-	float x;
-	float y;
-	float z;
-	char strMes[150];
-	while (1){
-		ReadAccelG(&ACL, &x, &y, &z);
-		sprintf(strMes ,"X=%f\tY=%f\tZ=%f\n\r", x, y, z);
-		xil_printf(strMes);
+    float x, y, z;
 
-#ifdef XPAR_MICROBLAZE_ID
-		MB_Sleep(500);
+    while (1)
+    {
+        ACL_ReadAccelG(&acl, &x, &y, &z);
+        printf("X=%f\tY=%f\tZ=%f\n\r", x, y, z);
+        DemoSleep(100);
+    }
+}
+
+void DemoCleanup()
+{
+    DisableCaches();
+}
+
+void DemoSleep(u32 millis)
+{
+#ifdef __MICROBLAZE__
+    MB_Sleep(millis);
 #else
-		sleep(1);
+    usleep(1000 * millis);
 #endif
-	}
+}
+
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+  Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+  Xil_ICacheDisable();
+#endif
+#endif
 }

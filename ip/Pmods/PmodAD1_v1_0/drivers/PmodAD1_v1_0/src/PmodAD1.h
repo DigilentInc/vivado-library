@@ -1,55 +1,50 @@
+/*************************************************************************/
+/*                                                                       */
+/*     PmodAD1.h --     PmodAD1 Driver Definitions						 */
+/*                                                                       */
+/*************************************************************************/
+/*     Author: Arthur Brown                                              */
+/*     Copyright 2017, Digilent Inc.                                     */
+/*************************************************************************/
+/*  Module Description:                                                  */
+/*                                                                       */
+/*            This file contains definitions for the PmodAD1 driver    	 */
+/*                                                                       */
+/*************************************************************************/
+/*  Revision History:                                                    */
+/*                                                                       */
+/*            08/15/2017(ArtVVB): Created                                */
+/*                                                                       */
+/*************************************************************************/
 
 #ifndef PMODAD1_H
 #define PMODAD1_H
-#define AD1_FLOATING_POINT
 
 /****************** Include Files ********************/
+
 #include "xil_types.h"
-#include "xstatus.h"
-#include "xspi_l.h"
-#include "xspi.h"
+#include "xil_io.h"
 
 /* ------------------------------------------------------------ */
 /*					Definitions									*/
 /* ------------------------------------------------------------ */
-#define bool u8
-#define true 1
-#define false 0
-#define ADCSPI_NO_BITS		12  //used in the process to get the physical value
 
-/* ------------------------------------------------------------ */
-/*		Register addresses Definitions							*/
-/* ------------------------------------------------------------ */
+#define AD1_NUM_BITS 12
+#define AD1_DATA_MASK 0xFFF
 
-/* ------------------------------------------------------------ */
-/*				Bit masks Definitions							*/
-/* ------------------------------------------------------------ */
+typedef struct PmodAD1 {
+	u32 BaseAddress;
+} PmodAD1;
 
-
-/* ------------------------------------------------------------ */
-/*				Parameters Definitions							*/
-/* ------------------------------------------------------------ */
-
-
+typedef u16 AD1_RawData[2];
+typedef float AD1_PhysicalData[2];
 
 /* ------------------------------------------------------------ */
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-typedef struct PmodAD1{
-	XSpi AD1Spi;
-	u32 data;
-}PmodAD1;
-
-void  AD1_begin(PmodAD1* InstancePtr, u32 SPI_Address); //Initialize the PmodAD1.
-void  AD1_end(PmodAD1* InstancePtr); //Stops the device
-int   AD1_SPIInit(XSpi *SpiInstancePtr); // spi initialization
-void  AD1_readData(PmodAD1* InstancePtr);// uses spi and reads the data into InstancePtr->data
-int   AD1_GetIntegerValue(PmodAD1* InstancePtr);// returns the integer value 
-float AD1_GetPhysicalValue(float dReference, PmodAD1* InstancePtr );// returns the physical value
-
-
-
-
+void AD1_begin(PmodAD1* InstancePtr, u32 SPI_Address);
+void AD1_GetSample(PmodAD1* InstancePtr, AD1_RawData *RawDataPtr);
+void AD1_RawToPhysical(float ReferenceVoltage, AD1_RawData RawData, AD1_PhysicalData *PhysicalDataPtr);
 
 #endif // PMODAD1_H

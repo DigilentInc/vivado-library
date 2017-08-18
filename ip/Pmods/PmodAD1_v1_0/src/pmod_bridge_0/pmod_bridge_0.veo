@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2016 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -46,52 +46,51 @@
 // 
 // DO NOT MODIFY THIS FILE.
 
-// IP VLNV: xilinx.com:ip:axi_quad_spi:3.2
-// IP Revision: 6
+// IP VLNV: digilentinc.com:ip:pmod_bridge:1.0
+// IP Revision: 7
 
 // The following must be inserted into your Verilog file for this
 // core to be instantiated. Change the instance name and port connections
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-PmodAD1_axi_quad_spi_0_0 your_instance_name (
-  .ext_spi_clk(ext_spi_clk),      // input wire ext_spi_clk
-  .s_axi_aclk(s_axi_aclk),        // input wire s_axi_aclk
-  .s_axi_aresetn(s_axi_aresetn),  // input wire s_axi_aresetn
-  .s_axi_awaddr(s_axi_awaddr),    // input wire [6 : 0] s_axi_awaddr
-  .s_axi_awvalid(s_axi_awvalid),  // input wire s_axi_awvalid
-  .s_axi_awready(s_axi_awready),  // output wire s_axi_awready
-  .s_axi_wdata(s_axi_wdata),      // input wire [31 : 0] s_axi_wdata
-  .s_axi_wstrb(s_axi_wstrb),      // input wire [3 : 0] s_axi_wstrb
-  .s_axi_wvalid(s_axi_wvalid),    // input wire s_axi_wvalid
-  .s_axi_wready(s_axi_wready),    // output wire s_axi_wready
-  .s_axi_bresp(s_axi_bresp),      // output wire [1 : 0] s_axi_bresp
-  .s_axi_bvalid(s_axi_bvalid),    // output wire s_axi_bvalid
-  .s_axi_bready(s_axi_bready),    // input wire s_axi_bready
-  .s_axi_araddr(s_axi_araddr),    // input wire [6 : 0] s_axi_araddr
-  .s_axi_arvalid(s_axi_arvalid),  // input wire s_axi_arvalid
-  .s_axi_arready(s_axi_arready),  // output wire s_axi_arready
-  .s_axi_rdata(s_axi_rdata),      // output wire [31 : 0] s_axi_rdata
-  .s_axi_rresp(s_axi_rresp),      // output wire [1 : 0] s_axi_rresp
-  .s_axi_rvalid(s_axi_rvalid),    // output wire s_axi_rvalid
-  .s_axi_rready(s_axi_rready),    // input wire s_axi_rready
-  .io0_i(io0_i),                  // input wire io0_i
-  .io0_o(io0_o),                  // output wire io0_o
-  .io0_t(io0_t),                  // output wire io0_t
-  .io1_i(io1_i),                  // input wire io1_i
-  .io1_o(io1_o),                  // output wire io1_o
-  .io1_t(io1_t),                  // output wire io1_t
-  .sck_i(sck_i),                  // input wire sck_i
-  .sck_o(sck_o),                  // output wire sck_o
-  .sck_t(sck_t),                  // output wire sck_t
-  .ss_i(ss_i),                    // input wire [0 : 0] ss_i
-  .ss_o(ss_o),                    // output wire [0 : 0] ss_o
-  .ss_t(ss_t),                    // output wire ss_t
-  .ip2intc_irpt(ip2intc_irpt)    // output wire ip2intc_irpt
+pmod_bridge_0 your_instance_name (
+  .in0_I(in0_I),    // output wire in0_I
+  .in1_I(in1_I),    // output wire in1_I
+  .in2_I(in2_I),    // output wire in2_I
+  .in3_I(in3_I),    // output wire in3_I
+  .in0_O(in0_O),    // input wire in0_O
+  .in1_O(in1_O),    // input wire in1_O
+  .in2_O(in2_O),    // input wire in2_O
+  .in3_O(in3_O),    // input wire in3_O
+  .in0_T(in0_T),    // input wire in0_T
+  .in1_T(in1_T),    // input wire in1_T
+  .in2_T(in2_T),    // input wire in2_T
+  .in3_T(in3_T),    // input wire in3_T
+  .out0_I(out0_I),  // input wire out0_I
+  .out1_I(out1_I),  // input wire out1_I
+  .out2_I(out2_I),  // input wire out2_I
+  .out3_I(out3_I),  // input wire out3_I
+  .out4_I(out4_I),  // input wire out4_I
+  .out5_I(out5_I),  // input wire out5_I
+  .out6_I(out6_I),  // input wire out6_I
+  .out7_I(out7_I),  // input wire out7_I
+  .out0_O(out0_O),  // output wire out0_O
+  .out1_O(out1_O),  // output wire out1_O
+  .out2_O(out2_O),  // output wire out2_O
+  .out3_O(out3_O),  // output wire out3_O
+  .out4_O(out4_O),  // output wire out4_O
+  .out5_O(out5_O),  // output wire out5_O
+  .out6_O(out6_O),  // output wire out6_O
+  .out7_O(out7_O),  // output wire out7_O
+  .out0_T(out0_T),  // output wire out0_T
+  .out1_T(out1_T),  // output wire out1_T
+  .out2_T(out2_T),  // output wire out2_T
+  .out3_T(out3_T),  // output wire out3_T
+  .out4_T(out4_T),  // output wire out4_T
+  .out5_T(out5_T),  // output wire out5_T
+  .out6_T(out6_T),  // output wire out6_T
+  .out7_T(out7_T)  // output wire out7_T
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
-
-// You must compile the wrapper file PmodAD1_axi_quad_spi_0_0.v when simulating
-// the core, PmodAD1_axi_quad_spi_0_0. When compiling the wrapper file, be sure to
-// reference the Verilog simulation library.
 

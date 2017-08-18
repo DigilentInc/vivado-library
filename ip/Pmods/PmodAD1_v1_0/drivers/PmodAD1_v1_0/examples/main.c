@@ -1,63 +1,122 @@
+/*************************************************************************/
+/*                                                                       */
+/*     main.c --     PmodAD1 Example Project                             */
+/*                                                                       */
+/*************************************************************************/
+/*     Author: Arthur Brown                                              */
+/*     Copyright 2017, Digilent Inc.                                     */
+/*************************************************************************/
+/*  Module Description:                                                  */
+/*                                                                       */
+/*            This file contains code for running a demonstration of the */
+/*            PmodAD1 when used with the PmodAD1 IP core.              	 */
+/*																		 */
+/*			  This demo initializes the PmodAD1 IP core and then polls   */
+/*			  it's sample register, printing the analog voltage last     */
+/*			  sampled by each of the AD1's two channels over UART.   	 */
+/*																		 */
+/*            Messages printed by this demo can be received by using a   */
+/*			  serial terminal configured with the appropriate baud rate. */
+/*		      115200 for Zynq systems, and whatever the AXI UARTLITE IP  */
+/*			  is configured with for Microblaze systems - typically 9600 */
+/*			  or 115200 baud.											 */
+/*                                                                       */
+/*************************************************************************/
+/*  Revision History:                                                    */
+/*                                                                       */
+/*            08/15/2017(ArtVVB): Created                                */
+/*                                                                       */
+/*************************************************************************/
 
-#include "PmodAD1.h"
-#include "xparameters.h"
-#include "xil_cache.h"
 #include <stdio.h>
-#include "platform.h"
-#include "xil_printf.h"
-#ifdef XPAR_MICROBLAZE_ID
+#include "xparameters.h"
+#include "xil_io.h"
+#include "xil_types.h"
+#include "xil_cache.h"
+#include "PmodAD1.h"
+
+#ifdef __MICROBLAZE__
 #include "microblaze_sleep.h"
+#else
+#include "sleep.h"
 #endif
-unsigned int wValue; // unsigned 16 bit variable to store integer value
-    	float fValue;  // float variable to store physical value
-    	float dReference = 3.32; //used in getting the physical value
-    	int whole; // used to get the whole number for the float
-    	int not_whole;// used to get the non whole number for the float
-void DemoInitialize(); // initializes
-void DemoRun();// reads the data and prints the integer and the analog floating point number
 
 PmodAD1 myDevice;
+const float ReferenceVoltage = 3.3;
 
-int main(void)
+void DemoInitialize();
+void DemoRun();
+void DemoCleanup();
+void EnableCaches();
+void DisableCaches();
+
+int main ()
 {
-	Xil_ICacheEnable();
-	Xil_DCacheEnable();
-
 	DemoInitialize();
 	DemoRun();
+	DemoCleanup();
 	return 0;
 }
 
 void DemoInitialize()
 {
-	init_platform();
+	EnableCaches();
 
-    AD1_begin(&myDevice, XPAR_PMODAD1_0_AXI_LITE_SPI_BASEADDR);
+	AD1_begin(&myDevice, XPAR_PMODAD1_0_AXI_LITE_SAMPLE_BASEADDR);
+
+	//wait for AD1 to finish powering on
+#ifdef __MICROBLAZE__
+	MB_Sleep(1); // 1 ms
+#else
+	usleep(1); // 1 us (minimum)
+#endif
 }
-
 
 void DemoRun()
 {
+	AD1_RawData RawData;
+	AD1_PhysicalData PhysicalData;
 
+	while (1) {
+		AD1_GetSample (&myDevice, &RawData); // capture raw samples
+		AD1_RawToPhysical(ReferenceVoltage, RawData, &PhysicalData); // convert raw samples into floats scaled to 0 - VDD
+		printf("Input Data 1: %02f\t\t", PhysicalData[0]);
+		printf("Input Data 2: %02f\r\n", PhysicalData[1]);
 
-	xil_printf("starting...\n\r");
+		// do this 10x per second
+		#ifdef __MICROBLAZE__
+			MB_Sleep(100);
+		#else
+			usleep(100000);
+		#endif
+	}
+}
 
-    while(1)
-    {
-    	wValue =AD1_GetIntegerValue(&myDevice);  // read integer value
-    	fValue = AD1_GetPhysicalValue(dReference,&myDevice);  // read physical value
-    	whole = fValue; // getting whole number for the physical value
-    	not_whole= (fValue - whole) * 1000000; // getting the non whole number of the physical value
-    	xil_printf("Integer value: %d, Physical Value = %d.%06d", wValue, whole, not_whole); // format text to be displayed
-    	xil_printf("\n\r\n\r");
+void DemoCleanup()
+{
+	DisableCaches();
+}
 
-#ifdef XPAR_MICROBLAZE_ID
-		MB_Sleep(500);
-#else
-		sleep(1);
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
 #endif
-    }
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
+#endif
+#endif
+}
 
-    AD1_end(&myDevice);
-    cleanup_platform();
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+	Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+	Xil_ICacheDisable();
+#endif
+#endif
 }

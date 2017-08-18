@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2016 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -46,47 +46,50 @@
 -- 
 -- DO NOT MODIFY THIS FILE.
 
--- IP VLNV: xilinx.com:ip:axi_quad_spi:3.2
--- IP Revision: 6
+-- IP VLNV: digilentinc.com:ip:pmod_bridge:1.0
+-- IP Revision: 7
 
 -- The following code must appear in the VHDL architecture header.
 
 ------------- Begin Cut here for COMPONENT Declaration ------ COMP_TAG
-COMPONENT PmodAD1_axi_quad_spi_0_0
+COMPONENT pmod_bridge_0
   PORT (
-    ext_spi_clk : IN STD_LOGIC;
-    s_axi_aclk : IN STD_LOGIC;
-    s_axi_aresetn : IN STD_LOGIC;
-    s_axi_awaddr : IN STD_LOGIC_VECTOR(6 DOWNTO 0);
-    s_axi_awvalid : IN STD_LOGIC;
-    s_axi_awready : OUT STD_LOGIC;
-    s_axi_wdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    s_axi_wstrb : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
-    s_axi_wvalid : IN STD_LOGIC;
-    s_axi_wready : OUT STD_LOGIC;
-    s_axi_bresp : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
-    s_axi_bvalid : OUT STD_LOGIC;
-    s_axi_bready : IN STD_LOGIC;
-    s_axi_araddr : IN STD_LOGIC_VECTOR(6 DOWNTO 0);
-    s_axi_arvalid : IN STD_LOGIC;
-    s_axi_arready : OUT STD_LOGIC;
-    s_axi_rdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-    s_axi_rresp : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
-    s_axi_rvalid : OUT STD_LOGIC;
-    s_axi_rready : IN STD_LOGIC;
-    io0_i : IN STD_LOGIC;
-    io0_o : OUT STD_LOGIC;
-    io0_t : OUT STD_LOGIC;
-    io1_i : IN STD_LOGIC;
-    io1_o : OUT STD_LOGIC;
-    io1_t : OUT STD_LOGIC;
-    sck_i : IN STD_LOGIC;
-    sck_o : OUT STD_LOGIC;
-    sck_t : OUT STD_LOGIC;
-    ss_i : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-    ss_o : OUT STD_LOGIC_VECTOR(0 DOWNTO 0);
-    ss_t : OUT STD_LOGIC;
-    ip2intc_irpt : OUT STD_LOGIC
+    in0_I : OUT STD_LOGIC;
+    in1_I : OUT STD_LOGIC;
+    in2_I : OUT STD_LOGIC;
+    in3_I : OUT STD_LOGIC;
+    in0_O : IN STD_LOGIC;
+    in1_O : IN STD_LOGIC;
+    in2_O : IN STD_LOGIC;
+    in3_O : IN STD_LOGIC;
+    in0_T : IN STD_LOGIC;
+    in1_T : IN STD_LOGIC;
+    in2_T : IN STD_LOGIC;
+    in3_T : IN STD_LOGIC;
+    out0_I : IN STD_LOGIC;
+    out1_I : IN STD_LOGIC;
+    out2_I : IN STD_LOGIC;
+    out3_I : IN STD_LOGIC;
+    out4_I : IN STD_LOGIC;
+    out5_I : IN STD_LOGIC;
+    out6_I : IN STD_LOGIC;
+    out7_I : IN STD_LOGIC;
+    out0_O : OUT STD_LOGIC;
+    out1_O : OUT STD_LOGIC;
+    out2_O : OUT STD_LOGIC;
+    out3_O : OUT STD_LOGIC;
+    out4_O : OUT STD_LOGIC;
+    out5_O : OUT STD_LOGIC;
+    out6_O : OUT STD_LOGIC;
+    out7_O : OUT STD_LOGIC;
+    out0_T : OUT STD_LOGIC;
+    out1_T : OUT STD_LOGIC;
+    out2_T : OUT STD_LOGIC;
+    out3_T : OUT STD_LOGIC;
+    out4_T : OUT STD_LOGIC;
+    out5_T : OUT STD_LOGIC;
+    out6_T : OUT STD_LOGIC;
+    out7_T : OUT STD_LOGIC
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -95,45 +98,44 @@ END COMPONENT;
 -- body. Substitute your own instance name and net names.
 
 ------------- Begin Cut here for INSTANTIATION Template ----- INST_TAG
-your_instance_name : PmodAD1_axi_quad_spi_0_0
+your_instance_name : pmod_bridge_0
   PORT MAP (
-    ext_spi_clk => ext_spi_clk,
-    s_axi_aclk => s_axi_aclk,
-    s_axi_aresetn => s_axi_aresetn,
-    s_axi_awaddr => s_axi_awaddr,
-    s_axi_awvalid => s_axi_awvalid,
-    s_axi_awready => s_axi_awready,
-    s_axi_wdata => s_axi_wdata,
-    s_axi_wstrb => s_axi_wstrb,
-    s_axi_wvalid => s_axi_wvalid,
-    s_axi_wready => s_axi_wready,
-    s_axi_bresp => s_axi_bresp,
-    s_axi_bvalid => s_axi_bvalid,
-    s_axi_bready => s_axi_bready,
-    s_axi_araddr => s_axi_araddr,
-    s_axi_arvalid => s_axi_arvalid,
-    s_axi_arready => s_axi_arready,
-    s_axi_rdata => s_axi_rdata,
-    s_axi_rresp => s_axi_rresp,
-    s_axi_rvalid => s_axi_rvalid,
-    s_axi_rready => s_axi_rready,
-    io0_i => io0_i,
-    io0_o => io0_o,
-    io0_t => io0_t,
-    io1_i => io1_i,
-    io1_o => io1_o,
-    io1_t => io1_t,
-    sck_i => sck_i,
-    sck_o => sck_o,
-    sck_t => sck_t,
-    ss_i => ss_i,
-    ss_o => ss_o,
-    ss_t => ss_t,
-    ip2intc_irpt => ip2intc_irpt
+    in0_I => in0_I,
+    in1_I => in1_I,
+    in2_I => in2_I,
+    in3_I => in3_I,
+    in0_O => in0_O,
+    in1_O => in1_O,
+    in2_O => in2_O,
+    in3_O => in3_O,
+    in0_T => in0_T,
+    in1_T => in1_T,
+    in2_T => in2_T,
+    in3_T => in3_T,
+    out0_I => out0_I,
+    out1_I => out1_I,
+    out2_I => out2_I,
+    out3_I => out3_I,
+    out4_I => out4_I,
+    out5_I => out5_I,
+    out6_I => out6_I,
+    out7_I => out7_I,
+    out0_O => out0_O,
+    out1_O => out1_O,
+    out2_O => out2_O,
+    out3_O => out3_O,
+    out4_O => out4_O,
+    out5_O => out5_O,
+    out6_O => out6_O,
+    out7_O => out7_O,
+    out0_T => out0_T,
+    out1_T => out1_T,
+    out2_T => out2_T,
+    out3_T => out3_T,
+    out4_T => out4_T,
+    out5_T => out5_T,
+    out6_T => out6_T,
+    out7_T => out7_T
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
-
--- You must compile the wrapper file PmodAD1_axi_quad_spi_0_0.vhd when simulating
--- the core, PmodAD1_axi_quad_spi_0_0. When compiling the wrapper file, be sure to
--- reference the VHDL simulation library.
 

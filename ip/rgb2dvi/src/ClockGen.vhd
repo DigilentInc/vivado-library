@@ -230,6 +230,8 @@ Deskew: BUFR
       CLR => '0', -- 1-bit input: Active high, asynchronous clear (Divided modes only)        
       I => FeedbackClkOut      -- 1-bit input: Clock buffer input driven by an IBUF, MMCM or local interconnect
    );
+   
+   aLocked <= aLocked_int;   
 end generate;
 
 GenPLL: if kClkPrimitive /= "MMCM" generate

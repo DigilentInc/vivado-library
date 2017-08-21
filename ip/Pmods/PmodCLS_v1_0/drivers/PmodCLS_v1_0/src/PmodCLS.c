@@ -1,42 +1,28 @@
-/* PmodCLS.c	--		Template driver for a Pmod which uses SPI		*/
-/*																		*/
-/************************************************************************/
-/*	Author:		Mikel Skreen											*/
-/*	Copyright 2016, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-/************************************************************************/
-/*  File Description:													*/
-/*																		*/
-/*	This file contains a basic library for the Pmod CLS.				*/
-/*																		*/
-/************************************************************************/
-/*  Revision History:													*/
-/*																		*/
-/*	06/15/2016(MikelSkreen): Created									*/
-/*																		*/
-/************************************************************************/
+/*************************************************************************/
+/*                                                                       */
+/*     PmodCLS.c --     PmodCLS Example Projects                         */
+/*                                                                       */
+/*************************************************************************/
+/*     Author: Mikel Skreen                                              */
+/*     Copyright 2016, Digilent Inc.                                     */
+/*************************************************************************/
+/*  Module Description:                                                  */
+/*                                                                       */
+/*            This file contains code for running a demonstration of the */
+/*            PmodCLS when used with the PmodCLS IP core.                */
+/*                                                                       */
+/*************************************************************************/
+/*  Revision History:                                                    */
+/*                                                                       */
+/*            06/15/2016(MikelSkreen): Created                           */
+/* 			  8/17/2017(jPeyron): updated                                 */
+/*                                                                       */
+/*************************************************************************/
 
 /***************************** Include Files ****************************/
 #include "PmodCLS.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+
 /************************** Function Definitions ************************/
 XSpi_Config CLSConfig =
 {
@@ -63,8 +49,8 @@ XSpi_Config CLSConfig =
 **
 **	Return Value:
 **		uint8_t
-**					- LCDS_ERR_SUCCESS - The action completed successfully
-**					- LCDS_ERR_ARG_POS_RANGE - The argument is not within 0, 7 range
+**					- CLS_LCDS_ERR_SUCCESS - The action completed successfully
+**					- CLS_LCDS_ERR_ARG_POS_RANGE - The argument is not within 0, 7 range
 **
 **	Errors:
 **		none
@@ -74,27 +60,27 @@ XSpi_Config CLSConfig =
 **
 -----------------------------------------------------------------------*/
 u8 CLS_DefineUserChar(PmodCLS *InstancePtr, uint8_t* strUserDef, uint8_t charPos) {
-	char rgcCmd[MAX];
+	char rgcCmd[CLS_MAX];
 	uint8_t bResult;
 	if (charPos >= 0 && charPos <= 7){
-		rgcCmd[0] = ESC;
-		rgcCmd[1] = BRACKET;
+		rgcCmd[0] = CLS_ESC;
+		rgcCmd[1] = CLS_BRACKET;
 		rgcCmd[2] = 0;
 		//build the values to be sent for defining the custom character
 		CLS_BuildUserDefChar(strUserDef, rgcCmd + 2);
 		u8 bLength = strlen(rgcCmd);
 		rgcCmd[bLength++] = (char)charPos + '0';
-		rgcCmd[bLength++] = DEF_CHAR_CMD;
+		rgcCmd[bLength++] = CLS_DEF_CHAR_CMD;
 		//save the defined character in the RAM
-		rgcCmd[bLength++] = ESC;
-		rgcCmd[bLength++] = BRACKET;
+		rgcCmd[bLength++] = CLS_ESC;
+		rgcCmd[bLength++] = CLS_BRACKET;
 		rgcCmd[bLength++] = '3';
-		rgcCmd[bLength++] = PRG_CHAR_CMD;
+		rgcCmd[bLength++] = CLS_PRG_CHAR_CMD;
 		CLS_WriteSpi(InstancePtr, (unsigned char*)(rgcCmd), bLength);
-		bResult = LCDS_ERR_SUCCESS;
+		bResult = CLS_LCDS_ERR_SUCCESS;
 	}
 	else {
-		bResult = LCDS_ERR_ARG_POS_RANGE;
+		bResult = CLS_LCDS_ERR_ARG_POS_RANGE;
 	}
 	return bResult;
 }
@@ -153,10 +139,10 @@ void CLS_BuildUserDefChar(uint8_t* strUserDef, char* cmdStr) {
 **	Description:
 **		This function wraps the line at 16 or 40 characters
 -----------------------------------------------------------------------*/
-void CLS_DisplayMode(PmodCLS *InstancePtr, bool charNumber){
-	uint8_t dispMode16[] = {ESC, BRACKET, '0', DISP_MODE_CMD};
-	uint8_t dispMode40[] = {ESC, BRACKET, '1', DISP_MODE_CMD};
-	if (charNumber){
+void CLS_DisplayMode(PmodCLS *InstancePtr, uint8_t charNumber){
+	uint8_t dispMode16[] = {CLS_ESC, CLS_BRACKET, '0', CLS_DISP_MODE_CMD};
+	uint8_t dispMode40[] = {CLS_ESC, CLS_BRACKET, '1', CLS_DISP_MODE_CMD};
+	if (charNumber==1){
 		//wrap line at 16 characters
 		CLS_WriteSpi(InstancePtr, dispMode16, 4);
 	}
@@ -183,15 +169,15 @@ void CLS_DisplayMode(PmodCLS *InstancePtr, bool charNumber){
 **		This function turns the cursor and the blinking option on or off,
 **    according to the user's selection.
 -----------------------------------------------------------------------*/
-void CLS_CursorModeSet(PmodCLS *InstancePtr, bool setCursor, bool setBlink) {
-	uint8_t cursorOff[]			  = {ESC, BRACKET, '0', CURSOR_MODE_CMD};
-	uint8_t cursorOnBlinkOff[]    = {ESC, BRACKET, '1', CURSOR_MODE_CMD};
-	uint8_t cursorBlinkOn[]       = {ESC, BRACKET, '2', CURSOR_MODE_CMD};
-	if (!setCursor)	{
+void CLS_CursorModeSet(PmodCLS *InstancePtr, uint8_t setCursor, uint8_t setBlink) {
+	uint8_t cursorOff[]			  = {CLS_ESC, CLS_BRACKET, '0', CLS_CURSOR_MODE_CMD};
+	uint8_t cursorOnBlinkOff[]    = {CLS_ESC, CLS_BRACKET, '1', CLS_CURSOR_MODE_CMD};
+	uint8_t cursorBlinkOn[]       = {CLS_ESC, CLS_BRACKET, '2', CLS_CURSOR_MODE_CMD};
+	if (setCursor==0)	{
 		//send the command for both display and blink off
 		CLS_WriteSpi(InstancePtr, cursorOff, 4);
 	}
-	else if ((setCursor)&&(!setBlink)) {
+	else if ((setCursor==1)&&(setBlink==0)) {
 		//send the command for display on and blink off
 		CLS_WriteSpi(InstancePtr, cursorOnBlinkOff, 4);
 	}
@@ -217,7 +203,7 @@ void CLS_CursorModeSet(PmodCLS *InstancePtr, bool setCursor, bool setBlink) {
 **		This function clears the display and returns the cursor home
 -----------------------------------------------------------------------*/
 void CLS_DisplayClear(PmodCLS *InstancePtr) {
-	u8 dispClr[] = {ESC, BRACKET, '0', DISP_CLR_CMD};
+	u8 dispClr[] = {CLS_ESC, CLS_BRACKET, '0', CLS_DISP_CLR_CMD};
 	//clear the display and returns the cursor home
 	CLS_WriteSpi(InstancePtr, dispClr, 4);
 }
@@ -385,10 +371,10 @@ void CLS_WriteSpi(PmodCLS *InstancePtr, u8 *wData, int nData)
 **
 **	Return Value:
 **		u8
-**				- LCDS_ERR_SUCCESS - The action completed successfully
+**				- CLS_LCDS_ERR_SUCCESS - The action completed successfully
 **				- a combination of the following errors(OR-ed):
-**				- LCDS_ERR_ARG_COL_RANGE - The argument is not within 0, 39 range
-**				- LCDS_ERR_ARG_ROW_RANGE - The argument is not within 0, 2 range
+**				- CLS_LCDS_ERR_ARG_COL_RANGE - The argument is not within 0, 39 range
+**				- CLS_LCDS_ERR_ARG_ROW_RANGE - The argument is not within 0, 2 range
 **
 **	Errors:
 **		see returned values
@@ -399,20 +385,20 @@ void CLS_WriteSpi(PmodCLS *InstancePtr, u8 *wData, int nData)
 -----------------------------------------------------------------------*/
 u8 CLS_WriteStringAtPos(PmodCLS *InstancePtr, uint8_t idxRow, uint8_t idxCol, char* strLn) {
 
-	uint8_t bResult = LCDS_ERR_SUCCESS;
+	uint8_t bResult = CLS_LCDS_ERR_SUCCESS;
 	if (idxRow < 0 || idxRow > 2){
-		bResult |= LCDS_ERR_ARG_ROW_RANGE;
+		bResult |= CLS_LCDS_ERR_ARG_ROW_RANGE;
 	}
 	if (idxCol < 0 || idxCol > 39){
-		bResult |= LCDS_ERR_ARG_COL_RANGE;
+		bResult |= CLS_LCDS_ERR_ARG_COL_RANGE;
 	}
-	if (bResult == LCDS_ERR_SUCCESS){
+	if (bResult == CLS_LCDS_ERR_SUCCESS){
 		//separate the position digits in order to send them, useful when the position is greater than 10
 		uint8_t firstDigit 		= idxCol % 10;
 		uint8_t secondDigit 	= idxCol / 10;
 		uint8_t length 			= strlen(strLn);
 		uint8_t lengthToPrint   = length + idxCol;
-		uint8_t stringToSend[]  = {ESC, BRACKET, idxRow + '0', ';', secondDigit + '0', firstDigit + '0', CURSOR_POS_CMD};
+		uint8_t stringToSend[]  = {CLS_ESC, CLS_BRACKET, idxRow + '0', ';', secondDigit + '0', firstDigit + '0', CLS_CURSOR_POS_CMD};
 		if (lengthToPrint > 40) {
 			//truncate the length of the string
 			//if it's greater than the positions number of a line

@@ -97,8 +97,9 @@ PLL_LockSyncAsync: SyncAsync
 PLL_LockLostDetect: process(PixelClkIn)
 begin
    if (pRst = '1') then
-      pLocked_q <= (others => '1');
+      pLocked_q <= (others => '0');
       pLockWasLost <= '1'; 
+	  pLockGained <= '0';
    elsif Rising_Edge(PixelClkIn) then
       pLocked_q <= pLocked_q(pLocked_q'high-1 downto 0) & pLocked;
       pLockWasLost <= (not pLocked_q(0) or not pLocked_q(1)) and pLocked_q(2); --two-pulse 

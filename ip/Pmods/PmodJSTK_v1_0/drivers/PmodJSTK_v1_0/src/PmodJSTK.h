@@ -1,21 +1,17 @@
 /************************************************************************/
 /*																		*/
-/* PmodJSTK.h	--		driver definitions for the PmodJSTK				*/
+/* PmodJSTK.h	--		Driver definitions for the PmodJSTK			*/
 /*																		*/
-/************************************************************************/
-/*	Author:		Samuel Lowe												*/
-/*	Copyright 2015, Digilent Inc.										*/
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
-/*	This file contains the driver definitions for the PmodJSTK IP       */
-/*    from Digilent	                                                    */
+/*	This file contains the drivers for the PmodJSTK IP from Digilent	*/
 /*																		*/
 /************************************************************************/
 /*  Revision History:													*/
 /*																		*/
 /*	06/01/2016(SamL): Created											*/
-/*	04/07/2017(ArtVVB): Validated										*/
+/*	08/21/2017(ArtVVB): Validated for Vivado 2015.4						*/
 /*																		*/
 /************************************************************************/
 
@@ -23,7 +19,7 @@
 #define PMODJSTK_H
 
 /* ------------------------------------------------------------ */
-/*					Include Files							    */
+/*					Include Files 								*/
 /* ------------------------------------------------------------ */
 
 #include "xil_types.h"
@@ -32,30 +28,59 @@
 #include "xspi.h"
 
 /* ------------------------------------------------------------ */
-/*					Type Definitions							*/
+/*					SPI Command Definitions						*/
 /* ------------------------------------------------------------ */
 
-#define bool u8
-#define true 1
-#define false 0
+/* ------------------------------------------------------------ */
+/*				Bit masks Definitions							*/
+/* ------------------------------------------------------------ */
 
+// Define bit positions used in fsButtons.
+#define JSTK_bnJstk                  0
+#define JSTK_bnButton1               1
+#define JSTK_bnButton2               2
 
-typedef struct PmodJSTK{
-	XSpi JSTKSpi;
-	u8 btn, led;
-	u16 X, Y;
+#define JSTK_bitButton1              (1 << JSTK_bnButton1)
+#define JSTK_bitButton2              (1 << JSTK_bnButton2)
+#define JSTK_bitJstk                 (1 << JSTK_bnJstk)
+
+/* ------------------------------------------------------------ */
+/*					Device Definition							*/
+/* ------------------------------------------------------------ */
+
+typedef struct PmodJSTK {
+	XSpi SpiDevice;
+	u32 GpioAddr;
 	u32 ItersPerUSec;
-}PmodJSTK;
+	u8 LedState;
+} PmodJSTK;
+
+/* ------------------------------------------------------------ */
+/*					Data Type Declarations						*/
+/* ------------------------------------------------------------ */
+
+typedef struct JSTK_DataPacket {
+	u16 XData;
+	u16 YData;
+	u8 Jstk;
+	u8 Button1;
+	u8 Button2;
+} JSTK_DataPacket;
 
 /* ------------------------------------------------------------ */
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 CpuClkFreqHz);
+void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 GPIO_Address, u32 cpuClockFreqHz);
 void JSTK_end(PmodJSTK* InstancePtr);
 int JSTK_SPIInit(XSpi *SpiInstancePtr);
 
-void JSTK_transfer(PmodJSTK* InstancePtr);
+void JSTK_setLeds(PmodJSTK* InstancePtr, u8 leds);
+
+JSTK_DataPacket JSTK_getDataPacket(PmodJSTK* InstancePtr);
+
+//utility functions
+void JSTK_getData(PmodJSTK* InstancePtr, u8* recv, u8 nData);
 void JSTK_delay(PmodJSTK *InstancePtr, int micros);
 
 #endif // PMODJSTK_H

@@ -642,16 +642,15 @@ int XSpi_Transfer(XSpi *InstancePtr, u8 *SendBufPtr,
 		InstancePtr->RemainingBytes -= (DataWidth >> 3);
 		StatusReg = XSpi_GetStatusReg(InstancePtr);
 	}
+
 	
-
-
 	/*
 	 * Set the slave select register to select the device on the SPI before
 	 * starting the transfer of data.
 	 */
-//	XSpi_SetSlaveSelectReg(InstancePtr,
-//				InstancePtr->SlaveSelectReg);
-//	MB_Sleep(20);
+	XSpi_SetSlaveSelectReg(InstancePtr,
+				InstancePtr->SlaveSelectReg);
+				
 	/*
 	 * Start the transfer by no longer inhibiting the transmitter and
 	 * enabling the device. For a master, this will in fact start the
@@ -836,8 +835,8 @@ int XSpi_Transfer(XSpi *InstancePtr, u8 *SendBufPtr,
 		 * such as serial EEPROMs work correctly as chip enable
 		 * may be connected to slave select
 		 */
-//		XSpi_SetSlaveSelectReg(InstancePtr,
-//					InstancePtr->SlaveSelectMask);
+		XSpi_SetSlaveSelectReg(InstancePtr,
+					InstancePtr->SlaveSelectMask);
 		InstancePtr->IsBusy = FALSE;
 	}
 

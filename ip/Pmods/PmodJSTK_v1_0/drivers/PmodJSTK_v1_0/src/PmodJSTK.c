@@ -1,10 +1,7 @@
 /************************************************************************/
 /*																		*/
-/* PmodJSTK.c	--		driver for the PmodJSTK							*/
+/* PmodJSTK.c	--		Driver source for the PmodJSTK					*/
 /*																		*/
-/************************************************************************/
-/*	Author:		Samuel Lowe										        */
-/*	Copyright 2015, Digilent Inc.										*/
 /************************************************************************/
 /*  File Description:													*/
 /*																		*/
@@ -14,15 +11,15 @@
 /*  Revision History:													*/
 /*																		*/
 /*	06/01/2016(SamL): Created											*/
-/*	04/10/2017(ArtVVB): Validated										*/
+/*	08/21/2017(ArtVVB): Validated for Vivado 2015.4						*/
 /*																		*/
 /************************************************************************/
 
 /***************************** Include Files *******************************/
+
 #include "PmodJSTK.h"
 
-/**************************** Global Variables *****************************/
-
+/************************** Function Definitions ***************************/
 XSpi_Config JSTKConfig =
 {
 	0,
@@ -38,68 +35,64 @@ XSpi_Config JSTKConfig =
 	0
 };
 
-/************************** Function Definitions ***************************/
-
 /* ------------------------------------------------------------ */
-/***	void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 CpuClkFreqHz)
+/***	void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 GPIO_Address, u32 cpuClockFreqHz)
 **
 **	Parameters:
-**		InstancePtr: A PmodJSTK object to start
-**		SPI_Address: The base address of the PmodJSTK SPI
-**		CpuClkFreqHz: The speed of the cpu, used to calculate delays
+**		InstancePtr: 	A PmodJSTK object to start
+**		SPI_Address: 	The base address of the PmodJSTK SPI Device
+**		GPIO_Address: 	The base address of the PmodJSTK Chip-Select GPIO Device
+**		cpuClockFreqHz: The clock speed of the processor, used to scale JSTK_delay in microblaze implementations
+**
 **	Return Value:
 **		none
 **
-**	Errors:
-**		none
-**
 **	Description:
-**		Initialize the PmodJSTK.
+**		Initialize the JSTK IP
 */
-void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 CpuClkFreqHz)
+void JSTK_begin(PmodJSTK* InstancePtr, u32 SPI_Address, u32 GPIO_Address, u32 cpuClockFreqHz)
 {
 	JSTKConfig.BaseAddress=SPI_Address;
-	JSTK_SPIInit(&InstancePtr->JSTKSpi);
-	InstancePtr->ItersPerUSec = CpuClkFreqHz / 1000000;
+	InstancePtr->ItersPerUSec = cpuClockFreqHz / 1000000;
+	InstancePtr->GpioAddr = GPIO_Address;
+	InstancePtr->LedState = 0;
+	JSTK_SPIInit(&InstancePtr->SpiDevice);
+	Xil_Out32(InstancePtr->GpioAddr+4, 0b0);
+	Xil_Out32(InstancePtr->GpioAddr, 0b1);
+	JSTK_getDataPacket(InstancePtr);
 }
 
 /* ------------------------------------------------------------ */
-/***	void JSTK_end(PmodJSTK* InstancePtr)
+/***	JSTK_end(void)
 **
 **	Parameters:
-**		InstancePtr		- PmodJSTK object to stop
+**		InstancePtr		- PmodJSTK device to stop
 **
 **	Return Value:
 **		none
 **
-**	Errors:
-**		none
-**
 **	Description:
-**		Stops the device
+**		Clean up the JSTK
 */
-void JSTK_end(PmodJSTK* InstancePtr){
-	XSpi_Stop(&InstancePtr->JSTKSpi);
+void JSTK_end(PmodJSTK* InstancePtr)
+{
+	XSpi_Stop(&InstancePtr->SpiDevice);
 }
 
 /* ------------------------------------------------------------ */
 /***	int JSTK_SPIInit(XSpi *SpiInstancePtr)
 **
 **	Parameters:
-**		XSpi *SpiInstancePtr: a pointer to the joystick spi device
+**		SpiInstancePtr: JSTK SPI driver device to initialize
 **
 **	Return Value:
-**		int Status: success or failure
-**
-**	Errors:
-**		none
+**		XST_SUCCESS or XST_FAILURE
 **
 **	Description:
 **		Initializes the PmodJSTK SPI.
-
 */
-
-int JSTK_SPIInit(XSpi *SpiInstancePtr){
+int JSTK_SPIInit(XSpi *SpiInstancePtr)
+{
 	int Status;
 
 	Status = XSpi_CfgInitialize(SpiInstancePtr, &JSTKConfig, JSTKConfig.BaseAddress);
@@ -107,91 +100,130 @@ int JSTK_SPIInit(XSpi *SpiInstancePtr){
 		return XST_FAILURE;
 	}
 
-
-
 	Status = XSpi_SetOptions(SpiInstancePtr, (XSP_MASTER_OPTION) | XSP_MANUAL_SSELECT_OPTION);
 	if (Status != XST_SUCCESS) {
 		return XST_FAILURE;
 	}
 
+	//Even though we are generating the CS signal through the GPIO controller, the SPI driver does not work without this statement
 	Status = XSpi_SetSlaveSelect(SpiInstancePtr, 1);
 	if (Status != XST_SUCCESS) {
 		return XST_FAILURE;
 	}
 
-	/*
-	 * Start the SPI driver so that the device is enabled.
-	 */
+	//Start the SPI driver so that the device is enabled.
 	XSpi_Start(SpiInstancePtr);
 
-	/*
-	 * Disable Global interrupt to use polled mode operation
-	 */
+	//Disable Global interrupt to use polled mode operation
 	XSpi_IntrGlobalDisable(SpiInstancePtr);
 
 	return XST_SUCCESS;
-
 }
 
 /* ------------------------------------------------------------ */
-/***	void JSTK_transfer(PmodJSTK* InstancePtr)
+/***	void JSTK_getBtn(PmodJSTK* InstancePtr)
 **
 **	Parameters:
 **		InstancePtr: A PmodJSTK object to start
-**		InstancePtr->led: the state to set the leds to
 **
-**	Return Values:
-**		InstancePtr->X: the y axis position of the joystick
-**		InstancePtr->Y: the x axis position of the joystick
-**		InstancePtr->btn: the state of the push buttons
-**
-**	Errors:
-**		none
+**	Return Value:
+**		btn: The 8 bit representation of the buttons which are in the
+**			 0th and 1st positions
 **
 **	Description:
-**		Sets the leds
-**		Gets the x and y positions of the joystick
-**		Gets the push button states of the PmodJSTK
-**
-**	Problems:
-**		Setting the chip select low through SetSlaveSelectReg isnt working so
-**		the function now uses XilOut
+**		Gets the push button states of the PmodJSTK2
+**		The button states can be accessed from the return value of this function with the following macros:
+**			JSTK_<bn/bit>Button1 : 1 if BTN1 is pressed
+**			JSTK_<bn/bit>Button2 : 1 if BTN2 is pressed
+**			JSTK_<bn/bit>JSTK	 : 1 if the joystick inline button is pressed
+**		In order to test a button state, the following operation is recommended:
+**			if ((Status & JSTK_bit<a button bit name>) != 0)
 */
-void JSTK_transfer(PmodJSTK* InstancePtr){
-
-	//In order to correctly communicate with the Pmod, there needs to be a small delay between
-	//each spi read
+void JSTK_setLeds(PmodJSTK* InstancePtr, u8 leds)
+{
 	u8 recv[5] = {0};
-	recv[0] = 0x80 | InstancePtr->led;
 
-//	XSpi_SetSlaveSelect(&InstancePtr->JSTKSpi, 1);
-	XSpi_SetSlaveSelectReg(&InstancePtr->JSTKSpi,	&InstancePtr->JSTKSpi.SlaveSelectReg);
-	JSTK_delay(InstancePtr, 20);
-	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[0], &recv[0], 1);
-	JSTK_delay(InstancePtr, 20);
-	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[1], &recv[1], 1);
-	JSTK_delay(InstancePtr, 20);
-	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[2], &recv[2], 1);
-	JSTK_delay(InstancePtr, 20);
-	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[3], &recv[3], 1);
-	JSTK_delay(InstancePtr, 20);
-	XSpi_Transfer(&InstancePtr->JSTKSpi, &recv[4], &recv[4], 1);
+	InstancePtr->LedState = leds;
 
-
-//	XSpi_SetSlaveSelectReg(&InstancePtr->JSTKSpi,	&InstancePtr->JSTKSpi.SlaveSelectMask);
-//	XSpi_SetSlaveSelect(&InstancePtr->JSTKSpi, 0);
-	//above doesn't seem to work so manually set it in memory
-	Xil_Out32(InstancePtr->JSTKSpi.BaseAddr+0x70, 1);
-
-	InstancePtr->btn = (recv[4] >> 1) & 0x3;
-	InstancePtr->Y = (recv[3] << 8) | recv[2];
-	InstancePtr->X = (recv[1] << 8) | recv[0];
+	JSTK_getDataPacket(InstancePtr);
 }
 
 /* ------------------------------------------------------------ */
-/***	void JSTK_delay(int micros)
+/***	JSTK_DataPacket JSTK_getDataPacket(PmodJSTK* InstancePtr)
 **
 **	Parameters:
+**		InstancePtr: A PmodJSTK device to interact with
+**
+**	Return Value:
+**		A basic data packet containing button states and X and Y position data
+**
+**	Description:
+**		Captures state data from the JSTK
+*/
+JSTK_DataPacket JSTK_getDataPacket(PmodJSTK* InstancePtr)
+{
+	u8 recv[5] = {0};
+	JSTK_DataPacket rawdata;
+
+	recv[0] = 0x80 | InstancePtr->LedState;
+
+	JSTK_getData(InstancePtr, recv, 5);
+
+	rawdata.XData = recv[0] | (recv[1] << 8);
+	rawdata.YData = recv[2] | (recv[3] << 8);
+	rawdata.Button1 = (recv[4] & JSTK_bitButton1) >> JSTK_bnButton1;
+	rawdata.Button2 = (recv[4] & JSTK_bitButton2) >> JSTK_bnButton2;
+	rawdata.Jstk = (recv[4] & JSTK_bitJstk) >> JSTK_bnJstk;
+
+	return rawdata;
+}
+
+/* ------------------------------------------------------------ */
+/***	void JSTK_getData(PmodJSTK* InstancePtr, u8* recv, u8 nData)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK device to capture from
+**		recv: 		 A byte array to act as the receive and send buffer
+**		nData: 		 The number of bytes to send and receive, recv must be at least this size
+**
+**	Return Value:
+**		none
+**
+**	Description:
+**		Manages a SPI transaction with the PmodJSTK
+**
+**	Problems:
+**		Holding the chip select low between bytes through the qspi driver isn't working
+**		so bit-banging that line with an AXI gpio controller instead
+*/
+void JSTK_getData(PmodJSTK* InstancePtr, u8* recv, u8 nData)
+{
+	int i = 0;
+
+	//bring chip select low
+	Xil_Out32(InstancePtr->GpioAddr, 0b0);
+
+	JSTK_delay(InstancePtr, 5); // 15 us delay from cs->low to first byte
+
+	for(i = 0; i < nData; i++)
+	{
+		JSTK_delay(InstancePtr, 10); // 10 us delay between bytes
+		XSpi_Transfer(&InstancePtr->SpiDevice, &recv[i], &recv[i], 1);
+	}
+
+	JSTK_delay(InstancePtr, 20); // 20 us delay from last packet to cs->high
+
+	//bring chip select high
+	Xil_Out32(InstancePtr->GpioAddr, 0b1);
+
+	JSTK_delay(InstancePtr, 25);
+}
+
+/* ------------------------------------------------------------ */
+/***	void JSTK_delay(PmodJSTK *InstancePtr, int micros)
+**
+**	Parameters:
+**		InstancePtr: A PmodJSTK device containing the scaling parameter
 **		micros: amount of microseconds to delay
 **
 **	Return Value:
@@ -201,24 +233,16 @@ void JSTK_transfer(PmodJSTK* InstancePtr){
 **		none
 **
 **	Description:
-**		Delays for a given amount of microseconds. Adapted from sleep and MB_Sleep
-**
-**	Problems:
-**		none
+**		delays for a given amount of microseconds. Microblaze variant adapted from sleep and MB_Sleep
 */
-void JSTK_delay(PmodJSTK *InstancePtr, int micros){
+void JSTK_delay(PmodJSTK *InstancePtr, int micros) {
 	int i;
+
 #ifdef __MICROBLAZE__
 	for(i = 0; i < (InstancePtr->ItersPerUSec*micros); i++){
-		asm("");
+			asm("");
 	}
 #else
 	usleep(micros);
 #endif
 }
-
-
-
-
-
-

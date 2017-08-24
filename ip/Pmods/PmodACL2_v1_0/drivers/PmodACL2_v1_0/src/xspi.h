@@ -813,12 +813,8 @@ u32 XSpi_GetSlaveSelect(XSpi *InstancePtr);
 int XSpi_Transfer(XSpi *InstancePtr, u8 *SendBufPtr, u8 *RecvBufPtr,
 		  unsigned int ByteCount);
 
-int XSpi_CustomTransfer(XSpi *InstancePtr, u8 *SendBufPtr,
-		  u8 *RecvBufPtr, unsigned int ByteCount);
-
 void XSpi_SetStatusHandler(XSpi *InstancePtr, void *CallBackRef,
 			   XSpi_StatusHandler FuncPtr);
-
 void XSpi_InterruptHandler(void *InstancePtr);
 
 

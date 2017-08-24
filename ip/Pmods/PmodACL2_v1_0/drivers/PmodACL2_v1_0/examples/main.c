@@ -1,17 +1,53 @@
+/************************************************************************/
+/*																		*/
+/* main.c  --  Demonstration of a simple use of the Pmod ACL2			*/
+/*																		*/
+/************************************************************************/
+/*	Author:		Mikel Skreen											*/
+/*	Copyright 2016, Digilent Inc.										*/
+/************************************************************************/
+/*  File Description:													*/
+/*																		*/
+/*	This file contains a basic demo in order to use the ACL2 sample 	*/
+/*	capture mode. 														*/
+/*																		*/
+/*	X, Y, and Z axis data is captured and printed over UART.			*/
+/*  This data can be viewed with a serial terminal application 			*/
+/*  connected to your board and configured to use the appropriate baud 	*/
+/*  rate below.															*/
+/*																		*/
+/************************************************************************/
+/*  Revision History:													*/
+/*																		*/
+/*	04/19/2016(MikelS): Created											*/
+/*	08/24/2017(artvvb): Validated for Vivado 2015.4						*/
+/*																		*/
+/************************************************************************/
+/*  Baud Rates:                                                         */
+/*                                                                      */
+/*  Microblaze: 9600 or what was specified in UARTlite core             */
+/*  Zynq: 115200                                                        */
+/*                                                                      */
+/************************************************************************/
+
 #include <stdio.h>
-#include "platform.h"
 #include "xil_printf.h"
 #include "PmodACL2.h"
 #include "xparameters.h"
-#ifdef XPAR_MICROBLAZE_ID
-#include "microblaze_sleep.h"
-#endif
+#include "xil_cache.h"
 
+#ifdef __MICROBLAZE__
+#include "microblaze_sleep.h"
+#else
+#include "sleep.h"
+#endif
 
 void DemoInitialize();
 void DemoRun();
-void SamplesExample();
-void FIFOexample();
+void DemoSleep(u32 millis);
+void DemoCleanup();
+void EnableCaches();
+void DisableCaches();
 
 PmodACL2 myDevice;
 
@@ -19,89 +55,89 @@ int main(void)
 {
 	DemoInitialize();
 	DemoRun();
+	DemoCleanup();
 
 	return 0;
 }
 
 void DemoInitialize()
 {
-	init_platform();
-	ACL2_begin(&myDevice, XPAR_PMODACL2_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODACL2_0_AXI_LITE_SPI_BASEADDR);
-}
+	EnableCaches();
 
+	//initialize the ACL2 driver device
+	ACL2_begin(&myDevice, XPAR_PMODACL2_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODACL2_0_AXI_LITE_SPI_BASEADDR);
+
+	//reset the ACL2
+	ACL2_reset(&myDevice);
+	DemoSleep(1);
+
+	//set ACL2 configuration data
+	ACL2_configure(&myDevice);
+}
 
 void DemoRun()
 {
-	print("Starting...\n\r");
-
-//	SamplesExample();
-	FIFOexample();
-
-	ACL2_end(&myDevice);
-	cleanup_platform();
-}
-
-void SamplesExample()
-{
-	int x, y, z;
 	int status;
+	ACL2_SamplePacket data;
 
-	while(1)
+	xil_printf("Starting ACL2 Demo...\n\r");
+
+	while (1)
 	{
-		xil_printf("\x1B[2J");		// clear screen
-		xil_printf("\x1B[H");		// reset cursor to 0,0
-
 		status = ACL2_getStatus(&myDevice);
-		xil_printf("Status: %x\n\r", status);
 
-		x = ACL2_getX(&myDevice);
-		y = ACL2_getY(&myDevice);
-		z = ACL2_getZ(&myDevice);
-
-		xil_printf("X= %d, Y= %d, Z= %d\n\r", x, y, z);
-
-#ifdef XPAR_MICROBLAZE_ID
-		MB_Sleep(500);
-#else
-		usleep(100000);
-#endif
-	}
-}
-
-void FIFOexample()
-{
-	int fifoEnt, status;
-
-	while(1)
-	{
-		xil_printf("\x1B[2J");		// clear screen
-		xil_printf("\x1B[H");		// reset cursor to 0,0
-
-		status = ACL2_getStatus(&myDevice);
-		xil_printf("Status: %x\n\r", status);
-
-		fifoEnt = ACL2_getFIFOentries(&myDevice);
-		xil_printf("FIFO: %d\n\r", fifoEnt);
-		if(fifoEnt == 512)
+		//capture data only when there is data available
+		if ((ACL2_STATUS_DATA_READY_MASK & status) != 0)
 		{
-			xil_printf("Threshold triggered.\n\r");
-			ACL2_fillFIFO(&myDevice);
+			data = ACL2_getSample(&myDevice);
 
-#ifdef XPAR_MICROBLAZE_ID
-			MB_Sleep(10);
-#else
-			usleep(1000000);
-#endif
-
-			xil_printf("FIFO: %d\n\r", ACL2_getFIFOentries(&myDevice));
-			ACL2_printQueue(&myDevice);
-			ACL2_myQueueEmptyAll(&myDevice);
-
-#ifdef XPAR_MICROBLAZE_ID
-			MB_Sleep(5000);
-#else
-			usleep(1000000);
-#endif
+			//convert data to units of g before printing
+			printf("X: %.2f \tY: %.2f \tZ: %.2f\r\n",
+					ACL2_DataToG(&myDevice, data.XData),
+					ACL2_DataToG(&myDevice, data.YData),
+					ACL2_DataToG(&myDevice, data.ZData)
+			);
 		}
 	}
+
+	ACL2_end(&myDevice);
+}
+
+void DemoSleep(u32 millis)
+{
+#ifdef __MICROBLAZE__
+	MB_Sleep(millis);
+#else
+	usleep(millis*1000);
+#endif
+}
+
+void DemoCleanup()
+{
+	ACL2_end(&myDevice);
+	DisableCaches();
+}
+
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheDisable();
+#endif
+#endif
 }

@@ -1,10 +1,10 @@
 /************************************************************************/
-/*																		*/
-/*	OLED_Driver.c	-- Graphics Driver Library for OLED Display			*/
-/*																		*/
+/*                                                                      */
+/*  OLED_Driver.c   -- Graphics Driver Library for OLED Display         */
+/*                                                                      */
 /************************************************************************/
-/*	Author: 	Gene Apperson											*/
-/*	Copyright 2011, Digilent Inc.										*/
+/*  Author:     Gene Apperson                                           */
+/*  Copyright 2011, Digilent Inc.                                       */
 /************************************************************************/
 /*
   This library is free software; you can redistribute it and/or
@@ -22,27 +22,27 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /************************************************************************/
-/*  Module Description: 												*/
-/*																		*/
-/*	This is part of the device driver software for the OLED bit mapped	*/
-/*	display on the Digilent Basic I/O Shield. This module contains the	*/
-/*	initialization functions and basic display control functions.		*/
-/*																		*/
+/*  Module Description:                                                 */
+/*                                                                      */
+/*  This is part of the device driver software for the OLED bit mapped  */
+/*  display on the Digilent Basic I/O Shield. This module contains the  */
+/*  initialization functions and basic display control functions.       */
+/*                                                                      */
 /************************************************************************/
-/*  Revision History:													*/
-/*																		*/
-/*	04/29/2011(GeneA): Created											*/
-/*	08/03/2011(GeneA): added functions to shut down the display and to	*/
-/*		turn the display on and off.									*/
-/*	06/20/2016(ArtVVB): edited for PmodOLED IP							*/
-/*	                        											*/
+/*  Revision History:                                                   */
+/*                                                                      */
+/*  04/29/2011(GeneA): Created                                          */
+/*  08/03/2011(GeneA): added functions to shut down the display and to  */
+/*      turn the display on and off.                                    */
+/*  06/20/2016(ArtVVB): edited for PmodOLED IP                          */
+/*                                                                      */
 /* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
 /* as well as inverting the white and black                             */
 /************************************************************************/
 
 
 /* ------------------------------------------------------------ */
-/*				Include File Definitions						*/
+/*              Include File Definitions                        */
 /* ------------------------------------------------------------ */
 
 #include "PmodOLED.h"
@@ -50,14 +50,14 @@
 #include "FillPat.c"
 
 /* ------------------------------------------------------------ */
-/*				Local Symbol Definitions						*/
+/*              Local Symbol Definitions                        */
 /* ------------------------------------------------------------ */
 
-#define	cmdOledDisplayOn	   0xAF
-#define	cmdOledDisplayOff	   0xAE
-#define	cmdOledSegRemap		   0xA1	//map column 127 to SEG0
-#define	cmdOledComDir		   0xC8	//scan from COM[N-1] to COM0
-#define	cmdOledComConfig	   0xDA	//set COM hardware configuration
+#define cmdOledDisplayOn       0xAF
+#define cmdOledDisplayOff      0xAE
+#define cmdOledSegRemap        0xA1 //map column 127 to SEG0
+#define cmdOledComDir          0xC8 //scan from COM[N-1] to COM0
+#define cmdOledComConfig       0xDA //set COM hardware configuration
 #define DispContrast1          0x81
 #define DispContrast2          0x0F
 #define SetSegRemap            0xA0
@@ -68,13 +68,13 @@
 /* Setting pins based on DSPI_SS pin plus offset to get to lower 4 pins
 ** on pmod connector
 */
-#define DataCmd		0x1
-#define Reset		0x2
-#define VbatCtrl	0x4
-#define VddCtrl		0x8
+#define DataCmd     0x1
+#define Reset       0x2
+#define VbatCtrl    0x4
+#define VddCtrl     0x8
 
 /* ------------------------------------------------------------ */
-/*				Local Variables									*/
+/*              Local Variables                                 */
 /* ------------------------------------------------------------ */
 
 /* This array is the offscreen frame buffer used for rendering.
@@ -85,541 +85,500 @@
 extern const u8 rgbFillPat[];
 
 /* ------------------------------------------------------------ */
-/*				Forward Declarations							*/
+/*              Forward Declarations                            */
 /* ------------------------------------------------------------ */
 
-void 	OLED_HostInit	(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address);
-void 	OLED_HostTerm	(PmodOLED *InstancePtr);
-void 	OLED_DevInit	(PmodOLED *InstancePtr,bool orientation, bool invert);
-void 	OLED_DevTerm	(PmodOLED *InstancePtr);
-void 	OLED_DvrInit	(PmodOLED *InstancePtr);
+void    OLED_HostInit   (PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address);
+void    OLED_HostTerm   (PmodOLED *InstancePtr);
+void    OLED_DevInit    (PmodOLED *InstancePtr,u8 orientation, u8 invert);
+void    OLED_DevTerm    (PmodOLED *InstancePtr);
+void    OLED_DvrInit    (PmodOLED *InstancePtr);
 
-void	OLED_PutBuffer	(PmodOLED *InstancePtr, int cb, uint8_t *rgbTx);
-//uint8_t	Spi2PutByte		(uint8_t bVal);
+void    OLED_PutBuffer  (PmodOLED *InstancePtr, int cb, uint8_t *rgbTx);
+//uint8_t   Spi2PutByte     (uint8_t bVal);
 
 /* ------------------------------------------------------------ */
-/*				Procedure Definitions							*/
+/*              Procedure Definitions                           */
 /* ------------------------------------------------------------ */
-/***	OLED_Init
+/***    OLED_Init
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Initialize the OLED display subsystem.
+**  Description:
+**      Initialize the OLED display subsystem.
 */
 
-void OLED_Init(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address, bool orientation, bool invert)
+void OLED_Init(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address, u8 orientation, u8 invert)
 {
 
-	/* Init the PIC32 peripherals used to talk to the display.
-	*/
-	OLED_HostInit(InstancePtr, GPIO_Address, SPI_Address);
+    /* Init the PIC32 peripherals used to talk to the display.
+    */
+    OLED_HostInit(InstancePtr, GPIO_Address, SPI_Address);
 
-	/* Init the memory variables used to control access to the
-	** display.
-	*/
-	OLED_DvrInit(InstancePtr);
+    /* Init the memory variables used to control access to the
+    ** display.
+    */
+    OLED_DvrInit(InstancePtr);
 
-	/* Init the OLED display hardware.
-	*/
-	OLED_DevInit(InstancePtr, orientation, invert);
+    /* Init the OLED display hardware.
+    */
+    OLED_DevInit(InstancePtr, orientation, invert);
 
-	/* Clear the display.
-	*/
-	OLED_Clear(InstancePtr);
+    /* Clear the display.
+    */
+    OLED_Clear(InstancePtr);
 
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_Term
+/***    OLED_Term
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Shut down the OLED display.
+**  Description:
+**      Shut down the OLED display.
 */
 
 void OLED_Term(PmodOLED *InstancePtr)
 {
 
-	/* Shut down the OLED display hardware.
-	*/
-	OLED_DevTerm(InstancePtr);
+    /* Shut down the OLED display hardware.
+    */
+    OLED_DevTerm(InstancePtr);
 
-	/* Release the PIC32 peripherals being used.
-	*/
-	OLED_HostTerm(InstancePtr);
+    /* Release the PIC32 peripherals being used.
+    */
+    OLED_HostTerm(InstancePtr);
 
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_HostInit
+/***    OLED_HostInit
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Perform PIC32 device initialization to prepare for use
-**		of the OLED display.
-**		This is currently hard coded for the Cerebot 32MX4 and
-**		SPI2. This needs to be generalized.
+**  Description:
+**      Perform PIC32 device initialization to prepare for use
+**      of the OLED display.
+**      This is currently hard coded for the Cerebot 32MX4 and
+**      SPI2. This needs to be generalized.
 */
 
 void OLED_HostInit(PmodOLED *InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 {
-	InstancePtr->GPIO_addr=GPIO_Address;
-	OLEDConfig.BaseAddress=SPI_Address;
+    InstancePtr->GPIO_addr=GPIO_Address;
+    OLEDConfig.BaseAddress=SPI_Address;
 
-	if (XST_SUCCESS != OLED_SPIInit(&InstancePtr->OLEDSpi))
-		xil_printf("SPI Initialization failed\n\r");
+    if (XST_SUCCESS != OLED_SPIInit(&InstancePtr->OLEDSpi))
+        xil_printf("SPI Initialization failed\n\r");
 
-	OLED_SetGPIOTristateBits(InstancePtr, 0xF, false);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc.
-	OLED_SetGPIOBits(InstancePtr, 0xF, true);
+    OLED_SetGPIOTristateBits(InstancePtr, 0xF, 0b0);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc.
+    OLED_SetGPIOBits(InstancePtr, 0xF, 0b1);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_HostTerm
+/***    OLED_HostTerm
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Release processor resources used by the library
+**  Description:
+**      Release processor resources used by the library
 */
 
 void OLED_HostTerm(PmodOLED *InstancePtr)
-	{
+    {
 
-	///* Make the Data/Command select, Reset, and SPI CS pins be inputs.
-	//*/
+    ///* Make the Data/Command select, Reset, and SPI CS pins be inputs.
+    //*/
 
-	OLED_SetGPIOBits(InstancePtr, DataCmd | Reset, true);
+    OLED_SetGPIOBits(InstancePtr, DataCmd | Reset, 0b1);
 
-	OLED_SetGPIOTristateBits(InstancePtr, DataCmd | Reset, true);
+    OLED_SetGPIOTristateBits(InstancePtr, DataCmd | Reset, 0b1);
 
-	///* Make power control pins be inputs. The pullup resistors on the
-	//** board will ensure that the power supplies stay off.
-	//*/
-	OLED_SetGPIOBits(InstancePtr, VddCtrl | VbatCtrl, true);
+    ///* Make power control pins be inputs. The pullup resistors on the
+    //** board will ensure that the power supplies stay off.
+    //*/
+    OLED_SetGPIOBits(InstancePtr, VddCtrl | VbatCtrl, 0b1);
 
-	OLED_SetGPIOTristateBits(InstancePtr, VddCtrl | VbatCtrl, true);
+    OLED_SetGPIOTristateBits(InstancePtr, VddCtrl | VbatCtrl, 0b1);
 
-	XSpi_Stop(&InstancePtr->OLEDSpi);
+    XSpi_Stop(&InstancePtr->OLEDSpi);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_DvrInit
+/***    OLED_DvrInit
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Initialize the OLED software system
+**  Description:
+**      Initialize the OLED software system
 */
 
 void OLED_DvrInit(PmodOLED *InstancePtr)
-	{
-	int	  ib;
-	OLED *OledPtr = &(InstancePtr->OLEDState);
+    {
+    int   ib;
+    OLED *OledPtr = &(InstancePtr->OLEDState);
 
-	/* Init the parameters for the default font
-	*/
-	OledPtr->dxcoOledFontCur = cbOledChar;
-	OledPtr->dycoOledFontCur = 8;
-	OledPtr->pbOledFontCur = (uint8_t*)(rgbOledFont0);
-	OledPtr->pbOledFontUser = InstancePtr->OLEDState.rgbOledFontUser;
+    /* Init the parameters for the default font
+    */
+    OledPtr->dxcoOledFontCur = cbOledChar;
+    OledPtr->dycoOledFontCur = 8;
+    OledPtr->pbOledFontCur = (uint8_t*)(rgbOledFont0);
+    OledPtr->pbOledFontUser = InstancePtr->OLEDState.rgbOledFontUser;
 
-	for (ib = 0; ib < cbOledFontUser; ib++) {
-		OledPtr->rgbOledFontUser[ib] = 0;
-	}
+    for (ib = 0; ib < cbOledFontUser; ib++) {
+        OledPtr->rgbOledFontUser[ib] = 0;
+    }
 
-	OledPtr->xchOledMax = ccolOledMax / OledPtr->dxcoOledFontCur;
-	OledPtr->ychOledMax = crowOledMax / OledPtr->dycoOledFontCur;
+    OledPtr->xchOledMax = ccolOledMax / OledPtr->dxcoOledFontCur;
+    OledPtr->ychOledMax = crowOledMax / OledPtr->dycoOledFontCur;
 
-	/* Set the default character cursor position.
-	*/
-	OLED_SetCursor(InstancePtr, 0, 0);
+    /* Set the default character cursor position.
+    */
+    OLED_SetCursor(InstancePtr, 0, 0);
 
-	/* Set the default foreground draw color and fill pattern
-	*/
-	OledPtr->clrOledCur = 0x01;
-	OledPtr->pbOledPatCur = (uint8_t*)rgbFillPat;
-	OLED_SetDrawMode(InstancePtr, modOledSet);
+    /* Set the default foreground draw color and fill pattern
+    */
+    OledPtr->clrOledCur = 0x01;
+    OledPtr->pbOledPatCur = (uint8_t*)rgbFillPat;
+    OLED_SetDrawMode(InstancePtr, modOledSet);
 
-	/* Default the character routines to automaticall
-	** update the display.
-	*/
-	OledPtr->fOledCharUpdate = 1;
+    /* Default the character routines to automaticall
+    ** update the display.
+    */
+    OledPtr->fOledCharUpdate = 1;
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_DevInit
+/***    OLED_DevInit
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Initialize the OLED display controller and turn the display on.
+**  Description:
+**      Initialize the OLED display controller and turn the display on.
 */
 
-void OLED_DevInit(PmodOLED *InstancePtr, bool orientation, bool invert)
-	{
-	/* We're going to be sending commands, so clear the Data/Cmd bit
-	*/
-	OLED_SetGPIOBits(InstancePtr, DataCmd | VddCtrl, false);
+void OLED_DevInit(PmodOLED *InstancePtr, u8 orientation, u8 invert)
+    {
+    /* We're going to be sending commands, so clear the Data/Cmd bit
+    */
+    OLED_SetGPIOBits(InstancePtr, DataCmd | VddCtrl, 0b0);
 
 
-	/* Start by turning VDD on and wait a while for the power to come up.
-	*/
-	OLED_Delay(1);
+    /* Start by turning VDD on and wait a while for the power to come up.
+    */
+    OLED_Delay(1);
 
 
-	/* Display off command
-	*/
-	OLED_WriteByte(InstancePtr, cmdOledDisplayOff);
+    /* Display off command
+    */
+    OLED_WriteByte(InstancePtr, cmdOledDisplayOff);
 
-	/* Bring Reset low and then high
-	*/
-	OLED_SetGPIOBits(InstancePtr, Reset, false);
-	OLED_Delay(1);
-	OLED_SetGPIOBits(InstancePtr, Reset, true);
+    /* Bring Reset low and then high
+    */
+    OLED_SetGPIOBits(InstancePtr, Reset, 0b0);
+    OLED_Delay(1);
+    OLED_SetGPIOBits(InstancePtr, Reset, 0b1);
 
-	/* Send the Set Charge Pump and Set Pre-Charge Period commands
-	*/
-	OLED_WriteByte(InstancePtr, 0x8D);//From Univision data sheet, not in SSD1306 data sheet
-	OLED_WriteByte(InstancePtr, 0x14);
+    /* Send the Set Charge Pump and Set Pre-Charge Period commands
+    */
+    OLED_WriteByte(InstancePtr, 0x8D);//From Univision data sheet, not in SSD1306 data sheet
+    OLED_WriteByte(InstancePtr, 0x14);
 
-	OLED_WriteByte(InstancePtr, 0xD9);//From Univision data sheet, not in SSD1306 data sheet
-	OLED_WriteByte(InstancePtr, 0xF1);
+    OLED_WriteByte(InstancePtr, 0xD9);//From Univision data sheet, not in SSD1306 data sheet
+    OLED_WriteByte(InstancePtr, 0xF1);
 
-	/* Turn on VCC and wait 100ms
-	*/
-	OLED_SetGPIOBits(InstancePtr, VbatCtrl, false);
-	OLED_Delay(100);
+    /* Turn on VCC and wait 100ms
+    */
+    OLED_SetGPIOBits(InstancePtr, VbatCtrl, 0b0);
+    OLED_Delay(100);
 
-	// Send the commands to invert the display for onboard OLED or upside down for PmodOLED.
-	// uncomment/comment the next 6 lines if you are using the PmodOLED right side up
+    // Send the commands to invert the display for onboard OLED or upside down for PmodOLED.
+    // uncomment/comment the next 6 lines if you are using the PmodOLED right side up
 
     if(orientation)
-	{
+    {
 
-		OLED_WriteByte(InstancePtr, DispContrast1); /* DispContrast 1 */
-		OLED_WriteByte(InstancePtr, DispContrast2); /* DispContrast 2 */
-		OLED_WriteByte(InstancePtr, SetSegRemap); /* SetSegRemap */
-		OLED_WriteByte(InstancePtr, SetScanDirection); /* SetScanDirection /*/
-		OLED_WriteByte(InstancePtr, SetLowerColumnAddress); /* Set Lower Column Address command */
-		OLED_WriteByte(InstancePtr, LowerColumnAddress); /* Lower Column Address */
-	}else
-	{
+        OLED_WriteByte(InstancePtr, DispContrast1); /* DispContrast 1 */
+        OLED_WriteByte(InstancePtr, DispContrast2); /* DispContrast 2 */
+        OLED_WriteByte(InstancePtr, SetSegRemap); /* SetSegRemap */
+        OLED_WriteByte(InstancePtr, SetScanDirection); /* SetScanDirection /*/
+        OLED_WriteByte(InstancePtr, SetLowerColumnAddress); /* Set Lower Column Address command */
+        OLED_WriteByte(InstancePtr, LowerColumnAddress); /* Lower Column Address */
+    }else
+    {
 
-		// Send the commands to invert the display for PmodOLED or upside down for onboardOLED.
-		// uncomment/comment the next 4 lines if you are using the PmodOLED right side up
+        // Send the commands to invert the display for PmodOLED or upside down for onboardOLED.
+        // uncomment/comment the next 4 lines if you are using the PmodOLED right side up
 
-		OLED_WriteByte(InstancePtr, cmdOledSegRemap);//remap columns
-		OLED_WriteByte(InstancePtr, cmdOledComDir);//remap the rows
+        OLED_WriteByte(InstancePtr, cmdOledSegRemap);//remap columns
+        OLED_WriteByte(InstancePtr, cmdOledComDir);//remap the rows
 
-		/* Send the commands to select sequential COM configuration
-		*/
-		OLED_WriteByte(InstancePtr, cmdOledComConfig);//set COM configuration command
-		OLED_WriteByte(InstancePtr, 0x20);//sequential COM, left/right remap enabled
+        /* Send the commands to select sequential COM configuration
+        */
+        OLED_WriteByte(InstancePtr, cmdOledComConfig);//set COM configuration command
+        OLED_WriteByte(InstancePtr, 0x20);//sequential COM, left/right remap enabled
 
-	}
+    }
 
     if(invert)
-    	OLED_WriteByte(InstancePtr, 0xA7);//invert white/black
+        OLED_WriteByte(InstancePtr, 0xA7);//invert white/black
     else
-    	OLED_WriteByte(InstancePtr, 0xA6);//invert black/white
+        OLED_WriteByte(InstancePtr, 0xA6);//invert black/white
 
     /* Send Display On command
-    	*/
-	OLED_WriteByte(InstancePtr, cmdOledDisplayOn);
+        */
+    OLED_WriteByte(InstancePtr, cmdOledDisplayOn);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_DevTerm
+/***    OLED_DevTerm
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Shut down the OLED display hardware
+**  Description:
+**      Shut down the OLED display hardware
 */
 
 void OLED_DevTerm(PmodOLED *InstancePtr)
-	{
+    {
 
-	/* Send the Display Off command.
-	*/
-	OLED_WriteByte(InstancePtr, cmdOledDisplayOff);
+    /* Send the Display Off command.
+    */
+    OLED_WriteByte(InstancePtr, cmdOledDisplayOff);
 
-	/* Turn off VCC
-	*/
-	OLED_SetGPIOBits(InstancePtr, VddCtrl, true);
-	OLED_Delay(100);
+    /* Turn off VCC
+    */
+    OLED_SetGPIOBits(InstancePtr, VddCtrl, 0b1);
+    OLED_Delay(100);
 
-	/* Turn off VDD
-	*/
-	OLED_SetGPIOBits(InstancePtr, VbatCtrl, false);
+    /* Turn off VDD
+    */
+    OLED_SetGPIOBits(InstancePtr, VbatCtrl, 0b0);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_DisplayOn
+/***    OLED_DisplayOn
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Turn the display on. This assumes that the display has
-**		already been powered on and initialized. All it does
-**		is send the display on command.
+**  Description:
+**      Turn the display on. This assumes that the display has
+**      already been powered on and initialized. All it does
+**      is send the display on command.
 */
 
 void OLED_DisplayOn(PmodOLED *InstancePtr)
 {
-	OLED_SetGPIOBits(InstancePtr, DataCmd, false);
-	OLED_WriteByte(InstancePtr, cmdOledDisplayOn);
+    OLED_SetGPIOBits(InstancePtr, DataCmd, 0b0);
+    OLED_WriteByte(InstancePtr, cmdOledDisplayOn);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_DisplayOff
+/***    OLED_DisplayOff
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Turn the display off. This does not power the display
-**		down. All it does is send the display off command.
+**  Description:
+**      Turn the display off. This does not power the display
+**      down. All it does is send the display off command.
 */
 
 void OLED_DisplayOff(PmodOLED *InstancePtr)
 {
-	OLED_SetGPIOBits(InstancePtr, DataCmd, false);
-	OLED_WriteByte(InstancePtr, cmdOledDisplayOff);
+    OLED_SetGPIOBits(InstancePtr, DataCmd, 0b0);
+    OLED_WriteByte(InstancePtr, cmdOledDisplayOff);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_Clear
+/***    OLED_Clear
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Clear the display. This clears the memory buffer and then
-**		updates the display.
+**  Description:
+**      Clear the display. This clears the memory buffer and then
+**      updates the display.
 */
 
 void OLED_Clear(PmodOLED *InstancePtr)
 {
-	OLED_ClearBuffer(InstancePtr);
-	OLED_Update(InstancePtr);
+    OLED_ClearBuffer(InstancePtr);
+    OLED_Update(InstancePtr);
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_ClearBuffer
+/***    OLED_ClearBuffer
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Clear the display memory buffer.
+**  Description:
+**      Clear the display memory buffer.
 */
 
 void OLED_ClearBuffer(PmodOLED *InstancePtr)
 {
-	OLED    *OledPtr = &(InstancePtr->OLEDState);
-	int		 ib;
-	uint8_t *pb;
+    OLED    *OledPtr = &(InstancePtr->OLEDState);
+    int      ib;
+    uint8_t *pb;
 
-	pb = OledPtr->rgbOledBmp;
+    pb = OledPtr->rgbOledBmp;
 
-	/* Fill the memory buffer with 0.
-	*/
-	for (ib = 0; ib < cbOledDispMax; ib++) {
-		*pb++ = 0x00;
-	}
+    /* Fill the memory buffer with 0.
+    */
+    for (ib = 0; ib < cbOledDispMax; ib++) {
+        *pb++ = 0x00;
+    }
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_Update
+/***    OLED_Update
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Update the OLED display with the contents of the memory buffer
+**  Description:
+**      Update the OLED display with the contents of the memory buffer
 */
 
 void OLED_Update(PmodOLED *InstancePtr)
 {
-	int		 ipag;
-	int		 icol;
-	uint8_t *pb;
+    int      ipag;
+    int      icol;
+    uint8_t *pb;
 
-	pb = InstancePtr->OLEDState.rgbOledBmp;
-	for (ipag = 0; ipag < cpagOledMax; ipag++) {
-		OLED_SetGPIOBits(InstancePtr, DataCmd, false);
+    pb = InstancePtr->OLEDState.rgbOledBmp;
+    for (ipag = 0; ipag < cpagOledMax; ipag++) {
+        OLED_SetGPIOBits(InstancePtr, DataCmd, 0b0);
 
-		/* Set the page address
-		*/
-		OLED_WriteByte(InstancePtr, 0x22);
-		OLED_WriteByte(InstancePtr, ipag);
+        /* Set the page address
+        */
+        OLED_WriteByte(InstancePtr, 0x22);
+        OLED_WriteByte(InstancePtr, ipag);
 
-		/* Start at the left column
-		*/
-		OLED_WriteByte(InstancePtr, 0x00);
-		OLED_WriteByte(InstancePtr, 0x10);
+        /* Start at the left column
+        */
+        OLED_WriteByte(InstancePtr, 0x00);
+        OLED_WriteByte(InstancePtr, 0x10);
 
-		OLED_SetGPIOBits(InstancePtr, DataCmd, true);
+        OLED_SetGPIOBits(InstancePtr, DataCmd, 0b1);
 
-		/* Copy this memory page of display data.
-		*/
-		OLED_PutBuffer(InstancePtr, ccolOledMax, pb);
-		pb += ccolOledMax;
-	}
+        /* Copy this memory page of display data.
+        */
+        OLED_PutBuffer(InstancePtr, ccolOledMax, pb);
+        pb += ccolOledMax;
+    }
 }
 
 /* ------------------------------------------------------------ */
-/***	OLED_PutBuffer
+/***    OLED_PutBuffer
 **
-**	Parameters:
-**		InstancePtr - pointer to SPI handler and OLED data
-**		cb		- number of bytes to send/receive
-**		rgbTx	- pointer to the buffer to send
+**  Parameters:
+**      InstancePtr - pointer to SPI handler and OLED data
+**      cb      - number of bytes to send/receive
+**      rgbTx   - pointer to the buffer to send
 **
-**	Return Value:
-**		none
+**  Return Value:
+**      none
 **
-**	Errors:
-**		none
+**  Errors:
+**      none
 **
-**	Description:
-**		Send the bytes specified in rgbTx to the slave and return
-**		the bytes read from the slave in rgbRx
+**  Description:
+**      Send the bytes specified in rgbTx to the slave and return
+**      the bytes read from the slave in rgbRx
 */
 void OLED_PutBuffer(PmodOLED *InstancePtr, int cb, uint8_t *rgbTx)
 {
-	int ib;
-	/* Write/Read the data
-	*/
-	for (ib = 0; ib < cb; ib++) {
-		OLED_WriteByte(InstancePtr, *rgbTx++);
-	}
+    int ib;
+    /* Write/Read the data
+    */
+    for (ib = 0; ib < cb; ib++) {
+        OLED_WriteByte(InstancePtr, *rgbTx++);
+    }
 }
-
-/* ------------------------------------------------------------ */
-/***	Spi2PutByte
-**
-**	Parameters:
-**		bVal		- byte value to write
-**
-**	Return Value:
-**		Returns byte read
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Write/Read a byte on SPI port 2
-*/
-/*
-uint8_t Spi2PutByte(uint8_t bVal)
-	{
-	uint8_t	bRx;
-
-	bRx = spiCon.transfer(bVal);
-	
-	return bRx;
-}
-//*/
-
-/* ------------------------------------------------------------ */
-/***	ProcName
-**
-**	Parameters:
-**
-**	Return Value:
-**
-**	Errors:
-**
-**	Description:
-**
-*/
-
-/* ------------------------------------------------------------ */
 
 /************************************************************************/
 

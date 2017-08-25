@@ -33,6 +33,7 @@
 /*																		*/
 /*	07/20/2015(CristianF): created										*/
 /*	04/19/2015(TommyK): Adapted for use with Microblaze/Zynq .c designs	*/
+/*	08/25/2017(artvvb):  added OLEDrgb_sleep							*/
 /*																		*/
 /************************************************************************/
 #ifndef PMODOLEDRGB_H
@@ -44,21 +45,6 @@
 #include "xstatus.h"
 #include "xspi_l.h"
 #include "xspi.h"
-#include "xparameters.h"
-
-
-#ifdef XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ
-#include "sleep.h"
-#else
-#include "microblaze_sleep.h"
-#define usleep MB_Sleep
-#endif
-
-
-#define bool u8
-#define true 1
-#define false 0
-
 
 #define OLEDRGB_WIDTH                      96
 #define OLEDRGB_HEIGHT                     64
@@ -177,9 +163,9 @@ typedef struct{
 	u32 GPIO_addr;
 	XSpi OLEDSpi;
 
-	uint8_t* pbOledrgbFontCur;
-	uint8_t* pbOledrgbFontUser;
-	uint8_t	rgbOledrgbFontUser[OLEDRGB_CHARBYTES_USER];
+	u8* pbOledrgbFontCur;
+	u8* pbOledrgbFontUser;
+	u8	rgbOledrgbFontUser[OLEDRGB_CHARBYTES_USER];
 	int	dxcoOledrgbFontCur;
 	int	dycoOledrgbFontCur;
 	uint16_t m_FontColor, m_FontBkColor;
@@ -194,42 +180,44 @@ typedef struct{
 void OLEDrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 void OLEDrgb_end(PmodOLEDrgb* InstancePtr);
 
-void OLEDrgb_DrawPixel(PmodOLEDrgb* InstancePtr, uint8_t c, uint8_t r, uint16_t pixelColor);
-void OLEDrgb_DrawLine(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor);
-void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint16_t lineColor, bool bFill, uint16_t fillColor);
+void OLEDrgb_DrawPixel(PmodOLEDrgb* InstancePtr, u8 c, u8 r, uint16_t pixelColor);
+void OLEDrgb_DrawLine(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, uint16_t lineColor);
+void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, uint16_t lineColor, u8 bFill, uint16_t fillColor);
 void OLEDrgb_Clear(PmodOLEDrgb* InstancePtr);
-void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t *pBmp);
+void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, u8 *pBmp);
 
 void OLEDrgb_SetCursor(PmodOLEDrgb* InstancePtr, int xch, int ych);
 void OLEDrgb_GetCursor(PmodOLEDrgb* InstancePtr, int *pxch, int* pych);
-int OLEDrgb_DefUserChar(PmodOLEDrgb* InstancePtr, char ch, uint8_t * pbDef);
+int OLEDrgb_DefUserChar(PmodOLEDrgb* InstancePtr, char ch, u8 *pbDef);
 void OLEDrgb_DrawGlyph(PmodOLEDrgb* InstancePtr, char ch);
 void OLEDrgb_PutChar(PmodOLEDrgb* InstancePtr, char ch);
 void OLEDrgb_PutString(PmodOLEDrgb* InstancePtr, char * sz);
 void OLEDrgb_SetFontColor(PmodOLEDrgb* InstancePtr, uint16_t fontColor);
 void OLEDrgb_SetFontBkColor(PmodOLEDrgb* InstancePtr, uint16_t fontBkColor);
-void OLEDrgb_SetCurrentFontTable(PmodOLEDrgb* InstancePtr, uint8_t *pbFont);
-void OLEDrgb_SetCurrentUserFontTable(PmodOLEDrgb* InstancePtr, uint8_t *pbUserFont);
+void OLEDrgb_SetCurrentFontTable(PmodOLEDrgb* InstancePtr, u8 *pbFont);
+void OLEDrgb_SetCurrentUserFontTable(PmodOLEDrgb* InstancePtr, u8 *pbUserFont);
 void OLEDrgb_AdvanceCursor(PmodOLEDrgb* InstancePtr);
-void OLEDrgb_SetScrolling(PmodOLEDrgb* InstancePtr, uint8_t scrollH, uint8_t scrollV, uint8_t rowAddr, uint8_t rowNum, uint8_t timeInterval);
-void OLEDrgb_EnableScrolling(PmodOLEDrgb* InstancePtr, bool fEnable);
-void OLEDrgb_EnablePmod(PmodOLEDrgb* InstancePtr, bool fEnable);
-void OLEDrgb_EnableBackLight(PmodOLEDrgb* InstancePtr, bool fEnable);
-void OLEDrgb_Copy(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2, uint8_t c3, uint8_t r3);
-void OLEDrgb_Dim(PmodOLEDrgb* InstancePtr, uint8_t c1, uint8_t r1, uint8_t c2, uint8_t r2);
+void OLEDrgb_SetScrolling(PmodOLEDrgb* InstancePtr, u8 scrollH, u8 scrollV, u8 rowAddr, u8 rowNum, u8 timeInterval);
+void OLEDrgb_EnableScrolling(PmodOLEDrgb* InstancePtr, u8 fEnable);
+void OLEDrgb_EnablePmod(PmodOLEDrgb* InstancePtr, u8 fEnable);
+void OLEDrgb_EnableBackLight(PmodOLEDrgb* InstancePtr, u8 fEnable);
+void OLEDrgb_Copy(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, u8 c3, u8 r3);
+void OLEDrgb_Dim(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2);
 void OLEDrgb_HostInit(PmodOLEDrgb* InstancePtr);
 void OLEDrgb_HostTerm(PmodOLEDrgb* InstancePtr);
 void OLEDrgb_DevInit(PmodOLEDrgb* InstancePtr);
 void OLEDrgb_DevTerm(PmodOLEDrgb* InstancePtr);
 
 int OLEDrgb_SPIInit(XSpi *SpiInstancePtr);
-void OLEDrgb_WriteSPICommand(PmodOLEDrgb* InstancePtr, uint8_t cmd);
-void OLEDrgb_WriteSPI(PmodOLEDrgb* InstancePtr, uint8_t *pCmd, int nCmd, uint8_t *pData, int nData);
-uint16_t OLEDrgb_BuildHSV(uint8_t hue, uint8_t sat, uint8_t val);
-uint16_t OLEDrgb_BuildRGB(uint8_t R,uint8_t G,uint8_t B);
+void OLEDrgb_WriteSPICommand(PmodOLEDrgb* InstancePtr, u8 cmd);
+void OLEDrgb_WriteSPI(PmodOLEDrgb* InstancePtr, u8 *pCmd, int nCmd, u8 *pData, int nData);
+uint16_t OLEDrgb_BuildHSV(u8 hue, u8 sat, u8 val);
+uint16_t OLEDrgb_BuildRGB(u8 R, u8 G, u8 B);
 
-uint8_t OLEDrgb_ExtractRFromRGB(uint16_t wRGB);
-uint8_t OLEDrgb_ExtractGFromRGB(uint16_t wRGB);
-uint8_t OLEDrgb_ExtractBFromRGB(uint16_t wRGB);
+u8 OLEDrgb_ExtractRFromRGB(uint16_t wRGB);
+u8 OLEDrgb_ExtractGFromRGB(uint16_t wRGB);
+u8 OLEDrgb_ExtractBFromRGB(uint16_t wRGB);
+
+void OLEDrgb_sleep(u32 millis);
 
 #endif // PMODOLEDRGB_H

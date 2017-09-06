@@ -95,12 +95,12 @@ entity dvi2rgb is
       aPixelClkLckd : out std_logic; -- advanced use only; PixelClk and SerialClk stable
       
       -- Optional DDC port
-      DDC_SDA_I : in std_logic;
-      DDC_SDA_O : out std_logic;
-      DDC_SDA_T : out std_logic;
-      DDC_SCL_I : in std_logic;
-      DDC_SCL_O : out std_logic; 
-      DDC_SCL_T : out std_logic;
+      SDA_I : in std_logic;
+      SDA_O : out std_logic;
+      SDA_T : out std_logic;
+      SCL_I : in std_logic;
+      SCL_O : out std_logic; 
+      SCL_T : out std_logic;
       
       pRst : in std_logic; -- synchronous reset; will restart locking procedure
       pRst_n : in std_logic -- synchronous reset; will restart locking procedure
@@ -252,12 +252,12 @@ GenerateDDC: if kEmulateDDC generate
       port map(
          SampleClk => RefClk,
          sRst => '0',
-         aSDA_I => DDC_SDA_I,
-         aSDA_O => DDC_SDA_O,
-         aSDA_T => DDC_SDA_T,
-         aSCL_I => DDC_SCL_I,
-         aSCL_O => DDC_SCL_O,
-         aSCL_T => DDC_SCL_T);
+         aSDA_I => SDA_I,
+         aSDA_O => SDA_O,
+         aSDA_T => SDA_T,
+         aSCL_I => SCL_I,
+         aSCL_O => SCL_O,
+         aSCL_T => SCL_T);
 end generate GenerateDDC;
    
 end Behavioral;

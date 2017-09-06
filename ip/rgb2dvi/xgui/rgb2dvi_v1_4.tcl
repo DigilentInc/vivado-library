@@ -6,7 +6,7 @@ proc init_gui { IPINST } {
   ipgui::add_param $IPINST -name "kRstActiveHigh" -parent ${Page_0}
   ipgui::add_param $IPINST -name "kGenerateSerialClk" -parent ${Page_0}
   ipgui::add_param $IPINST -name "kClkPrimitive" -parent ${Page_0} -layout horizontal
-  ipgui::add_param $IPINST -name "kClkRange" -parent ${Page_0} -layout horizontal
+  ipgui::add_param $IPINST -name "kClkRange" -parent ${Page_0}
   #Adding Group
   set Invert_TMDS_lanes [ipgui::add_group $IPINST -name "Invert TMDS lanes" -parent ${Page_0} -layout horizontal]
   set_property tooltip {Use the tickboxes below to invert data or clock lanes independently on boards with the P and N sides of the pair swapped.} ${Invert_TMDS_lanes}

@@ -258,7 +258,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>503b84a4</spirit:value>
+            <spirit:value>ea0843fa</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -532,9 +532,10 @@
       <spirit:enumeration>PLL</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
-      <spirit:name>choice_pairs_c59fad91</spirit:name>
+      <spirit:name>choice_pairs_236e8b89</spirit:name>
       <spirit:enumeration spirit:text=">=120 MHz (1080p)">1</spirit:enumeration>
-      <spirit:enumeration spirit:text="&lt; 120 MHz (720p)">2</spirit:enumeration>
+      <spirit:enumeration spirit:text="&lt; 120 MHz">2</spirit:enumeration>
+      <spirit:enumeration spirit:text="&lt; 80MHz (720p)">3</spirit:enumeration>
     </spirit:choice>
   </spirit:choices>
   <spirit:fileSets>
@@ -649,7 +650,7 @@
       <spirit:file>
         <spirit:name>xgui/rgb2dvi_v1_4.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_dd565ffd</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_a3072662</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -693,7 +694,7 @@
     <spirit:parameter>
       <spirit:name>kClkRange</spirit:name>
       <spirit:displayName>TMDS clock range</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choice_pairs_c59fad91">1</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.kClkRange" spirit:choiceRef="choice_pairs_236e8b89">1</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -742,29 +743,29 @@
       <xilinx:displayName>RGB to DVI Video Encoder (Source)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>5</xilinx:coreRevision>
+      <xilinx:coreRevision>7</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.1</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.2</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:rgb2dvi:1.3</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2017-08-21T14:47:00Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2017-09-06T11:41:09Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="xilinx.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.0_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo/ip/rgb2dvi_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.1_ARCHIVE_LOCATION">C:/Users/Elod/Documents/Vivado_Projects/dgl_repo</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.2_ARCHIVE_LOCATION">D:/vivado-library/ip/rgb2dvi_v1_2</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.3_ARCHIVE_LOCATION">c:/git/vivado-library/ip/rgb2dvi</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.4_ARCHIVE_LOCATION">c:/git/sword/common-repo/vivado-library/ip/rgb2dvi</xilinx:tag>
+        <xilinx:tag xilinx:name="digilentinc.com:ip:rgb2dvi:1.4_ARCHIVE_LOCATION">c:/git/vivado-library/ip/rgb2dvi</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="264d38a0"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="29ddb93d"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="9f1f34ba"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="16681a3c"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="5c0772e1"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="cee46adb"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="d6994f3e"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

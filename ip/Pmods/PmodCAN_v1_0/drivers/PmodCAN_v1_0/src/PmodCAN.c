@@ -361,7 +361,7 @@ u8 CAN_GetRegisterBits(PmodCAN* InstancePtr, u8 bRegisterAddress, u8 bMask)
 */
 void CAN_ModifyReg(PmodCAN *InstancePtr, u8 reg, u8 mask, u8 value)
 {
-    u8 buf[4] = {MODIFY_REG_CMD, reg, mask, value};
+    u8 buf[4] = {CAN_MODIFY_REG_CMD, reg, mask, value};
     XSpi_Transfer(&InstancePtr->CANSpi, buf, NULL, 4);
 }
 
@@ -393,7 +393,7 @@ void CAN_WriteReg(PmodCAN *InstancePtr, u8 reg, u8 *data, u32 nData)
 {
     u8 buf[nData + 2];
     int i;
-    buf[0] = WRITE_REG_CMD;
+    buf[0] = CAN_WRITE_REG_CMD;
     buf[1] = reg;
     for (i=0; i<nData; i++) buf[i+2] = data[i];
     XSpi_Transfer(&InstancePtr->CANSpi, buf, NULL, nData+2);
@@ -426,7 +426,7 @@ void CAN_WriteReg(PmodCAN *InstancePtr, u8 reg, u8 *data, u32 nData)
 void CAN_ClearReg(PmodCAN *InstancePtr, u8 reg, u32 nData)
 {
     u8 buf[nData + 2];
-    buf[0] = WRITE_REG_CMD;
+    buf[0] = CAN_WRITE_REG_CMD;
     buf[1] = reg;
     XSpi_Transfer(&InstancePtr->CANSpi, buf, NULL, nData+2);
 }
@@ -459,7 +459,7 @@ void CAN_LoadTxBuffer(PmodCAN *InstancePtr, u8 start_addr, u8 *data, u32 nData)
 {
     u8 buf[nData + 1];
     u32 i;
-    buf[0] = LOADBUF_CMD | start_addr;
+    buf[0] = CAN_LOADBUF_CMD | start_addr;
     for (i=0; i<nData; i++)
         buf[i + 1] = data[i];
     XSpi_Transfer(&InstancePtr->CANSpi, buf, NULL, nData + 1);
@@ -489,7 +489,7 @@ void CAN_LoadTxBuffer(PmodCAN *InstancePtr, u8 start_addr, u8 *data, u32 nData)
 */
 void CAN_RequestToSend(PmodCAN *InstancePtr, u8 mask)
 {
-    u8 buf[1] = {RTS_CMD | mask};
+    u8 buf[1] = {CAN_RTS_CMD | mask};
     XSpi_Transfer(&InstancePtr->CANSpi, buf, NULL, 1);
 }
 
@@ -520,7 +520,7 @@ void CAN_ReadRxBuffer(PmodCAN *InstancePtr, u8 start_addr, u8 *data, u32 nData)
 {
     u8 buf[nData + 1];
     u32 i;
-    buf[0] = READBUF_CMD | start_addr;
+    buf[0] = CAN_READBUF_CMD | start_addr;
     XSpi_Transfer(&InstancePtr->CANSpi, buf, buf, nData + 1);
     for (i=0; i<nData; i++)
         data[i] = buf[i + 1];
@@ -554,7 +554,7 @@ void CAN_ReadReg(PmodCAN *InstancePtr, u8 reg, u8 *data, u32 nData)
 {
     u8 buf[nData + 2];
     int i;
-    buf[0] = READ_REG_CMD;
+    buf[0] = CAN_READ_REG_CMD;
     buf[1] = reg;
     XSpi_Transfer(&InstancePtr->CANSpi, buf, buf, nData+2);
     for (i=0; i<nData; i++)
@@ -585,7 +585,7 @@ void CAN_ReadReg(PmodCAN *InstancePtr, u8 reg, u8 *data, u32 nData)
 */
 u8 CAN_ReadStatus(PmodCAN *InstancePtr)
 {
-    u8 buf[2] = {READSTATUS_CMD, 0x00};
+    u8 buf[2] = {CAN_READSTATUS_CMD, 0x00};
     XSpi_Transfer(&InstancePtr->CANSpi, buf, buf, 2);
     return buf[1];
 }
@@ -614,7 +614,7 @@ u8 CAN_ReadStatus(PmodCAN *InstancePtr)
 */
 u8 CAN_RxStatus(PmodCAN *InstancePtr)
 {
-    u8 buf[2] = {READSTATUS_CMD, 0x00};
+    u8 buf[2] = {CAN_READSTATUS_CMD, 0x00};
     XSpi_Transfer(&InstancePtr->CANSpi, buf, buf, 2);
     return buf[1];
 }
@@ -645,8 +645,8 @@ void CAN_Configure(PmodCAN *InstancePtr, u8 mode)
 {
     u8 CNF[3] = {0x86, 0xFB, 0x41};
 
-    CAN_ModifyReg(InstancePtr, CANCTRL_REG_ADDR, CAN_CANCTRL_MODE_MASK, CAN_ModeConfiguration);// Set CAN control mode to configuration
-    CAN_WriteReg(InstancePtr, CNF3_REG_ADDR, CNF, 3);//Set config rate and clock for CAN
+    CAN_ModifyReg(InstancePtr, CAN_CANCTRL_REG_ADDR, CAN_CAN_CANCTRL_MODE_MASK, CAN_ModeConfiguration);// Set CAN control mode to configuration
+    CAN_WriteReg(InstancePtr, CAN_CNF3_REG_ADDR, CNF, 3);//Set config rate and clock for CAN
 
     CAN_ClearReg(InstancePtr, 0x00, 12);//Initiate can buffer filters and registers
     CAN_ClearReg(InstancePtr, 0x10, 12);
@@ -655,9 +655,9 @@ void CAN_Configure(PmodCAN *InstancePtr, u8 mode)
     CAN_ClearReg(InstancePtr, 0x40, 14);
     CAN_ClearReg(InstancePtr, 0x50, 14);
 
-    CAN_ModifyReg(InstancePtr, RXB0CTRL_REG_ADDR, 0x64, 0x60);//Set the CAN mode for any message type
+    CAN_ModifyReg(InstancePtr, CAN_RXB0CTRL_REG_ADDR, 0x64, 0x60);//Set the CAN mode for any message type
 
-    CAN_ModifyReg(InstancePtr, CANCTRL_REG_ADDR, CAN_CANCTRL_MODE_MASK, mode << CAN_CANCTRL_MODE_BIT);//Set CAN control mode to selected mode (exit configuration)
+    CAN_ModifyReg(InstancePtr, CAN_CANCTRL_REG_ADDR, CAN_CAN_CANCTRL_MODE_MASK, mode << CAN_CANCTRL_MODE_BIT);//Set CAN control mode to selected mode (exit configuration)
 }
 
 
@@ -693,16 +693,16 @@ XStatus CAN_SendMessage(PmodCAN *InstancePtr, CAN_Message message, CAN_TxBuffer 
     switch (target)
     {
     case CAN_Tx0:
-        rts_mask = RTS_TXB0_MASK;
-        load_start_addr = LOADBUF_TXB0SIDH;
+        rts_mask = CAN_RTS_TXB0_MASK;
+        load_start_addr = CAN_LOADBUF_TXB0SIDH;
         break;
     case CAN_Tx1:
-        rts_mask = RTS_TXB1_MASK;
-        load_start_addr = LOADBUF_TXB1SIDH;
+        rts_mask = CAN_RTS_TXB1_MASK;
+        load_start_addr = CAN_LOADBUF_TXB1SIDH;
         break;
     case CAN_Tx2:
-        rts_mask = RTS_TXB2_MASK;
-        load_start_addr = LOADBUF_TXB2SIDH;
+        rts_mask = CAN_RTS_TXB2_MASK;
+        load_start_addr = CAN_LOADBUF_TXB2SIDH;
         break;
     default: return XST_FAILURE;
     }
@@ -763,10 +763,10 @@ XStatus CAN_ReceiveMessage(PmodCAN *InstancePtr, CAN_Message *MessagePtr, CAN_Rx
     switch(target)
     {
     case CAN_Rx0:
-        read_start_addr = READBUF_RXB0SIDH;
+        read_start_addr = CAN_READBUF_RXB0SIDH;
         break;
     case CAN_Rx1:
-        read_start_addr = READBUF_RXB1SIDH;
+        read_start_addr = CAN_READBUF_RXB1SIDH;
         break;
     default: return XST_FAILURE;
     }

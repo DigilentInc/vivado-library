@@ -1,6 +1,6 @@
 /*************************************************************************/
 /*                                                                       */
-/*     main.c --     PmodCAN Example Projects                            */
+/*     LoopBack.c --     PmodCAN Example Projects                        */
 /*                                                                       */
 /*************************************************************************/
 /*     Author: Arthur Browm                                              */
@@ -9,13 +9,15 @@
 /*  File Description:                                                    */
 /*                                                                       */
 /*  This demo sends data through GPIO/SPI to the PmodCAN and receives    */
-/*  it through the PmodCAN. Loop back function                            */
+/*  it through the PmodCAN. Sends through uart as well.                  */
+/*  Loop back function                                                   */
 /*                                                                       */
 /*************************************************************************/
 /*  Revision History:                                                    */
 /*                                                                       */
 /*            8/30/2017(ArtVVB): Created                                 */
 /* 			  9/1/2017(jPeyron): formatted Validated                     */
+/*            9/6/2017(jPeyron): Added RX and TX demos                   */
 /*                                                                       */
 /*************************************************************************/
 /*************************************************************************/
@@ -126,31 +128,32 @@ void DemoRun()
         do {
             status = CAN_ReadStatus(&myDevice);
             xil_printf("Waiting to send\r\n");
-        } while ((status & STATUS_TX0REQ_MASK) != 0); // wait for buffer 0 to be clear
+        } while ((status & CAN_STATUS_TX0REQ_MASK) != 0); // wait for buffer 0 to be clear
 
         TxMessage = DemoComposeMessage();
 
         xil_printf("sending ");
         DemoPrintMessage(TxMessage);
 
-        CAN_ModifyReg(&myDevice, CANINTF_REG_ADDR, CANINTF_TX0IF_MASK, 0);
+        CAN_ModifyReg(&myDevice, CAN_CANINTF_REG_ADDR, CAN_CANINTF_TX0IF_MASK, 0);
 
         xil_printf("requesting to transmit message through transmit buffer 0\r\n");
 
         CAN_SendMessage(&myDevice, TxMessage, CAN_Tx0);
 
-        CAN_ModifyReg(&myDevice, CANINTF_REG_ADDR, CANINTF_TX0IF_MASK, 0);
+        CAN_ModifyReg(&myDevice, CAN_CANINTF_REG_ADDR, CAN_CANINTF_TX0IF_MASK, 0);
 
         do {
             status = CAN_ReadStatus(&myDevice);
             xil_printf("Waiting to complete transmission\r\n");
-        } while ((status & STATUS_TX0IF_MASK) != 0); // wait for message to transmit successfully
+        } while ((status & CAN_STATUS_TX0IF_MASK
+		) != 0); // wait for message to transmit successfully
 
 
         do {
             status = CAN_ReadStatus(&myDevice);
             xil_printf("Waiting to receive\r\n");
-        } while ((status & STATUS_RX0IF_MASK) != 0 && (status & STATUS_RX1IF_MASK) != 0);
+        } while ((status & CAN_STATUS_RX0IF_MASK) != 0 && (status & CAN_STATUS_RX1IF_MASK) != 0);
 
         switch(status & 0x03)
         {
@@ -158,12 +161,12 @@ void DemoRun()
         case 0b11:
             xil_printf("fetching message from receive buffer 0\r\n");
             target = CAN_Rx0;
-            rx_int_mask = CANINTF_RX0IF_MASK;
+            rx_int_mask = CAN_CANINTF_RX0IF_MASK;
             break;
         case 0b10:
             xil_printf("fetching message from receive buffer 1\r\n");
             target = CAN_Rx1;
-            rx_int_mask = CANINTF_RX1IF_MASK;
+            rx_int_mask = CAN_CANINTF_RX1IF_MASK;
             break;
         default:
             xil_printf("Error, message not received\r\n");
@@ -172,7 +175,7 @@ void DemoRun()
 
         CAN_ReceiveMessage(&myDevice, &RxMessage, target);
 
-        CAN_ModifyReg(&myDevice, CANINTF_REG_ADDR, rx_int_mask, 0);
+        CAN_ModifyReg(&myDevice, CAN_CANINTF_REG_ADDR, rx_int_mask, 0);
 
         xil_printf("received ");
         DemoPrintMessage(RxMessage);

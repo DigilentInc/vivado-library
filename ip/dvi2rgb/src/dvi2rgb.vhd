@@ -67,7 +67,7 @@ entity dvi2rgb is
       kRstActiveHigh : boolean := true; --true, if active-high; false, if active-low
       kAddBUFG : boolean := true; --true, if PixelClk should be re-buffered with BUFG 
       kClkRange : natural := 2;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)
-      kEdidFileName : string := "900p_edid.data";  -- Select EDID file to use
+      kEdidFileName : string := "dgl_720p_cea.data";  -- Select EDID file to use
       -- 7-series specific
       kIDLY_TapValuePs : natural := 78; --delay in ps per tap
       kIDLY_TapWidth : natural := 5); --number of bits for IDELAYE2 tap counter   
@@ -241,12 +241,12 @@ end generate DontGenerateBUFG;
 -- Optional DDC EEPROM Display Data Channel - Bi-directional (DDC2B)
 -- The EDID will be loaded from the file specified below in kInitFileName.
 ----------------------------------------------------------------------------------
-GenerateDDC: if kEmulateDDC generate	
+GenerateDDC: if kEmulateDDC generate
    DDC_EEPROM: entity work.EEPROM_8b
       generic map (
          kSampleClkFreqInMHz => 200,
          kSlaveAddress => "1010000",
-         kAddrBits => 7, -- 128 byte EDID 1.x data
+         kAddrBits => 8, -- 256 byte EDID 1.x data
          kWritable => false,
          kInitFileName => kEdidFileName) -- name of file containing init values
       port map(

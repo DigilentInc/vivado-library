@@ -378,7 +378,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>7da12794</spirit:value>
+            <spirit:value>55afef4c</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -394,7 +394,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>49ff181d</spirit:value>
+            <spirit:value>37fd2443</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -826,16 +826,16 @@
       <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
+      <spirit:name>choice_pairs_6203f2c8</spirit:name>
+      <spirit:enumeration spirit:text="1920x1080">dgl_1080p_cea.data</spirit:enumeration>
+      <spirit:enumeration spirit:text="1280x1024">dgl_1280_1024_cea.data</spirit:enumeration>
+      <spirit:enumeration spirit:text="1280x720">dgl_720p_cea.data</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
       <spirit:name>choice_pairs_d63e43ca</spirit:name>
       <spirit:enumeration spirit:text=">=120 MHz (1080p)">1</spirit:enumeration>
       <spirit:enumeration spirit:text="&lt; 120 MHz">2</spirit:enumeration>
       <spirit:enumeration spirit:text="&lt; 80 MHz (720p)">3</spirit:enumeration>
-    </spirit:choice>
-    <spirit:choice>
-      <spirit:name>choice_pairs_fcc30d0e</spirit:name>
-      <spirit:enumeration spirit:text="1280x720">dgl_720p_cea.data</spirit:enumeration>
-      <spirit:enumeration spirit:text="1920x1080">dgl_1080p_cea.data</spirit:enumeration>
-      <spirit:enumeration spirit:text="1280x1024">dgl_1280_1024_cea.data</spirit:enumeration>
     </spirit:choice>
   </spirit:choices>
   <spirit:fileSets>
@@ -1076,7 +1076,7 @@
     <spirit:parameter>
       <spirit:name>kEdidFileName</spirit:name>
       <spirit:displayName>Preferred resolution</spirit:displayName>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.kEdidFileName" spirit:choiceRef="choice_pairs_fcc30d0e">dgl_720p_cea.data</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.kEdidFileName" spirit:choiceRef="choice_pairs_6203f2c8">dgl_720p_cea.data</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -1107,7 +1107,7 @@
       <xilinx:displayName>DVI to RGB Video Decoder (Sink)</xilinx:displayName>
       <xilinx:vendorDisplayName>Digilent, Inc.</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.digilentinc.com</xilinx:vendorURL>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.3</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.4</xilinx:canUpgradeFrom>
@@ -1115,7 +1115,7 @@
         <xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.6</xilinx:canUpgradeFrom>
         <xilinx:canUpgradeFrom>digilentinc.com:ip:dvi2rgb:1.7</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2017-09-07T14:12:38Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2017-09-07T16:18:58Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.6_ARCHIVE_LOCATION">c:/git/xcam/common-repo/vivado-library/ip/dvi2rgb_v1_7</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:ip:dvi2rgb:1.7_ARCHIVE_LOCATION">c:/git/vivado-library/ip/dvi2rgb_v1_7</xilinx:tag>
@@ -1125,10 +1125,10 @@
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="5addb80b"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="310cf639"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="d5c6a032"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="33448e46"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="0990aa5e"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="44e2c5bf"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="917ae467"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

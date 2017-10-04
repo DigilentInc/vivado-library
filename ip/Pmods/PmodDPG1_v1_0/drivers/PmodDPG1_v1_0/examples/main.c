@@ -1,110 +1,166 @@
+/******************************************************************************/
+/*                                                                            */
+/* main.c -- Example program using the PmodDPG1 IP                            */
+/*                                                                            */
+/******************************************************************************/
+/* Author: Jon Peyron                                                         */
+/*                                                                            */
+/******************************************************************************/
+/* File Description:                                                          */
+/*                                                                            */
+/* This demo continuously the PmodDPG1 for pressure measurements and prints   */
+/* the data in 6 different units (kPa, atm, psi, inH2O, cmH2O, and mmHg).     */
+/*                                                                            */
+/******************************************************************************/
+/* Revision History:                                                          */
+/*                                                                            */
+/*    08/19/2016(jpeyron):  Created                                           */
+/*    09/29/2017(atangzwj): Validated for Vivado 2015.4                       */
+/*                                                                            */
+/******************************************************************************/
+
+/************ Include Files ************/
 
 #include "PmodDPG1.h"
-#include "xparameters.h"
 #include "xil_cache.h"
-#include <stdio.h>
-#include "platform.h"
 #include "xil_printf.h"
-#ifdef XPAR_MICROBLAZE_ID
+#include "xparameters.h"
+
+#ifdef __MICROBLAZE__
 #include "microblaze_sleep.h"
+#else
+#include "sleep.h"
 #endif
 
-void DemoInitialize(); // initializes
-void DemoRun();// reads the data and prints the integer and the analog floating point number
+
+/************ Macro Definitions ************/
+
+// Pressure unit types
+#define KPA   DPG1_KPA_PRESSURE_TYPE
+#define ATM   DPG1_ATM_PRESSURE_TYPE
+#define PSI   DPG1_PSI_PRESSURE_TYPE
+#define INH2O DPG1_INH2O_PRESSURE_TYPE
+#define CMH2O DPG1_CMH2O_PRESSURE_TYPE
+#define MMHG  DPG1_MMHG_PRESSURE_TYPE
+
+
+/************ Function Prototypes ************/
+
+void DemoInitialize();
+
+void DemoRun();
+
+void DemoCleanup();
+
+void EnableCaches();
+
+void DisableCaches();
+
+
+/************ Global Variables ************/
 
 PmodDPG1 myDevice;
 
-// pressure unit types
-#define KPA		0
-#define ATM		1
-#define PSI		2
-#define INH20	3
-#define CMH20	4
-#define MMHG	5
 
-int whole; // used to get the whole number for the float
-int not_whole;// used to get the non whole number for the float
+/************ Function Definitions ************/
 
-int main(void)
-{
-	Xil_ICacheEnable();
-	Xil_DCacheEnable();
-
-	DemoInitialize();
-	DemoRun();
-	return 0;
+int main(void) {
+   DemoInitialize();
+   DemoRun();
+   DemoCleanup();
+   return 0;
 }
 
-void DemoInitialize()
-{
-	init_platform();
+void DemoInitialize() {
+   EnableCaches();
 
-    DPG1_begin(&myDevice, XPAR_PMODDPG1_0_AXI_LITE_SPI_BASEADDR);
+   DPG1_begin(&myDevice, XPAR_PMODDPG1_0_AXI_LITE_SPI_BASEADDR);
 }
 
+void DemoRun() {
+   xil_printf("starting...\n\r");
 
-void DemoRun()
-{
+   while (1) {
+      int rawData;
+      double pressureValue;
+      DPG1_readData(&myDevice);
 
+      // read raw data from PmodDPG1 and print it
+      rawData = (int) myDevice.data;
+      xil_printf("Raw data: %d \n\r", rawData); // format text for display
 
-	xil_printf("starting...\n\r");
+      int whole; // used to get the whole number for the float
+      int not_whole;// used to get the non whole number for the float
 
-    while(1)
-    {
+      // convert raw data into units of kPa and print it
+      pressureValue = DPG1_GetPressure(KPA, &myDevice);
+      whole = pressureValue; // get whole number part of the physical value
+      not_whole = (pressureValue - whole) * 1000000; // get fractional part
+      xil_printf("kPa: %d.%06d \n\r", whole, not_whole); // format and print
 
-		int rawData;
-		double pressureValue;
-		DPG1_readData(&myDevice);
+      // convert raw data into units of atm and print it
+      pressureValue = DPG1_GetPressure(ATM, &myDevice);
+      whole = pressureValue;
+      not_whole = (pressureValue - whole) * 1000000;
+      xil_printf("atm: %d.%06d \n\r", whole, not_whole);
 
-		// read raw data from PmodDPG1 and print it
-		rawData = (int)myDevice.data ;
-		xil_printf("Raw data: %d \n\r", rawData); // format text to be displayed
+      // convert raw data into units of and print it
+      pressureValue = DPG1_GetPressure(PSI, &myDevice);
+      whole = pressureValue;
+      not_whole = (pressureValue - whole) * 1000000;
+      xil_printf("psi: %d.%06d \n\r", whole, not_whole);
 
-		// convert raw data into units of kPa and print it
-		pressureValue = DPG1_GetPressure(KPA,&myDevice);
-		whole = pressureValue; // getting whole number for the physical value
-		not_whole= (pressureValue - whole) * 1000000; // getting the non whole number of the physical value
-		xil_printf("kPa: %d.%06d \n\r", whole, not_whole); // format text to be displayed
+      // convert raw data into units of and print it
+      pressureValue = DPG1_GetPressure(INH2O,&myDevice);
+      whole = pressureValue;
+      not_whole = (pressureValue - whole) * 1000000;
+      xil_printf("inH20: %d.%06d \n\r", whole, not_whole);
 
-		// convert raw data into units of atm and print it
-		pressureValue = DPG1_GetPressure(ATM, &myDevice);
-		whole = pressureValue; // getting whole number for the physical value
-		not_whole= (pressureValue - whole) * 1000000; // getting the non whole number of the physical value
-		xil_printf("atm: %d.%06d \n\r", whole, not_whole); // format text to be displayed
+      // convert raw data into units of and print it
+      pressureValue = DPG1_GetPressure(CMH2O,&myDevice);
+      whole = pressureValue;
+      not_whole = (pressureValue - whole) * 1000000;
+      xil_printf("cmH20: %d.%06d \n\r", whole, not_whole);
 
-		// convert raw data into units of and print it
-		pressureValue = DPG1_GetPressure(PSI, &myDevice);
-		whole = pressureValue; // getting whole number for the physical value
-		not_whole= (pressureValue - whole) * 1000000; // getting the non whole number of the physical value
-		xil_printf("psi: %d.%06d \n\r", whole, not_whole); // format text to be displayed
+      // convert raw data into units of and print it
+      pressureValue = DPG1_GetPressure(MMHG, &myDevice);
+      whole = pressureValue;
+      not_whole = (pressureValue - whole) * 1000000;
+      xil_printf("mmHg: %d.%06d \n\r", whole, not_whole);
 
-		// convert raw data into units of and print it
-		pressureValue = DPG1_GetPressure(INH20,&myDevice);
-		whole = pressureValue; // getting whole number for the physical value
-		not_whole= (pressureValue - whole) * 1000000; // getting the non whole number of the physical value
-		xil_printf("inH20: %d.%06d \n\r", whole, not_whole); // format text to be displayed
+      xil_printf("\n\r\n\r");
 
-		// convert raw data into units of and print it
-		pressureValue = DPG1_GetPressure(CMH20,&myDevice );
-		whole = pressureValue; // getting whole number for the physical value
-		not_whole= (pressureValue - whole) * 1000000; // getting the non whole number of the physical value
-		xil_printf("cmH20: %d.%06d \n\r", whole, not_whole); // format text to be displayed
-
-		// convert raw data into units of and print it
-		pressureValue = DPG1_GetPressure(MMHG, &myDevice);
-		whole = pressureValue; // getting whole number for the physical value
-		not_whole= (pressureValue - whole) * 1000000; // getting the non whole number of the physical value
-		xil_printf("mmHg: %d.%06d \n\r", whole, not_whole); // format text to be displayed
-
-		xil_printf("\n\r\n\r");
-
-#ifdef XPAR_MICROBLAZE_ID
-		MB_Sleep(1200);
+#ifdef __MICROBLAZE__
+      MB_Sleep(1200);
 #else
-		sleep(2);
+      sleep(2);
 #endif
-    }
+   }
+}
 
-    DPG1_end(&myDevice);
-    cleanup_platform();
+void DemoCleanup() {
+   DPG1_end(&myDevice);
+   DisableCaches();
+}
+
+void EnableCaches() {
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+   Xil_DCacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+   Xil_ICacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches() {
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+   Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+   Xil_ICacheDisable();
+#endif
+#endif
 }

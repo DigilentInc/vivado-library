@@ -1,85 +1,129 @@
-#include "xparameters.h"
+/******************************************************************************/
+/*                                                                            */
+/* main.c -- Example program using the PmodBT2 IP                            */
+/*                                                                            */
+/******************************************************************************/
+/* Author: Arthur Brown                                                       */
+/*                                                                            */
+/******************************************************************************/
+/* File Description:                                                          */
+/*                                                                            */
+/* This demo continuously polls the Pmod BT2 and host development board's     */
+/* UART connections and forwards each character from each to the other.       */
+/*                                                                            */
+/******************************************************************************/
+/* Revision History:                                                          */
+/*                                                                            */
+/*    10/04/2017(artvvb):  Created                                            */
+/*                                                                            */
+/******************************************************************************/
+
 #include "xil_cache.h"
+#include "xparameters.h"
 #include "PmodBT2.h"
+
+//required definitions for sending & receiving data over the host board's UART port
+#ifdef __MICROBLAZE__
+#include "xuartlite.h"
+typedef XUartLite SysUart;
+#define SysUart_Send            XUartLite_Send
+#define SysUart_Recv            XUartLite_Recv
+#define SYS_UART_DEVICE_ID      XPAR_AXI_UARTLITE_0_DEVICE_ID
+#define BT2_UART_AXI_CLOCK_FREQ XPAR_CPU_M_AXI_DP_FREQ_HZ
+#else
+#include "xuartps.h"
+typedef XUartPs SysUart;
+#define SysUart_Send            XUartPs_Send
+#define SysUart_Recv            XUartPs_Recv
+#define SYS_UART_DEVICE_ID      XPAR_PS7_UART_1_DEVICE_ID
+#define BT2_UART_AXI_CLOCK_FREQ 100000000
+#endif
+
+PmodBT2 myDevice;
+SysUart myUart;
 
 void DemoInitialize();
 void DemoRun();
-void PolledMode();
-void IntMode();
-void sent(int bytes);
-void recvd(int bytes);
-void timeout(int bytes);
+void SysUartInit();
+void EnableCaches();
+void DisableCaches();
 
-
-PmodBT2 myDevice;
-
-
-int main(void)
+int main()
 {
-	Xil_ICacheEnable();
-	Xil_DCacheEnable();
-
-	DemoInitialize();
-	DemoRun();
-	return 0;
+    DemoInitialize();
+    DemoRun();
+    DisableCaches();
+    return XST_SUCCESS;
 }
 
 void DemoInitialize()
 {
-	xil_printf("Starting...\r\n");
-	BT2_begin(&myDevice, XPAR_PMODBT2_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODBT2_0_AXI_LITE_UART_BASEADDR);
+    EnableCaches();
+    SysUartInit();
+    BT2_Begin (
+        &myDevice,
+        XPAR_PMODBT2_0_AXI_LITE_GPIO_BASEADDR,
+        XPAR_PMODBT2_0_AXI_LITE_UART_BASEADDR,
+        BT2_UART_AXI_CLOCK_FREQ,
+        115200
+    );
 }
-
 
 void DemoRun()
 {
-#ifndef NO_IRPT
-	IntMode();
+    u8 buf[1];
+    int n;
+
+    xil_printf("Initialized PmodBT2 Demo, received data will be echoed here, type to send data\r\n");
+
+    while(1) {
+        //echo all characters received from both BT2 and terminal to terminal
+        //forward all characters received from terminal to BT2
+        n = SysUart_Recv(&myUart, buf, 1);
+        if (n != 0) {
+            SysUart_Send(&myUart, buf, 1);
+            BT2_SendData(&myDevice, buf, 1);
+        }
+
+        n = BT2_RecvData(&myDevice, buf, 1);
+        if (n != 0) {
+            SysUart_Send(&myUart, buf, 1);
+        }
+    }
+}
+
+//initialize the system uart device, AXI uartlite for microblaze, uartps for Zynq
+void SysUartInit()
+{
+#ifdef __MICROBLAZE__
+    XUartLite_Initialize(&myUart, SYS_UART_DEVICE_ID);
 #else
-	PolledMode();
+    XUartPs_Config *myUartCfgPtr;
+    myUartCfgPtr = XUartPs_LookupConfig(SYS_UART_DEVICE_ID);
+    XUartPs_CfgInitialize(&myUart, myUartCfgPtr, myUartCfgPtr->BaseAddress);
 #endif
 }
 
-void PolledMode(){
-	int len;
-	while(1){
-		//Polled mode, if no interrupts
-		if((len=BT2_getData(&myDevice, 600))){
-			//echo back to sender
-			BT2_sendData(&myDevice, myDevice.recv, len);
-		}
-	}
-}
-
-void IntMode(){
-
-#ifndef NO_IRPT //If there are interrupts
-#ifdef XPAR_MICROBLAZE_ID
-		BT2_SetupInterruptSystem(&myDevice, XPAR_PMODBT2_0_DEVICE_ID, XPAR_AXI_INTC_0_PMODBT2_0_BT2_UART_INTERRUPT_INTR, recvd, sent, timeout);
-#else
-		BT2_SetupInterruptSystem(&myDevice, XPAR_PS7_SCUGIC_0_DEVICE_ID, XPAR_FABRIC_PMODBT2_0_BT2_UART_INTERRUPT_INTR, recvd, sent, timeout);//Setup interrupts, Zynq
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
 #endif
 #endif
-		XUartNs550_Recv(&myDevice.BT2Uart, (u8*)myDevice.recv, 600);//Wait for new sentence
-
-	while(1){}
 }
 
-
-void sent(int bytes){
-	xil_printf("%d bytes sent\r\n", bytes);
-}
-
-void recvd(int bytes){
-	XUartNs550_Recv(&myDevice.BT2Uart, (u8*)myDevice.recv, 600);//Wait for new sentence
-	xil_printf("RDATA: %s \r\n", myDevice.recv);
-}
-
-void timeout(int bytes){
-	xil_printf("Timeout: %d bytes received so far\r\n", bytes);
-	if(myDevice.recv[bytes-1]=='\n'){
-		myDevice.recv[bytes]='\0';
-		XUartNs550_Send(&myDevice.BT2Uart, (u8*)&myDevice.recv, bytes);
-		XUartNs550_Recv(&myDevice.BT2Uart, (u8*)&myDevice.recv, 600);//Wait for new sentence
-	}
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheDisable();
+#endif
+#endif
 }

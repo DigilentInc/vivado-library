@@ -887,7 +887,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>2a23500b</spirit:value>
+            <spirit:value>7885f72f</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -912,7 +912,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>4f2e8964</spirit:value>
+            <spirit:value>d36f913e</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -940,7 +940,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>ae1daae8</spirit:value>
+            <spirit:value>010927f3</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -954,7 +954,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>142ef21f</spirit:value>
+            <spirit:value>1b4224ac</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1853,7 +1853,7 @@
       <spirit:file>
         <spirit:name>src/PmodGPS.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_b90ce24d</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_a9a07c38</spirit:userFileType>
         <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -2099,15 +2099,15 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodGPS_v1_1</xilinx:displayName>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2016-04-15T02:11:07Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>12</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2017-10-13T20:13:55Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodGP:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:IP:PmodGP:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:IP:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:IP:PmodGPS:1.1_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
+        <xilinx:tag xilinx:name="digilentinc.com:IP:PmodGPS:1.1_ARCHIVE_LOCATION">C:/Users/user/Desktop/vivLib/ip/Pmods/PmodGPS_v1_1</xilinx:tag>
       </xilinx:tags>
       <xilinx:configElementInfos>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_LITE_GPIO.ADDR_WIDTH" xilinx:valueSource="user"/>
@@ -2163,7 +2163,7 @@
       <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="e9e6f907"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="cd480073"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="670feef0"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="67e5fa68"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="722c7981"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="b17d4ed1"/>
     </xilinx:packagingInfo>

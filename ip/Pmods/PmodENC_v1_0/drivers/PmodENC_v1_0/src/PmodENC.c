@@ -16,7 +16,8 @@
 /*                                                                       */
 /*	04/19/2016(TommyK): Created 								 	     */
 /*	06/10/2016(ArtVVB): Adapted for PmodENC								 */
-/*	02/14/2017(ArtVVB): Validated										 */
+/*  02/13/2017(ArtVVB): Validated for 2015.4                   			*/
+/*  10/25/2017(ArtVVB): Validated for 2016.4                   			*/
 /*																		 */
 /*************************************************************************/
 

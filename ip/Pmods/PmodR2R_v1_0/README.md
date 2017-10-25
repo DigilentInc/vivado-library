@@ -1,4 +1,4 @@
-PmodDPG1 IP
+PmodR2R IP
 ==============
 
 Using the IP in Vivado

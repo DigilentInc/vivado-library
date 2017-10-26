@@ -25,20 +25,14 @@
 #include "PmodTC1.h"
 #include "xparameters.h"
 #include "xil_cache.h"
-#include "xil_printf.h"
-#ifdef __MICROBLAZE__
-	#include "microblaze_sleep.h"
-	//(deprecated in Vivado 2016.4)
-#else
-	#include "sleep.h"
-#endif
+#include "stdio.h"
+#include "sleep.h"
 
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
 void EnableCaches();
 void DisableCaches();
-void DemoSleep(int millis);
 
 PmodTC1 myDevice;
 
@@ -60,19 +54,14 @@ void DemoInitialize()
 void DemoRun()
 {
 	double celsius, fahrenheit;
-	xil_printf("Starting Pmod TC1 Demo...\n\r");
+	printf("Starting Pmod TC1 Demo...\n\r");
 
     while(1)
     {
     	celsius = TC1_getTemp(&myDevice);
     	fahrenheit = TC1_tempC2F(celsius);
-		xil_printf("Temperature: %d.%d deg F   %d.%d deg C\n\r",
-			(int)(fahrenheit),
-			(int)(fahrenheit*100)%100,
-			(int)(celsius),
-			(int)(celsius*100)%100
-		);
-		DemoSleep(500);
+		printf("Temperature: %f deg F   %f deg C\n\r", (fahrenheit), (celsius) );
+		usleep(500000);
     }
 }
 
@@ -81,15 +70,6 @@ void DemoCleanup()
 {
     TC1_end(&myDevice);
 	DisableCaches();
-}
-
-void DemoSleep(int millis)
-{
-#ifdef __MICROBLAZE__
-	MB_Sleep(millis);
-#else
-	usleep(1000 * millis);//delay for param microseconds
-#endif
 }
 
 void EnableCaches()

@@ -16,21 +16,17 @@
 /*                                                                            */
 /*    08/19/2016(jpeyron):  Created                                           */
 /*    09/29/2017(atangzwj): Validated for Vivado 2015.4                       */
+/*    10/20/2017(atangzwj): Validated for Vivado 2016.4                       */
 /*                                                                            */
 /******************************************************************************/
 
 /************ Include Files ************/
 
 #include "PmodDPG1.h"
+#include "sleep.h"
 #include "xil_cache.h"
 #include "xil_printf.h"
 #include "xparameters.h"
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
-#include "sleep.h"
-#endif
 
 
 /************ Macro Definitions ************/
@@ -130,11 +126,7 @@ void DemoRun() {
 
       xil_printf("\n\r\n\r");
 
-#ifdef __MICROBLAZE__
-      MB_Sleep(1200);
-#else
-      sleep(2);
-#endif
+      sleep(1);
    }
 }
 

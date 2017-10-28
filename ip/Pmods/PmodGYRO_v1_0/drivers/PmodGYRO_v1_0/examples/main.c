@@ -16,6 +16,7 @@
 /*                                                                            */
 /*    06/15/2016(MikelS):   Created                                           */
 /*    10/02/2017(atangzwj): Validated for Vivado 2015.4                       */
+/*    10/27/2017(artvvb):   Validated for Vivado 2016.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -25,12 +26,7 @@
 #include "xil_cache.h"
 #include "xil_printf.h"
 
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
-
 
 /************ Function Prototypes ************/
 
@@ -44,11 +40,9 @@ void EnableCaches();
 
 void DisableCaches();
 
-
 /************ Global Variables ************/
 
 PmodGYRO myDevice;
-
 
 /************ Function Definitions ************/
 
@@ -82,11 +76,8 @@ void DemoRun() {
 
    print("Starting...\n\r");
    while (1) {
-#ifdef __MICROBLAZE__
-      MB_Sleep(1000);
-#else
       usleep(500000);
-#endif
+
       if (GYRO_Int1Status(&myDevice) != 0) {
          xil_printf("\x1B[2J");
          xil_printf("\x1B[H");
@@ -107,8 +98,12 @@ void DemoRun() {
          zAxis = GYRO_getZ(&myDevice);
          temp = GYRO_getTemp(&myDevice);
 
-         xil_printf("X Axis: %d\n\rY Axis: %d\n\rZ Axis: %d\n\r\n\r", xAxis,
-               yAxis, zAxis);
+         xil_printf("X Axis: 0x%04x\n\r", xAxis & 0xFFFF);
+         xil_printf("Y Axis: 0x%04x\n\r", yAxis & 0xFFFF);
+         xil_printf("Z Axis: 0x%04x\n\r", zAxis & 0xFFFF);
+
+         xil_printf("\n\r");
+
          xil_printf("Temperature: %d deg F\n\r", temp);
       }
    }

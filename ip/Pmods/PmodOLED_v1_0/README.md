@@ -8,7 +8,7 @@ A tutorial for using Pmod IP cores in Vivado is available [here](https://referen
 There are no special prompts that must be followed over the course of this demo
 (the IP does not require interrupts or an additional clock).
 
-It should be noted that This IP will nto function properly when the provided AXI
+It should be noted that This IP will not function properly when the provided AXI
 clock has a frequency greater than 160 MHz.
 
 Demo Program in Xilinx SDK

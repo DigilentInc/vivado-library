@@ -36,8 +36,10 @@
 /*      turn the display on and off.                                    */
 /*  06/20/2016(ArtVVB): edited for PmodOLED IP                          */
 /*                                                                      */
-/* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
-/* as well as inverting the white and black                             */
+/*  12/15/2016(jPeyron) edited for better use for OnboardOLED in        */
+/*                      as well as inverting the white and black        */
+/*  10/31/2017(ArtVVB): 2016.4 Maintenance, replaced OLED_Delay with    */
+/*                      usleep                                          */
 /************************************************************************/
 
 
@@ -48,6 +50,7 @@
 #include "PmodOLED.h"
 #include "ChrFont0.c"
 #include "FillPat.c"
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*              Local Symbol Definitions                        */
@@ -309,7 +312,7 @@ void OLED_DevInit(PmodOLED *InstancePtr, u8 orientation, u8 invert)
 
     /* Start by turning VDD on and wait a while for the power to come up.
     */
-    OLED_Delay(1);
+    usleep(1000);
 
 
     /* Display off command
@@ -319,7 +322,7 @@ void OLED_DevInit(PmodOLED *InstancePtr, u8 orientation, u8 invert)
     /* Bring Reset low and then high
     */
     OLED_SetGPIOBits(InstancePtr, Reset, 0b0);
-    OLED_Delay(1);
+    usleep(1000);
     OLED_SetGPIOBits(InstancePtr, Reset, 0b1);
 
     /* Send the Set Charge Pump and Set Pre-Charge Period commands
@@ -333,7 +336,7 @@ void OLED_DevInit(PmodOLED *InstancePtr, u8 orientation, u8 invert)
     /* Turn on VCC and wait 100ms
     */
     OLED_SetGPIOBits(InstancePtr, VbatCtrl, 0b0);
-    OLED_Delay(100);
+    usleep(100000);
 
     // Send the commands to invert the display for onboard OLED or upside down for PmodOLED.
     // uncomment/comment the next 6 lines if you are using the PmodOLED right side up
@@ -399,7 +402,7 @@ void OLED_DevTerm(PmodOLED *InstancePtr)
     /* Turn off VCC
     */
     OLED_SetGPIOBits(InstancePtr, VddCtrl, 0b1);
-    OLED_Delay(100);
+    usleep(100000);
 
     /* Turn off VDD
     */

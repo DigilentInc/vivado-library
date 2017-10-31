@@ -18,18 +18,16 @@
 /* 12/15/2016(jPeyron) edited for better use for OnboardOLED in         */
 /* as well as inverting the white and black                             */
 /*  08/25/2017(ArtVVB):  Validated for Vivado 2015.4                    */
+/*  08/25/2017(ArtVVB):  Validated for Vivado 2016.4                    */
+/*                       Removed MB_Sleep calls                         */
 /*                                                                      */
 /************************************************************************/
 
 /***************************** Include Files *******************************/
 
 #include "PmodOLED.h"
+#include "sleep.h"
 
-#ifdef __MICROBLAZE__
-    #include "microblaze_sleep.h"
-#else
-    #include "sleep.h"
-#endif
 
 XSpi_Config OLEDConfig =
 {
@@ -372,26 +370,3 @@ void OLED_SetGPIOTristateBits(PmodOLED* InstancePtr, u8 bMask, u8 fValue)
     Xil_Out32(InstancePtr->GPIO_addr+4, regval);
 }
 
-/* ------------------------------------------------------------ */
-/*  OLED_Delay
-**
-**  Synopsis:
-**      OLED_Delay(100);
-**
-**  Parameters:
-**      millis: the number of milliseconds to wait
-**
-**  Return Values:
-**      None
-**
-**  Description:
-**      This function delays for the specified number of milliseconds
-*/
-void OLED_Delay(int millis)
-{
-#ifdef __MICROBLAZE__
-    MB_Sleep(millis);
-#else
-    usleep(millis*1000);
-#endif
-}

@@ -16,6 +16,7 @@
 /*																		*/
 /*	06/9/2016(SamL): Created 											*/
 /*	04/19/2019(ArtVVB): Validated for 2015.4							*/
+/*	10/31/2017(ArtVVB): Validated for 2016.4							*/
 /*																		*/
 /************************************************************************/
 /*  Baud Rates:															*/
@@ -25,18 +26,12 @@
 /*																		*/
 /************************************************************************/
 
-#include <stdio.h>
 #include "xil_printf.h"
-#include "PmodGPIO.h"
 #include "xil_cache.h"
+#include "sleep.h"
+#include "PmodGPIO.h"
 
 PmodGPIO myDevice;
-
-#ifdef __MICROBLAZE__
-	#define CPU_CLK_FREQ_HZ   (XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000000)
-#else
-	#define CPU_CLK_FREQ_HZ     (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 1000000)
-#endif
 
 void DemoInitialize();
 void DemoRun();
@@ -55,15 +50,15 @@ int main()
 void DemoInitialize()
 {
 	EnableCaches();
-    GPIO_begin(&myDevice, XPAR_PMODGPIO_0_AXI_LITE_GPIO_BASEADDR, 0x00, CPU_CLK_FREQ_HZ);
+    GPIO_begin(&myDevice, XPAR_PMODGPIO_1_AXI_LITE_GPIO_BASEADDR, 0x00);
 }
 
 void DemoRun()
 {
-    int count = 0;
+    u8 count = 0;
     int i = 0;
-    print("GPIO Output Demo\n\r");
-	
+
+    xil_printf("GPIO Output Demo\n\r");
     while(1)
 	{
     	GPIO_setPin(&myDevice, count, 1);
@@ -73,14 +68,14 @@ void DemoRun()
     		for(i = 0; i < 4; i++)
 			{
 				GPIO_setPins(&myDevice, 0xFF);
-				GPIO_delay(&myDevice, 300000);
+				usleep(300000);
 				GPIO_setPins(&myDevice, 0x00);
-				GPIO_delay(&myDevice, 300000);
+				usleep(300000);
     		}
     	}
     	else
     		count ++;
-    	GPIO_delay(&myDevice, 200000);
+    	usleep(200000);
     }
 }
 
@@ -104,11 +99,11 @@ void EnableCaches()
 void DisableCaches()
 {
 #ifdef __MICROBLAZE__
-#ifdef XPAR_MICROBLAZE_USE_ICACHE
-    Xil_ICacheDisable();
-#endif
 #ifdef XPAR_MICROBLAZE_USE_DCACHE
     Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheDisable();
 #endif
 #endif
 }

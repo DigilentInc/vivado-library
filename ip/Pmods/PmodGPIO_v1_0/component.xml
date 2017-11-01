@@ -580,7 +580,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>8ec00a8a</spirit:value>
+            <spirit:value>a0071feb</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -608,7 +608,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>5f0304f4</spirit:value>
+            <spirit:value>47b4ca37</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -636,7 +636,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>fc5dbd4e</spirit:value>
+            <spirit:value>045d80ad</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1528,11 +1528,11 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodGPIO_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>natinst.com:user:PmodGPIO:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2017-10-31T17:18:48Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2017-11-01T18:33:36Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodGPIO:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGeneric/GPIO_Template</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodGPIO:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGeneric/GPIO_Template</xilinx:tag>
@@ -1568,7 +1568,7 @@
       <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="dd451c7d"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="31fcbb85"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="ad12204e"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="6be71f8f"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="8627ea3c"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="93844740"/>
     </xilinx:packagingInfo>

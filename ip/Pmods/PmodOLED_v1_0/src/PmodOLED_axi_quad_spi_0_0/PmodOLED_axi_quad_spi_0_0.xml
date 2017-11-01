@@ -2642,7 +2642,7 @@ This bit has no significance in dual or quad mode.
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Oct 30 23:58:41 UTC 2017</spirit:value>
+            <spirit:value>Wed Nov 01 19:01:41 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -2654,7 +2654,7 @@ This bit has no significance in dual or quad mode.
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>b9302bd1</spirit:value>
+            <spirit:value>12a86fbd</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -5065,6 +5065,13 @@ This bit has no significance in dual or quad mode.
   </spirit:model>
   <spirit:choices>
     <spirit:choice>
+      <spirit:name>choice_list_397ba2a5</spirit:name>
+      <spirit:enumeration>Custom</spirit:enumeration>
+      <spirit:enumeration>spi</spirit:enumeration>
+      <spirit:enumeration>spi</spirit:enumeration>
+      <spirit:enumeration>spi</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
       <spirit:name>choice_list_552a89ba</spirit:name>
       <spirit:enumeration>2</spirit:enumeration>
       <spirit:enumeration>4</spirit:enumeration>
@@ -5091,10 +5098,6 @@ This bit has no significance in dual or quad mode.
       <spirit:name>choice_list_8af5a703</spirit:name>
       <spirit:enumeration>0</spirit:enumeration>
       <spirit:enumeration>1</spirit:enumeration>
-    </spirit:choice>
-    <spirit:choice>
-      <spirit:name>choice_list_ac75ef1e</spirit:name>
-      <spirit:enumeration>Custom</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
       <spirit:name>choice_list_d1a56f17</spirit:name>
@@ -5470,7 +5473,7 @@ This bit has no significance in dual or quad mode.
     <spirit:parameter>
       <spirit:name>QSPI_BOARD_INTERFACE</spirit:name>
       <spirit:displayName>QSPI Board Interface</spirit:displayName>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.QSPI_BOARD_INTERFACE" spirit:choiceRef="choice_list_ac75ef1e" spirit:order="39">Custom</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.QSPI_BOARD_INTERFACE" spirit:choiceRef="choice_list_397ba2a5" spirit:order="39">Custom</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>

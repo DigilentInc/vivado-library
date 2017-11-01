@@ -616,7 +616,7 @@ Each I/O pin of the AXI GPIO is individually programmable as an input or output 
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Wed Oct 25 20:33:57 UTC 2017</spirit:value>
+            <spirit:value>Wed Nov 01 18:23:46 UTC 2017</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>boundaryCRC</spirit:name>
@@ -628,7 +628,7 @@ Each I/O pin of the AXI GPIO is individually programmable as an input or output 
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRC</spirit:name>
-            <spirit:value>10b191bc</spirit:value>
+            <spirit:value>6fd25e11</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>customizationCRCversion</spirit:name>
@@ -1170,13 +1170,14 @@ Each I/O pin of the AXI GPIO is individually programmable as an input or output 
   </spirit:model>
   <spirit:choices>
     <spirit:choice>
-      <spirit:name>choice_list_1d7b0cfc</spirit:name>
+      <spirit:name>choice_list_a63df46c</spirit:name>
       <spirit:enumeration>Custom</spirit:enumeration>
       <spirit:enumeration>btns_4bits</spirit:enumeration>
-      <spirit:enumeration>hdmi_hpd</spirit:enumeration>
-      <spirit:enumeration>hdmi_out_en</spirit:enumeration>
       <spirit:enumeration>leds_4bits</spirit:enumeration>
-      <spirit:enumeration>sws_4bits</spirit:enumeration>
+      <spirit:enumeration>rgb_led</spirit:enumeration>
+      <spirit:enumeration>shield_dp0_dp13</spirit:enumeration>
+      <spirit:enumeration>shield_dp26_dp41</spirit:enumeration>
+      <spirit:enumeration>sws_2bits</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
       <spirit:name>choice_pairs_4873554b</spirit:name>
@@ -1344,7 +1345,7 @@ Each I/O pin of the AXI GPIO is individually programmable as an input or output 
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>GPIO_BOARD_INTERFACE</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.GPIO_BOARD_INTERFACE" spirit:choiceRef="choice_list_1d7b0cfc" spirit:order="1001">Custom</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.GPIO_BOARD_INTERFACE" spirit:choiceRef="choice_list_a63df46c" spirit:order="1001">Custom</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -1355,7 +1356,7 @@ Each I/O pin of the AXI GPIO is individually programmable as an input or output 
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>GPIO2_BOARD_INTERFACE</spirit:name>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.GPIO2_BOARD_INTERFACE" spirit:choiceRef="choice_list_1d7b0cfc" spirit:order="1201">Custom</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.GPIO2_BOARD_INTERFACE" spirit:choiceRef="choice_list_a63df46c" spirit:order="1201">Custom</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>

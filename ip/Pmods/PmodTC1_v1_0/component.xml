@@ -596,7 +596,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>783419db</spirit:value>
+            <spirit:value>464e3be5</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -618,7 +618,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>dc5de91b</spirit:value>
+            <spirit:value>0d8779b4</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -646,7 +646,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>34f1f2f3</spirit:value>
+            <spirit:value>3eefc434</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1477,8 +1477,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodTC1_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2017-10-26T19:43:48Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2017-11-01T19:19:05Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="digilentinc.com:IP:PmodTC1:1.0_ARCHIVE_LOCATION">c:/Users/arthur/Documents/GitHub/vivado-library/ip/Pmods/PmodTC1_v1_0</xilinx:tag>
       </xilinx:tags>
@@ -1512,7 +1512,7 @@
       <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="c4af2cf8"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="c81e8291"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="eb322a4b"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="18c60b3c"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="b647e614"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="6fc47880"/>
     </xilinx:packagingInfo>

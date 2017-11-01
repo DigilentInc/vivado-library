@@ -1,27 +1,22 @@
-PmodDPG1 IP
+PmodBT2 IP
 ==============
 
 Using the IP in Vivado
 --------------
-
 A tutorial for using Pmod IP cores in Vivado is available [here](https://reference.digilentinc.com/learn/programmable-logic/tutorials/pmod-ips/start).
 
-When creating a microblaze design, make sure that the axi_uart_lite core connected
-to the usb_uart port is configured to use a baud rate of 115200, rather than the
-typical 9600. This will ensure that there will be enough down-stream bandwidth to
-forward all characters received from the BT2.
-
-An interrupt connection is NOT required for normal operation of this IP core.
+There are no special prompts that must be followed over the course of this demo
+(the IP does not require interrupts or an additional clock).
 
 Demo Program in Xilinx SDK
 --------------
-
-This demo continuously polls the Pmod BT2 and host development board's UART connections
-and forwards each character received from each to the other.
+The demo program forwards data received from the BT2 UART connection to the host
+computer, forwards data received from the host computer to the BT2, and echoes
+data received from the host computer.
 
 To set up the demo you will need to open a serial terminal, such as TeraTerm, to
-see the data being printed out. Settings for the terminal may vary depending on
-your design. If the 
+see the data being printed out. Settings for the terminal will vary depending on
+your board.
 
 For Zynq projects, apply the following settings:
 - Baud rate: 115200
@@ -31,4 +26,9 @@ For Zynq projects, apply the following settings:
 
 For MicroBlaze projects, apply the settings according to the AXI Uartlite IP
 configurations. These settings can be found by double clicking the AXI Uartlite
-IP in the block design and clicking the IP Configuration tab.
+IP in the block design and clicking the IP Configuration tab. By default, this
+is the following:
+- Baud rate: 9600
+- Data bits: 8
+- Parity:    none
+- Stop bits: 1

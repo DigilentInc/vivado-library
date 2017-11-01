@@ -32,6 +32,7 @@
 /*                                                                      */
 /*  11/16/2016(SamL): Created                                           */
 /*  03/16/2017(ArtVVB): Completed & Validated                           */
+/*  11/01/2017(ArtVVB): 2016.4 Maintenance                              */
 /*                                                                      */
 /************************************************************************/
 #ifndef PmodNAV_H
@@ -317,20 +318,20 @@
 #define NAV_ALT_ODR_ALT_25HZ    	4
 
 
-typedef struct RECT_COORD {
+typedef struct {
     float X;
     float Y;
     float Z;
-} RectCoord;
+} NAV_RectCoord;
 
 
-struct ID{
+typedef struct {
     u8 ag;
     u8 mag;
     u8 alt;
-};
+} NAV_ID;
 
-typedef struct PmodNAV{
+typedef struct {
     u32 GPIO_addr;
     XSpi NAVSpi;
     //from chipKit
@@ -340,15 +341,13 @@ typedef struct PmodNAV{
     float m_DPSRangeLSB;
     float m_GaussRangeLSB;
 
-    RectCoord acclData;
-    RectCoord gyroData;
-    RectCoord magData;
-    struct ID idData;
+    NAV_RectCoord acclData;
+    NAV_RectCoord gyroData;
+    NAV_RectCoord magData;
+    NAV_ID idData;
     float hPa;
     float tempC;
-
-    u32 CpuClockFreqHz;
-}PmodNAV;
+} PmodNAV;
 
 
 
@@ -360,7 +359,7 @@ void NAV_DevTerm();
 float NAV_GetGRangeLSB(uint8_t bRangeG);
 
 //--------------------------------------------------- Basic device control functions.
-void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address, u32 CpuClockFreqHz);
+void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 int NAV_SPIInit(XSpi *InstancePtr);
 void NAV_end(PmodNAV* InstancePtr);
 void NAV_Init(PmodNAV* InstancePtr);

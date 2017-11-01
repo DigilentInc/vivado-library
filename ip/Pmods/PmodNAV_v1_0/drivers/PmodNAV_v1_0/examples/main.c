@@ -44,6 +44,7 @@
 /*                                                                      */
 /*  11/16/2016(SamL): Created                                           */
 /*  03/16/2017(ArtVVB): Completed & Validated                           */
+/*  11/01/2017(ArtVVB): 2016.4 Maintenance                              */
 /*                                                                      */
 /************************************************************************/
 /*  Problems:                                                           */
@@ -59,18 +60,7 @@
 #include "PmodNAV.h"
 #include "xil_cache.h"
 #include "math.h"
-
-#ifdef __MICROBLAZE__
-    #include "microblaze_sleep.h"
-#else
-    #include "sleep.h"
-#endif
-
-#ifdef __MICROBLAZE__
-	#define CPU_CLOCK_FREQ_HZ XPAR_CPU_CORE_CLOCK_FREQ_HZ
-#else
-	#define CPU_CLOCK_FREQ_HZ 0
-#endif
+#include "sleep.h"
 
 /*************************** Global Variables ******************************/
 PmodNAV nav;
@@ -79,7 +69,6 @@ PmodNAV nav;
 void NavDemo_Initialize(void);
 void NavDemo_Run(void);
 void NavDemo_Cleanup(void);
-void NavDemo_Sleep(int millis);
 
 float NavDemo_ComputePref(float hPa, float altitudeMeters);
 float NavDemo_ConvPresToAltF(float Pref, float hPa);
@@ -89,9 +78,9 @@ float NavDemo_ConvTempCToTempF(float tempC);
 float NavDemo_ConvFeetToMeters(float feet);
 float NavDemo_ConvMetersToFeet(float meters);
 
-float NavDemo_AngleInXY(RectCoord r);
-float NavDemo_DegreesFromVertical(RectCoord r);
-float NavDemo_ScalarProjection(RectCoord orient, RectCoord r);
+float NavDemo_AngleInXY(NAV_RectCoord r);
+float NavDemo_DegreesFromVertical(NAV_RectCoord r);
+float NavDemo_ScalarProjection(NAV_RectCoord orient, NAV_RectCoord r);
 
 void NavDemo_EnableCaches(void);
 void NavDemo_DisableCaches(void);
@@ -126,8 +115,7 @@ void NavDemo_Initialize(void) {
     NAV_begin ( // intialize the PmodNAV driver device
         &nav,
         XPAR_PMODNAV_0_AXI_LITE_GPIO_BASEADDR,
-        XPAR_PMODNAV_0_AXI_LITE_SPI_BASEADDR,
-        CPU_CLOCK_FREQ_HZ
+        XPAR_PMODNAV_0_AXI_LITE_SPI_BASEADDR
     );
     xil_printf("Pmod Nav Demo Initialized\n\r");
     NAV_Init(&nav); // initialize the connection with each spi slave
@@ -164,7 +152,7 @@ void NavDemo_Run(void) {
     NAV_ReadPressurehPa(&nav);
     alt = NavDemo_ConvFeetToMeters(2352); //altitude for Pullman WA in meters
     Pref = NavDemo_ComputePref(nav.hPa, alt);
-    NavDemo_Sleep(100);
+    usleep(100000);
     while(1){
         NAV_GetDeviceID(&nav);
 
@@ -218,7 +206,7 @@ void NavDemo_Run(void) {
         printf("      	     %.2f degrees Fahrenheit\n\r", tempF);
         xil_printf("\n\r\n\r");
 
-        NavDemo_Sleep(500);
+        usleep(500000);
     }
 }
 
@@ -367,7 +355,7 @@ float NavDemo_ConvMetersToFeet(float meters) {
 	return meters * 0.3048;
 }
 
-/*  float NavDemo_AngleInXY(RectCoord r)
+/*  float NavDemo_AngleInXY(NAV_RectCoord r)
 **
 **  Parameters:
 **		r - the vector in rectangular coordinates to be converted to polar
@@ -381,7 +369,7 @@ float NavDemo_ConvMetersToFeet(float meters) {
 **  Description:
 **		The function computes the degrees the vector r is rotated about the Z axis from the vector (X=1,0,0)
 */
-float NavDemo_AngleInXY(RectCoord r) {
+float NavDemo_AngleInXY(NAV_RectCoord r) {
 	float d;
 	if (r.X == 0)
 		d = (r.Y < 0) ? 90 : 0;
@@ -394,7 +382,7 @@ float NavDemo_AngleInXY(RectCoord r) {
 	return d;
 }
 
-/*  float NavDemo_DegreesFromVertical(RectCoord r)
+/*  float NavDemo_DegreesFromVertical(NAV_RectCoord r)
 **
 **  Parameters:
 **		r - the xyz vector to be operated upon
@@ -408,13 +396,13 @@ float NavDemo_AngleInXY(RectCoord r) {
 **  Description:
 **		The function computes the angle in degrees between the vector r and the vector (0,0,Z=1)
 */
-float NavDemo_DegreesFromVertical(RectCoord r) {
+float NavDemo_DegreesFromVertical(NAV_RectCoord r) {
 	float rM = sqrtf(powf(r.X,2)+ powf(r.Y,2)+powf(r.Z,2));//determine the magnitude of the vector r.
 	if (rM == 0) return 0.0;
 	return acosf(r.Z / rM) * (180.0 / M_PI);
 }
 
-/*  float NavDemo_ScalarProjection(RectCoord orient, RectCoord r)
+/*  float NavDemo_ScalarProjection(NAV_RectCoord orient, NAV_RectCoord r)
 **
 **  Parameters:
 **		orient - the xyz vector
@@ -430,32 +418,9 @@ float NavDemo_DegreesFromVertical(RectCoord r) {
 **		This function returns the scalar projection of the r vector onto the orient vector.
 **		This can be used with gyroscope and accelerometer data to determine rotation of the PmodNAV about true vertical.
 */
-float NavDemo_ScalarProjection(RectCoord orient, RectCoord r) {
+float NavDemo_ScalarProjection(NAV_RectCoord orient, NAV_RectCoord r) {
 	float oM = sqrtf(powf(orient.X,2)+ powf(orient.Y,2)+powf(orient.Z,2));
 	return (r.X*orient.X + r.Y*orient.Y + r.Z*orient.Z) / oM;
-}
-
-/*  void NavDemo_Sleep(int millis)
-**
-**   Parameters:
-**		int millis - how many milliseconds the function should wait to pass
-**
-**   Return Values:
-**      none
-**
-**   Errors:
-**		none
-**
-**   Description:
-**		This function delays the program by a number of milliseconds
-**
-*/
-void NavDemo_Sleep(int millis) {
-#ifdef __MICROBLAZE__
-	MB_Sleep(millis);
-#else
-	usleep(1000*millis);
-#endif
 }
 
 /*  void NavDemo_EnableCaches(void)

@@ -31,6 +31,7 @@
 /*  Revision History:                                                   */
 /*            12/08/2016(lengland): Created                             */
 /*            08/07/2017(artvvb): Validated for Vivado 2015.4			*/
+/*            11/02/2017(artvvb): 2016.4 Maintenance					*/
 /*                                                                      */
 /************************************************************************/
 
@@ -39,12 +40,7 @@
 #include "PmodRTCC.h"
 #include "xparameters.h"
 #include "xil_cache.h"
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 /*************************** Type Declarations *****************************/
 
@@ -77,7 +73,6 @@ PmodRTCC myDevice;
 void DemoRun();
 void DemoInitialize(u8 mode);
 void DemoCleanup();
-void DemoSleep(u32 seconds);
 void EnableCaches();
 void DisableCaches();
 
@@ -202,7 +197,7 @@ void DemoRun()
 {
 	while(1)
 	{
-		DemoSleep(1);
+		sleep(1);
 
 		//print current time
 		xil_printf("Current time is : ");
@@ -382,26 +377,6 @@ u8 bcd2int(u8 data) {
 */
 u8 int2bcd(u8 data) {
 	return (((data / 10) & 0xF) << 4) + ((data % 10) & 0xF);
-}
-
-
-/** void DemoSleep(u32 seconds)
-**
-**	Description:
-**	    This function makes the demo wait for the specified number of seconds.
-**
-**	Notes:
-**		In Microblaze, this function can run faster than expected.
-**		To use this in Microblaze, caches must be enabled, or delays will be much longer than expected.
-**		In Vivado 2016.X, MB_Sleep is deprecated, use sleep.h's sleep() instead.
-**
-*/
-void DemoSleep(u32 seconds) {
-#ifdef __MICROBLAZE__
-		MB_Sleep(1000 * seconds);
-#else
-		sleep(seconds);
-#endif
 }
 
 void DemoCleanup() {

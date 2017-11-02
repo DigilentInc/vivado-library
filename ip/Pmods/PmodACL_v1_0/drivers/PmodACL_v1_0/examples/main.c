@@ -10,7 +10,7 @@
 /************************************************************************/
 /*  Module Description:                                                 */
 /*          This file contains code for running a demonstration of the  */
-/*          PmodACL2 when used with the PmodACL2 IP core.               */
+/*          PmodACL when used with the PmodACL IP core.                 */
 /*                                                                      */
 /*          X, Y, and Z acceleration data in units of g are printed to  */
 /*          a serial terminal application ten times per second.         */
@@ -25,25 +25,19 @@
 /*      03/23/2016(TKappenman): Created                                 */
 /*      08/15/2016(jpeyron): Sleep and Zynq include fixes               */
 /*      08/11/2017(artvvb): Validated for Vivado 2015.4                 */
+/*      11/02/2017(artvvb): 2016.4 Maintenance                          */
 /*                                                                      */
 /************************************************************************/
 
 #include "xparameters.h"
 #include "xil_cache.h"
 #include "PmodACL.h"
-
 #include <stdio.h>
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include <sleep.h>
-#endif
 
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
-void DemoSleep(u32 millis);
 void EnableCaches();
 void DisableCaches();
 
@@ -60,38 +54,32 @@ int main(void)
 void DemoInitialize()
 {
     EnableCaches();
+    xil_printf("ACL Demo Initializing");
     ACL_begin(&acl, XPAR_PMODACL_0_AXI_LITE_GPIO_BASEADDR,XPAR_PMODACL_0_AXI_LITE_SPI_BASEADDR);
     ACL_SetMeasure(&acl, 0);
     ACL_SetGRange(&acl, ACL_PAR_GRANGE_PM4G);
     ACL_SetMeasure(&acl, 1);
     ACL_CalibrateOneAxisGravitational(&acl, ACL_PAR_AXIS_ZP);
-    DemoSleep(1000); // After calibration, some delay is required for the new settings to take effect.
+    sleep(1); // After calibration, some delay is required for the new settings to take effect.
 }
 
 void DemoRun()
 {
     float x, y, z;
 
+    xil_printf("ACL Demo Launched");
+
     while (1)
     {
         ACL_ReadAccelG(&acl, &x, &y, &z);
         printf("X=%f\tY=%f\tZ=%f\n\r", x, y, z);
-        DemoSleep(100);
+        usleep(100000);
     }
 }
 
 void DemoCleanup()
 {
     DisableCaches();
-}
-
-void DemoSleep(u32 millis)
-{
-#ifdef __MICROBLAZE__
-    MB_Sleep(millis);
-#else
-    usleep(1000 * millis);
-#endif
 }
 
 void EnableCaches()

@@ -940,7 +940,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>a2aa9c8c</spirit:value>
+            <spirit:value>13a0203b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2071,8 +2071,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodJSTK2_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>14</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2017-11-03T20:12:46Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>15</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2017-11-03T21:38:01Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodJSTK2:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Desktop/JSTK2_v2</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodJSTK2:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Desktop/JSTK2_v2</xilinx:tag>
@@ -2131,7 +2131,7 @@
       <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="bb10e86f"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="27e126e0"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="885cb05c"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="49161993"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="50af7ae9"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="c26b1dae"/>
     </xilinx:packagingInfo>

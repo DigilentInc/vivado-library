@@ -1,6 +1,6 @@
 /******************************************************************************/
 /*                                                                            */
-/* basic_example.c -- Demo project for the PmodJSTK IP                        */
+/* basic_example.c -- Demo project for the PmodJSTK2 IP                       */
 /*                                                                            */
 /******************************************************************************/
 /*                                                                            */
@@ -85,11 +85,12 @@ void DemoRun() {
       // Get button states
       rawdata = JSTK2_getDataPacket(&joystick);
 
-      xil_printf("X:%d\tY:%d%s%s\r\n",
-            position.XData,
-            position.YData,
-            (rawdata.Jstk != 0) ? "\tJoystick pressed" : "",
-            (rawdata.Trigger != 0) ? "\tTrigger pressed" : ""
+      xil_printf(
+         "X:%d\tY:%d%s%s\r\n",
+         position.XData,
+         position.YData,
+         (rawdata.Jstk != 0) ? "\tJoystick pressed" : "",
+         (rawdata.Trigger != 0) ? "\tTrigger pressed" : ""
       );
       JSTK2_delay(&joystick, 50000);
 

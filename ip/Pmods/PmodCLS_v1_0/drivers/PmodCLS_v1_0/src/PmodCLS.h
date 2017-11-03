@@ -15,7 +15,8 @@
 /*  Revision History:                                                    */
 /*                                                                       */
 /*            06/15/2016(MikelSkreen): Created                           */
-/* 			  8/17/2017(jPeyron): updated                                 */
+/* 			  8/17/2017(jPeyron): updated                                */
+/* 			  11/03/2017(artvvb): 2016.4 Maintenance                     */
 /*                                                                       */
 /*************************************************************************/
 #ifndef PMODCLS_H
@@ -27,19 +28,12 @@
 #include "xstatus.h"
 #include "xspi_l.h"
 #include "xspi.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 /* ------------------------------------------------------------ */
 /*					Definitions									*/
 /* ------------------------------------------------------------ */
-//#define bool u8
-//#define true 1
-//#define false 0
 
 #define	CLS_PAR_SPD_MAX				625000
 
-//#define LCDS_H
 //commands for the display list
 #define CLS_ESC 					0x1B
 #define CLS_BRACKET					0x5B //[
@@ -101,16 +95,14 @@
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-typedef struct PmodCLS{
+typedef struct PmodCLS {
 	XSpi CLSSpi;
-}PmodCLS;
+} PmodCLS;
 
 u8 CLS_WriteStringAtPos(PmodCLS *InstancePtr, uint8_t idxRow, uint8_t idxCol, char* strLn);
 void CLS_CursorModeSet(PmodCLS *InstancePtr, uint8_t setCursor, uint8_t setBlink);
 void CLS_DisplayClear(PmodCLS *InstancePtr);
 void CLS_DisplayMode(PmodCLS *InstancePtr, uint8_t charNumber);
-void CLS_BuildUserDefChar(uint8_t* strUserDef, char* cmdStr);
-u8 CLS_DefineUserChar(PmodCLS *InstancePtr, uint8_t* strUserDef, uint8_t charPos);
 
 void CLS_begin(PmodCLS* InstancePtr, u32 SPI_Address);
 void CLS_end(PmodCLS* InstancePtr);

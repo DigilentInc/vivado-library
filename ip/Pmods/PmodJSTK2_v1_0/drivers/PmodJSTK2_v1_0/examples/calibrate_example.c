@@ -13,10 +13,10 @@
 /* This demo runs through the calibration process for the PmodJSTK2.          */
 /*                                                                            */
 /* After programming your board, wait for the blue blinking light on the      */
-/* JSTK2 to turn on, then move the joystick in a circle at the far edges of   */
-/* where it can move. After completing one full circle, release the joystick, */
-/* and let it stay still until the green light flashes twice, this is the     */
-/* that the calibration process has completed.                                */
+/* JSTK2 to turn on. Then, move the joystick in a circle at the far edges of  */
+/* where it can move. After completing one full circle, release the joystick. */
+/* Let the joystick stay still until the green light flashes twice, this      */
+/* indicates that the calbration process is complete.                         */
 /*                                                                            */
 /* Status messages can be received by connecting your board to a serial       */
 /* terminal application at the Baud rate specified below.                     */

@@ -15,7 +15,8 @@
 /*  Revision History:                                                    */
 /*                                                                       */
 /*            06/15/2016(MikelSkreen): Created                           */
-/* 			  8/17/2017(jPeyron): updated                                 */
+/* 			  8/17/2017(jPeyron): updated                                */
+/* 			  11/03/2017(artvvb): 2016.4 Maintenance                     */
 /*                                                                       */
 /*************************************************************************/
 
@@ -38,91 +39,6 @@ XSpi_Config CLSConfig =
 	0,
 	0
 };
-
-/* --------------------------------------------------------------------*/
-/** CLS_DefineUserChar
-**
-**	Parameters:
-**		strUserDef - characters array containing the numerical value of each row in the char
-**		charPos - the position of the character saved in the memory
-**
-**
-**	Return Value:
-**		uint8_t
-**					- CLS_LCDS_ERR_SUCCESS - The action completed successfully
-**					- CLS_LCDS_ERR_ARG_POS_RANGE - The argument is not within 0, 7 range
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		This function saves a user defined char in the RAM memory
-**
------------------------------------------------------------------------*/
-u8 CLS_DefineUserChar(PmodCLS *InstancePtr, uint8_t* strUserDef, uint8_t charPos) {
-	char rgcCmd[CLS_MAX];
-	uint8_t bResult;
-	if (charPos >= 0 && charPos <= 7){
-		rgcCmd[0] = CLS_ESC;
-		rgcCmd[1] = CLS_BRACKET;
-		rgcCmd[2] = 0;
-		//build the values to be sent for defining the custom character
-		CLS_BuildUserDefChar(strUserDef, rgcCmd + 2);
-		u8 bLength = strlen(rgcCmd);
-		rgcCmd[bLength++] = (char)charPos + '0';
-		rgcCmd[bLength++] = CLS_DEF_CHAR_CMD;
-		//save the defined character in the RAM
-		rgcCmd[bLength++] = CLS_ESC;
-		rgcCmd[bLength++] = CLS_BRACKET;
-		rgcCmd[bLength++] = '3';
-		rgcCmd[bLength++] = CLS_PRG_CHAR_CMD;
-		CLS_WriteSpi(InstancePtr, (unsigned char*)(rgcCmd), bLength);
-		bResult = CLS_LCDS_ERR_SUCCESS;
-	}
-	else {
-		bResult = CLS_LCDS_ERR_ARG_POS_RANGE;
-	}
-	return bResult;
-}
-
-/* --------------------------------------------------------------------*/
-/** CLS_BuildUserDefChar
-**
-**	Parameters:
-**		strUserDef - bytes array containing the values to be converted in values that are recognized by the firmware
-**		cmdStr	   - characters array containing the values converted
-**
-**
-**	Return Value:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		This function builds the string to be converted in an interpretable array of chars for the LCD
------------------------------------------------------------------------*/
-void CLS_BuildUserDefChar(uint8_t* strUserDef, char* cmdStr) {
-	uint8_t len = 8;
-	int i;
-	char elStr[4];
-	//print the bytes from the input array as hex values
-	for(i = 0; i < len; i++){
-		sprintf(elStr, "%2.2X", strUserDef[i]);
-		//concatenate the result with the 0x chars to be able to send it to the LCD
-		strcat(cmdStr, "0x");
-
-		if (strUserDef[i] > 15) {
-			elStr[3] = 0;
-			strcat(cmdStr, elStr + 1);
-		}
-		else {
-			elStr[2] = 0;
-			strcat(cmdStr, elStr);
-		}
-		strcat(cmdStr, ";");
-	}
-}
 
 /* --------------------------------------------------------------------*/
 /** CLS_DisplayMode

@@ -21,15 +21,9 @@
 
 #include "xparameters.h"
 #include "xil_cache.h"
-#include "xil_printf.h"
+#include "stdio.h"
 #include "PmodCMPS2.h"
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
-
 #include "math.h"
 
 //calibration data struct, track minimum, maximum, and average sample seen for each x/y/z channel
@@ -42,9 +36,8 @@ void DemoRun();
 int DemoConvertDegree(PmodCMPS2 *InstancePtr, CMPS2_CalibrationData calib, CMPS2_DataPacket data, int declination);
 void DemoClearCalibration(CMPS2_CalibrationData *calib);
 void DemoCalibrate (PmodCMPS2 *InstancePtr, CMPS2_CalibrationData *calib, CMPS2_DataPacket data);
-char *DemoGetCardinalDirectionString(int deg);
+char *DemoGetCardinalDirectionString(int deg, char *cardinal_table[]);
 void DemoCleanup();
-void DemoSleep(u32 millis);
 void EnableCaches();
 void DisableCaches();
 
@@ -66,9 +59,9 @@ void DemoInitialize()
 {
 	EnableCaches();
 	CMPS2_begin(&myDevice, XPAR_PMODCMPS2_0_AXI_LITE_IIC_BASEADDR, chip_address);
-	DemoSleep(10);
+	usleep(10000);
 	CMPS2_SetSensor(&myDevice);
-	DemoSleep(10);
+	usleep(10000);
 	CMPS2_SetOutputResolution(&myDevice, 0b00);
 }
 
@@ -76,6 +69,8 @@ void DemoRun()
 {
 	//FIXME: data becomes invalid when the board is not face up and flat.
 
+	char *cardinal_table[] = {"North", "North East", "East", "South East", "South", "South West", "West", "North West"};
+	char *cardinal;
 	int deg;
 	CMPS2_DataPacket data;
 
@@ -89,9 +84,11 @@ void DemoRun()
 
 		deg = DemoConvertDegree(&myDevice, myCalibrationData, data, myDeclination);
 
-		xil_printf("Degree: %d;  Y Direction: %s\r\n", deg, DemoGetCardinalDirectionString(deg));
+		cardinal = DemoGetCardinalDirectionString(deg, cardinal_table);
 
-		DemoSleep(100);
+		printf("Degree: %d;  Y Direction: %s\r\n", deg, cardinal);
+
+		usleep(100000);
 	}
 }
 
@@ -148,7 +145,7 @@ void DemoClearCalibration(CMPS2_CalibrationData *calib)
 
 void DemoCalibrate (PmodCMPS2 *InstancePtr, CMPS2_CalibrationData *calib, CMPS2_DataPacket data)
 {
-	if (data.x > calib->max.x) calib->max.x = data.x;
+	if (data.x > calib->max.x) calib->max.x = data.x; // track maximum / minimum value seen per axis
 	if (data.y > calib->max.y) calib->max.y = data.y;
 	if (data.z > calib->max.z) calib->max.z = data.z;
 	if (data.x < calib->min.x) calib->min.x = data.x;
@@ -159,28 +156,18 @@ void DemoCalibrate (PmodCMPS2 *InstancePtr, CMPS2_CalibrationData *calib, CMPS2_
 	calib->mid.z = (calib->max.z >> 1) + (calib->min.z >> 1);
 }
 
-char *cardinal[] = {"North", "North East", "East", "South East", "South", "South West", "West", "North West"};
-char *DemoGetCardinalDirectionString(int deg)
+char *DemoGetCardinalDirectionString(int deg, char *cardinal_table[])
 {
 	float fdeg = deg;
 	if (fdeg > 337.5) fdeg -= 337.5;
 	else fdeg += 22.5;
 	fdeg /= 45.0;
-	return cardinal[(int)fdeg];
+	return cardinal_table[(int)fdeg];
 }
 
 void DemoCleanup()
 {
 	DisableCaches();
-}
-
-void DemoSleep(u32 millis)
-{
-#ifdef __MICROBLAZE__
-	MB_Sleep(millis);
-#else
-	usleep(1000*millis);
-#endif
 }
 
 void EnableCaches() {

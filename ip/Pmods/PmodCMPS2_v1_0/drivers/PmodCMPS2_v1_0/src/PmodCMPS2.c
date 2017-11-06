@@ -238,6 +238,7 @@ void CMPS2_SetSensor(PmodCMPS2 *InstancePtr)
 **
 **	Parameters:
 **		InstancePtr - PmodCMPS2 object to set up
+**		res - output resolution to set, 0, 1, 2, or 3
 **
 **	Return Value:
 **		none

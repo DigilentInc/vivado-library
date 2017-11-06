@@ -84,7 +84,7 @@
 
 /* Bit mask definitions */
 
-// Define the for bit positions used in a status packet.
+// Define the bit positions used in a status packet.
 #define JSTK2_bnCalibrating  7
 #define JSTK2_bnLastCal      6
 #define JSTK2_bnLastFWS      5
@@ -111,14 +111,14 @@
 
 /************ Type Definitions ************/
 
-/* Device Definition */
+// Device Definition
 typedef struct PmodJSTK2 {
    XSpi SpiDevice;
    u32 GpioAddr;
    u32 ItersPerUSec;
 } PmodJSTK2;
 
-/* Data Type */
+// Data Type
 typedef struct JSTK2_DataPacket {
    u16 XData;
    u16 YData;

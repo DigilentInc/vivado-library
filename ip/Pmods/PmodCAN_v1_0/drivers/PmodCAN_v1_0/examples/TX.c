@@ -27,21 +27,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-
-
-
 #include "xparameters.h"
 #include "xil_cache.h"
-
 #include "PmodCAN.h"
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
-
-
-
 
 void DemoInitialize();
 void DemoRun();
@@ -123,9 +112,10 @@ void DemoRun()
 
     while (1)
     {
+
+    	xil_printf("Waiting to send\r\n");
         do {
             status = CAN_ReadStatus(&myDevice);
-            xil_printf("Waiting to send\r\n");
         } while ((status & CAN_STATUS_TX0REQ_MASK) != 0); // wait for buffer 0 to be clear
 
         TxMessage = DemoComposeMessage();
@@ -144,17 +134,9 @@ void DemoRun()
         do {
             status = CAN_ReadStatus(&myDevice);
             xil_printf("Waiting to complete transmission\r\n");
-        } while ((status & CAN_STATUS_TX0IF_MASK
-		) != 0); // wait for message to transmit successfully
+        } while ((status & CAN_STATUS_TX0IF_MASK) != 0); // wait for message to transmit successfully
 
-
-
-
-        #ifdef __MICROBLAZE__
-            MB_Sleep(1000);
-        #else
-            sleep(1);
-        #endif
+		sleep(1);
     }
 }
 

@@ -34,11 +34,7 @@
 #include "xil_cache.h"
 
 #include "PmodCAN.h"
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 
 
@@ -180,11 +176,7 @@ void DemoRun()
         xil_printf("received ");
         DemoPrintMessage(RxMessage);
 
-        #ifdef __MICROBLAZE__
-            MB_Sleep(1000);
-        #else
-            sleep(1);
-        #endif
+		sleep(1);
     }
 }
 

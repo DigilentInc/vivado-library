@@ -34,12 +34,7 @@
 #include "xil_types.h"
 #include "xil_cache.h"
 #include "PmodAD1.h"
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 PmodAD1 myDevice;
 const float ReferenceVoltage = 3.3;
@@ -65,11 +60,7 @@ void DemoInitialize()
 	AD1_begin(&myDevice, XPAR_PMODAD1_0_AXI_LITE_SAMPLE_BASEADDR);
 
 	//wait for AD1 to finish powering on
-#ifdef __MICROBLAZE__
-	MB_Sleep(1); // 1 ms
-#else
 	usleep(1); // 1 us (minimum)
-#endif
 }
 
 void DemoRun()
@@ -80,15 +71,12 @@ void DemoRun()
 	while (1) {
 		AD1_GetSample (&myDevice, &RawData); // capture raw samples
 		AD1_RawToPhysical(ReferenceVoltage, RawData, &PhysicalData); // convert raw samples into floats scaled to 0 - VDD
-		printf("Input Data 1: %02f\t\t", PhysicalData[0]);
-		printf("Input Data 2: %02f\r\n", PhysicalData[1]);
+
+		printf("Input Data 1: %.02f;   ", PhysicalData[0]);
+		printf("Input Data 2: %.02f\r\n", PhysicalData[1]);
 
 		// do this 10x per second
-		#ifdef __MICROBLAZE__
-			MB_Sleep(100);
-		#else
-			usleep(100000);
-		#endif
+		usleep(100000);
 	}
 }
 

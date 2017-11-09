@@ -33,17 +33,11 @@
 #include "xil_types.h"
 #include "PmodALS.h"
 #include "xil_cache.h"
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
-void DemoSleep(u32 millis);
 void EnableCaches();
 void DisableCaches();
 
@@ -71,22 +65,13 @@ void DemoRun()
     while (1) {
         light = ALS_read(&ALS);
         xil_printf("Light = %d\n\r", light);
-        DemoSleep(100);
+        usleep(100000);
     }
 }
 
 void DemoCleanup()
 {
     DisableCaches();
-}
-
-void DemoSleep(u32 millis)
-{
-#ifdef __MICROBLAZE__
-    MB_Sleep(millis);
-#else
-    usleep(1000*millis);
-#endif
 }
 
 void EnableCaches()

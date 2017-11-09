@@ -1,4 +1,4 @@
-PmodJSTK2 IP
+PmodJSTK IP
 ============
 
 Using the IP in Vivado
@@ -11,17 +11,17 @@ available for both approaches in the tutorial.
 
 Demo Program in Xilinx SDK
 ------------
-The demo programs reads the X and Y position of the joystick and prints those
+The demo program reads the X and Y position of the joystick and prints those
 values to the terminal. If the buttons on the JSTK are pressed, the adjacent LED
 will turn red. If either of the buttons or the joystick button are pressed, a
 message stating which of the buttons are pressed will be printed along with the
 positional data.
 
-To see text output from the example programs, you will need to open a serial
+To see text output from the example program, you will need to open a serial
 terminal, such as TeraTerm. Settings for the terminal will vary depending on
 your board.
 
-For Zynq Projects, apply the following settings:
+For Zynq projects, apply the following settings:
 - Baud rate: 115200
 - Data bits: 8
 - Parity:    none

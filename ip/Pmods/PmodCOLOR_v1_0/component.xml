@@ -915,7 +915,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>14737c9c</spirit:value>
+            <spirit:value>c446935b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -946,7 +946,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>ba2a3086</spirit:value>
+            <spirit:value>c3a7dcc3</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -974,7 +974,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>6943f17c</spirit:value>
+            <spirit:value>53987d3c</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2235,12 +2235,12 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodCOLOR_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>3</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2017-10-16T18:59:00Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2017-11-08T23:33:08Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
-        <xilinx:tag xilinx:name="digilentinc.com:IP:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arthur/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
+        <xilinx:tag xilinx:name="digilentinc.com:IP:PmodCOLOR:1.0_ARCHIVE_LOCATION">c:/Digilent-vivLib/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
       </xilinx:tags>
       <xilinx:configElementInfos>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.AXI_LITE_GPIO.ADDR_WIDTH" xilinx:valueSource="user"/>
@@ -2294,10 +2294,10 @@
       </xilinx:configElementInfos>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7137fe7b"/>
+      <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="6327becb"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="739fd854"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="73be4e15"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="0b6d06e0"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="8e23b78e"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="c7488f81"/>
     </xilinx:packagingInfo>

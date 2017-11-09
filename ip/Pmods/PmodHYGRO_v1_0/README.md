@@ -1,20 +1,18 @@
-PmodCOLOR IP
-==============
+PmodHYGRO IP
+============
 
 Using the IP in Vivado
---------------
+------------
 A tutorial for using Pmod IP cores in  Vivado is available [here](https://reference.digilentinc.com/learn/programmable-logic/tutorials/pmod-ips/start).
+This IP does not require interrupts or an additional clock.
 
 Demo Program in Xilinx SDK
---------------
-The demo program continuously prints RGB color data provided by the PmodCOLOR.
-This data is displayed in hexadecimal, and has been normalized such that the
-maximum value seen on a color channel is treated as 0xFFFF, while the minimum
-is treated as 0x0000. In order to get useful data, make sure to calibrate the
-sensor by storing readings of something white and something black.
+------------
+The demo program continuously prints temperature and humidity data collected by
+the PmodHYGRO to the serial terminal.
 
-To set up the demo you will need to open a serial terminal, such as TeraTerm, to
-see the data being printed out. Settings for the terminal will vary depending on
+To see text output from the example program, you will need to open a serial
+terminal, such as TeraTerm. Settings for the terminal will vary depending on
 your board.
 
 For Zynq projects, apply the following settings:

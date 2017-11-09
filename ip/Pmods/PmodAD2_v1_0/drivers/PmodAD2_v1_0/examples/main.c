@@ -32,21 +32,14 @@
 /************************************************************************/
 
 #include <stdio.h>
-
 #include "xparameters.h"
 #include "xil_cache.h"
 #include "PmodAD2.h"
-
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
-void DemoSleep(u32 millis);
 void EnableCaches();
 void DisableCaches();
 
@@ -93,28 +86,20 @@ void DemoRun()
 		//pull channel read information out of conv
 		channel = (conv & AD2_CHANNEL_MASK) >> AD2_CHANNEL_BIT;
 
-		printf("CHANNEL %d = %02f V%s",
-				channel,
-				voltage,
-				(channel == 3) ? "\r\n" : "    "
-		);
+		printf("Pin V%d = %.02f V", channel+1, voltage);
 
-		DemoSleep(10);
+		if (channel == 3)
+			printf("\r\n");
+		else
+			printf("    ");
+
+		usleep(10000);
 	}
 }
 
 void DemoCleanup()
 {
 	DisableCaches();
-}
-
-void DemoSleep(u32 millis)
-{
-#ifdef __MICROBLAZE__
-	MB_Sleep(millis);
-#else
-	usleep(1000*millis);
-#endif
 }
 
 void EnableCaches()

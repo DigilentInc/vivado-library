@@ -25,4 +25,9 @@ For Zynq projects, apply the following settings:
 
 For MicroBlaze projects, apply the settings according to the AXI Uartlite IP
 configurations. These settings can be found by double clicking the AXI Uartlite
-IP in the block design and clicking the IP Configuration tab.
+IP in the block design and clicking the IP Configuration tab. By default, these
+settings are:
+- Baud rate: 9600
+- Data bits: 8
+- Parity:    none
+- Stop bits: 1

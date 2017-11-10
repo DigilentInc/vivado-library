@@ -1,4 +1,4 @@
-PmodALS IP
+PmodACL2 IP
 ==============
 
 Using the IP in Vivado

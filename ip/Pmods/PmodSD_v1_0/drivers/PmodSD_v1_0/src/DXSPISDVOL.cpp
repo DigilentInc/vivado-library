@@ -71,7 +71,7 @@ int DXSPISDVOL::wait_ready (void)
 	for (tmr = 500; tmr; tmr--) {	/* Wait for ready in timeout of 500ms */
 		rcvr_mmc(&d, 1);
 		if (d == 0xFF) break;
-		MB_Sleep(1);
+		usleep(1000);
 	}
 
 	return tmr ? 1 : 0;
@@ -120,7 +120,7 @@ int DXSPISDVOL::rcvr_datablock (	/* 1:OK, 0:Failed */
 	for (tmr = 100; tmr; tmr--) {	/* Wait for data packet in timeout of 100ms */
 		rcvr_mmc(d, 1);
 		if (d[0] != 0xFF) break;
-		MB_Sleep(1);
+		usleep(1000);
 	}
 	if (d[0] != 0xFE) return 0;		/* If not valid data token, return with error */
 
@@ -242,7 +242,7 @@ DSTATUS DXSPISDVOL::disk_initialize(void)
 			if (buf[2] == 0x01 && buf[3] == 0xAA) {		/* The card can work at vdd range of 2.7-3.6V */
 				for (tmr=1000; tmr; tmr--){				/* Wait for leaving idle state (ACMD41 with HCS bit) */
 					if (send_cmd(ACMD41, 0x40000000)==0)break;
-					MB_Sleep(1);
+					usleep(1000);
 				}
 				if (tmr && send_cmd(CMD58, 0) == 0) {	/* Check CCS bit in the OCR */
 					rcvr_mmc(buf, 4);
@@ -257,7 +257,7 @@ DSTATUS DXSPISDVOL::disk_initialize(void)
 			}
 			for (tmr=1000; tmr; tmr--){				/* Wait for leaving idle state (ACMD41 with HCS bit) */
 				if (send_cmd(cmd, 0))break;
-				MB_Sleep(1);
+				usleep(1000);
 			}
 			if (!tmr || send_cmd(CMD16, 512) != 0)	/* Set R/W block length to 512 */
 				ty = 0;

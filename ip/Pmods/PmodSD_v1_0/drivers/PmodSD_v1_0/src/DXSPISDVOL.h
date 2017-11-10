@@ -49,7 +49,7 @@
 
 #include "DFATFS.h"       // required for the interface DFSVOL
 
-#include "microblaze_sleep.h"
+#include "sleep.h"
 #include "xspi.h"
 
 /*--------------------------------------------------------------------------

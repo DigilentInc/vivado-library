@@ -259,7 +259,7 @@ void OLEDrgb_Clear(PmodOLEDrgb* InstancePtr) {
    cmds[3] = OLEDRGB_WIDTH - 1;   // Set the finishing column coordinates;
    cmds[4] = OLEDRGB_HEIGHT - 1;  // Set the finishing row coordinates;
    OLEDrgb_WriteSPI(InstancePtr, cmds, 5, NULL, 0);
-   OLEDrgb_sleep(5);
+   usleep(1000 * 5);
 }
 
 /* ------------------------------------------------------------ */
@@ -300,7 +300,7 @@ void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2,
 
    OLEDrgb_WriteSPI(InstancePtr, cmds, 6, pBmp,
          (((c2 - c1 + 1) * (r2 - r1 + 1)) << 1));
-   OLEDrgb_sleep(5);
+   usleep(1000 * 5);
 }
 
 /* ------------------------------------------------------------ */
@@ -661,7 +661,7 @@ void OLEDrgb_SetScrolling(PmodOLEDrgb* InstancePtr, u8 scrollH, u8 scrollV,
    cmds[6] = CMD_ACTIVESCROLLING; // Set the starting row coordinates
 
    OLEDrgb_WriteSPI(InstancePtr, cmds, 7, NULL, 0);
-   OLEDrgb_sleep(5);
+   usleep(1000 * 5);
 }
 
 /* ------------------------------------------------------------ */
@@ -748,7 +748,7 @@ void OLEDrgb_EnableBackLight(PmodOLEDrgb* InstancePtr, u8 fEnable) {
             Xil_In32(InstancePtr->GPIO_addr + 4) & 0xB); // 0b1011
       Xil_Out32(InstancePtr->GPIO_addr,
             Xil_In32(InstancePtr->GPIO_addr) | 0x4); // 0b0100
-      OLEDrgb_sleep(25);
+      usleep(1000 * 25);
       OLEDrgb_WriteSPICommand(InstancePtr, CMD_DISPLAYON);
    } else {
       OLEDrgb_WriteSPICommand(InstancePtr, CMD_DISPLAYOFF);
@@ -792,7 +792,7 @@ void OLEDrgb_Copy(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, u8 c3,
    cmds[6] = r3;                   // Set the new starting row coordinates
 
    OLEDrgb_WriteSPI(InstancePtr, cmds, 7, NULL, 0);
-   OLEDrgb_sleep(5);
+   usleep(1000 * 5);
 }
 
 /* ------------------------------------------------------------ */
@@ -823,7 +823,7 @@ void OLEDrgb_Dim(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2) {
    cmds[4] = r2; // Set the finishing row coordinates
 
    OLEDrgb_WriteSPI(InstancePtr, cmds, 5, NULL, 0);
-   OLEDrgb_sleep(5);
+   usleep(1000 * 5);
 }
 
 /* ------------------------------------------------------------ */
@@ -893,13 +893,13 @@ void OLEDrgb_DevInit(PmodOLEDrgb* InstancePtr) {
 
    // Bring PmodEn HIGH
    Xil_Out32(InstancePtr->GPIO_addr, 0xA); // 0b1010
-   OLEDrgb_sleep(20); // Delay for 20us
+   usleep(1000 * 20); // Delay for 20us
 
    // Assert Reset
    Xil_Out32(InstancePtr->GPIO_addr, 0x8); // 0b1000
-   OLEDrgb_sleep(1);
+   usleep(1000 * 1);
    Xil_Out32(InstancePtr->GPIO_addr, 0xA); // 0b1010
-   OLEDrgb_sleep(2);
+   usleep(1000 * 2);
 
    // Command un-lock
    cmds[0] = 0xFD;
@@ -970,12 +970,12 @@ void OLEDrgb_DevInit(PmodOLEDrgb* InstancePtr) {
    // Turn on VCC and wait for it to become stable
    Xil_Out32(InstancePtr->GPIO_addr, 0b1110);
 
-   OLEDrgb_sleep(25);
+   usleep(1000 * 25);
 
    // Send Display On command
    OLEDrgb_WriteSPICommand(InstancePtr, CMD_DISPLAYON);
 
-   OLEDrgb_sleep(100);
+   usleep(1000 * 100);
 }
 
 /* ------------------------------------------------------------ */
@@ -996,7 +996,7 @@ void OLEDrgb_DevInit(PmodOLEDrgb* InstancePtr) {
 void OLEDrgb_DevTerm(PmodOLEDrgb* InstancePtr) {
    OLEDrgb_WriteSPICommand(InstancePtr, CMD_DISPLAYOFF);
    Xil_Out32(InstancePtr->GPIO_addr, Xil_In32(InstancePtr->GPIO_addr) & 0xB); // 0b1011
-   OLEDrgb_sleep(400);
+   usleep(1000 * 400);
 }
 /* ------------------------------------------------------------ */
 /*** OLEDrgb_SPIInit
@@ -1199,8 +1199,4 @@ u8 OLEDrgb_ExtractGFromRGB(u16 wRGB) {
 
 u8 OLEDrgb_ExtractBFromRGB(u16 wRGB) {
    return (u8) (wRGB & 0x1F);
-}
-
-void OLEDrgb_sleep(u32 millis) {
-   usleep(millis*1000);
 }

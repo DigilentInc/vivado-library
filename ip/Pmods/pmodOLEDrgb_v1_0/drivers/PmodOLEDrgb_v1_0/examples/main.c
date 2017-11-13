@@ -22,6 +22,7 @@
 
 #include "bitmap.h"
 #include "PmodOLEDrgb.h"
+#include "sleep.h"
 #include "xil_cache.h"
 #include "xparameters.h"
 
@@ -77,7 +78,7 @@ void DemoRun() {
    OLEDrgb_PutString(&oledrgb, "Demo");
    OLEDrgb_PutChar(&oledrgb, 0);
 
-   OLEDrgb_sleep(5000); // Wait 5 seconds
+   sleep(5); // Wait 5 seconds
 
    OLEDrgb_DrawBitmap(&oledrgb, 0, 0, 95, 63, (u8*) tommy);
 }

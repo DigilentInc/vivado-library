@@ -220,6 +220,4 @@ u8 OLEDrgb_ExtractRFromRGB(uint16_t wRGB);
 u8 OLEDrgb_ExtractGFromRGB(uint16_t wRGB);
 u8 OLEDrgb_ExtractBFromRGB(uint16_t wRGB);
 
-void OLEDrgb_sleep(u32 millis);
-
 #endif // PMODOLEDRGB_H

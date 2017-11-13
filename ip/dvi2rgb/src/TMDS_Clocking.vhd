@@ -69,7 +69,14 @@ entity TMDS_Clocking is
       aRst : in std_logic; --asynchronous reset; must be reset when RefClk is not within spec
       SerialClk : out std_logic;
       PixelClk : out std_logic;
-      aLocked : out std_logic);
+      aLocked : out std_logic;
+      
+      dbg_rDlyRst : out std_logic;
+      dbg_rRdyRst : out std_logic;
+      dbg_rMMCM_Reset : out std_logic;
+      dbg_rBUFR_Rst : out std_logic;
+      dbg_rMMCM_Locked : out std_logic
+      );
 end TMDS_Clocking;
 
 architecture Behavioral of TMDS_Clocking is
@@ -285,5 +292,12 @@ begin
       aLocked <= rMMCM_Locked_q(0);
    end if;
 end process GlitchFreeLocked;
+
+
+dbg_rDlyRst <= rDlyRst;
+dbg_rRdyRst <= rRdyRst;
+dbg_rMMCM_Reset <= rMMCM_Reset_q(0);
+dbg_rBUFR_Rst <= rBUFR_Rst;
+dbg_rMMCM_Locked <= rMMCM_Locked;
 
 end Behavioral;

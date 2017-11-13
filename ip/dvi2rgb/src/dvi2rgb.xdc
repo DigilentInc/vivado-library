@@ -9,6 +9,6 @@ set_property IODELAY_GROUP dvi2rgb_iodelay_grp [get_cells DataDecoders[*].Decode
 set_property IODELAY_GROUP dvi2rgb_iodelay_grp [get_cells TMDS_ClockingX/IDelayCtrlX]
 
 ### Asynchronous clock domain crossings ###
-set_false_path -through [get_pins -filter {NAME =~ */SyncAsync*/oSyncStages*/PRE || NAME =~ */SyncAsync*/oSyncStages*/CLR} -hier]
-set_false_path -through [get_pins -filter {NAME =~ */SyncAsync*/oSyncStages_reg[0]/D} -hier]
-set_false_path -through [get_pins -filter {NAME =~ */SyncBase*/iIn_q*/PRE || NAME =~ */SyncBase*/iIn_q*/CLR} -hier]
+set_false_path -through [get_pins -filter {NAME =~ */*SyncAsync*/oSyncStages*/PRE || NAME =~ */*SyncAsync*/oSyncStages*/CLR} -hier]
+set_false_path -through [get_pins -filter {NAME =~ */*SyncAsync*/oSyncStages_reg[0]/D} -hier]
+set_false_path -through [get_pins -filter {NAME =~ */*SyncBase*/iIn_q*/PRE || NAME =~ */*SyncBase*/iIn_q*/CLR} -hier]

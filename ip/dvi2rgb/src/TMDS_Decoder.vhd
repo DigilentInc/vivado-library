@@ -89,8 +89,10 @@ entity TMDS_Decoder is
       
       --Status and debug
       pRst : in std_logic; -- Synchronous reset to restart lock procedure
-      pAlignErr : out std_logic; 
-      pEyeSize : out STD_LOGIC_VECTOR(kIDLY_TapWidth-1 downto 0));
+      dbg_pAlignErr : out std_logic; 
+      dbg_pEyeSize : out STD_LOGIC_VECTOR(kIDLY_TapWidth-1 downto 0);
+      dbg_pBitslip : out std_logic
+      );
 end TMDS_Decoder;
 
 architecture Behavioral of TMDS_Decoder is
@@ -108,6 +110,9 @@ constant kTimeoutEnd : natural := kTimeoutMs * 1000 * kRefClkFrqMHz;
 signal rTimeoutCnt : natural range 0 to kTimeoutEnd-1;
 signal pTimeoutRst, pTimeoutOvf, rTimeoutRst, rTimeoutOvf : std_logic;
 begin
+
+dbg_pAlignErr <= pAlignErr_int;
+dbg_pBitslip <= pBitslip;
 
 -- Deserialization block
 InputSERDES_X: entity work.InputSERDES
@@ -195,9 +200,8 @@ PhaseAlignX: entity work.PhaseAlign
       pIDLY_LD => pIDLY_LD,
       pAligned => pAligned,
       pError => pAlignErr_int,
-      pEyeSize => pEyeSize);
+      pEyeSize => dbg_pEyeSize);
 
-pAlignErr <= pAlignErr_int;
 pMeVld <= pAligned;
 
 -- Bitslip when phase alignment exhausted the whole tap range and still no lock

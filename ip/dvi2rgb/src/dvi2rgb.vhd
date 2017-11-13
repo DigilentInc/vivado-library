@@ -68,6 +68,7 @@ entity dvi2rgb is
       kAddBUFG : boolean := true; --true, if PixelClk should be re-buffered with BUFG 
       kClkRange : natural := 2;  -- MULT_F = kClkRange*5 (choose >=120MHz=1, >=60MHz=2, >=40MHz=3)
       kEdidFileName : string := "dgl_720p_cea.data";  -- Select EDID file to use
+      kDebug : boolean := true;
       -- 7-series specific
       kIDLY_TapValuePs : natural := 78; --delay in ps per tap
       kIDLY_TapWidth : natural := 5); --number of bits for IDELAYE2 tap counter   
@@ -108,21 +109,63 @@ entity dvi2rgb is
 end dvi2rgb;
 
 architecture Behavioral of dvi2rgb is
+COMPONENT ila_refclk
+
+PORT (
+	clk : IN STD_LOGIC;
+
+	trig_out : OUT STD_LOGIC;
+	trig_out_ack : IN STD_LOGIC;
+	probe0 : IN STD_LOGIC_VECTOR(0 DOWNTO 0); 
+	probe1 : IN STD_LOGIC_VECTOR(0 DOWNTO 0); 
+	probe2 : IN STD_LOGIC_VECTOR(0 DOWNTO 0); 
+	probe3 : IN STD_LOGIC_VECTOR(0 DOWNTO 0); 
+	probe4 : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+	probe5 : IN STD_LOGIC_VECTOR(0 DOWNTO 0)
+);
+END COMPONENT  ;
+COMPONENT ila_pixclk
+
+PORT (
+	clk : IN STD_LOGIC;
+
+
+	trig_in : IN STD_LOGIC;
+	trig_in_ack : OUT STD_LOGIC;
+	probe0 : IN STD_LOGIC_VECTOR(0 DOWNTO 0); 
+	probe1 : IN STD_LOGIC_VECTOR(4 DOWNTO 0); 
+	probe2 : IN STD_LOGIC_VECTOR(4 DOWNTO 0); 
+	probe3 : IN STD_LOGIC_VECTOR(4 DOWNTO 0); 
+	probe4 : IN STD_LOGIC_VECTOR(2 DOWNTO 0); 
+	probe5 : IN STD_LOGIC_VECTOR(2 DOWNTO 0); 
+	probe6 : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+	probe7 : IN STD_LOGIC_VECTOR(2 DOWNTO 0)
+);
+END COMPONENT  ;
+
+
 type dataIn_t is array (2 downto 0) of std_logic_vector(7 downto 0);
 type eyeSize_t is array (2 downto 0) of std_logic_vector(kIDLY_TapWidth-1 downto 0);
 signal aLocked, SerialClk_int, PixelClk_int, pLockLostRst: std_logic;
-signal pRdy, pVld, pDE, pAlignErr, pC0, pC1 : std_logic_vector(2 downto 0);
+signal pRdy, pVld, pDE, pC0, pC1 : std_logic_vector(2 downto 0);
 signal pDataIn : dataIn_t;
-signal pEyeSize : eyeSize_t;
-
 signal aRst_int, pRst_int : std_logic;
 
 signal pData : std_logic_vector(23 downto 0);
 signal pVDE, pHSync, pVSync : std_logic;
--- set KEEP attribute so that synthesis does not optimize this register
--- in case we want to connect it to an inserted ILA debug core
-attribute KEEP : string;
-attribute KEEP of pEyeSize: signal is "TRUE";
+
+-- DEBUG
+signal dbg_rDlyRst : std_logic;
+signal dbg_rRdyRst : std_logic;
+signal dbg_rMMCM_Reset : std_logic;
+signal dbg_rBUFR_Rst : std_logic;
+signal dbg_rMMCM_Locked : std_logic;
+signal dbg_Clocking_aLocked : std_logic;
+signal dbg_pAlignErr, dbg_pBitslip : std_logic_vector(2 downto 0);
+signal dbg_pEyeSize : eyeSize_t;
+
+signal pTrigOut, pTrigOutAck, rTrigOutAck, rTrigOut : std_logic;
+
 begin
 
 ResetActiveLow: if not kRstActiveHigh generate
@@ -147,9 +190,16 @@ TMDS_ClockingX: entity work.TMDS_Clocking
 
       aLocked    => aLocked,  
       PixelClk   => PixelClk_int, -- slow parallel clock
-      SerialClk  => SerialClk_int -- fast serial clock
+      SerialClk  => SerialClk_int, -- fast serial clock
+      
+      dbg_rDlyRst => dbg_rDlyRst,
+      dbg_rRdyRst => dbg_rRdyRst,
+      dbg_rMMCM_Reset => dbg_rMMCM_Reset,
+      dbg_rBUFR_Rst => dbg_rBUFR_Rst,
+      dbg_rMMCM_Locked => dbg_rMMCM_Locked
    );
-   
+dbg_Clocking_aLocked <= aLocked;
+ 
 -- We need a reset bridge to use the asynchronous aLocked signal to reset our circuitry
 -- and decrease the chance of metastability. The signal pLockLostRst can be used as
 -- asynchronous reset for any flip-flop in the PixelClk domain, since it will be de-asserted
@@ -181,15 +231,16 @@ DataDecoders: for iCh in 2 downto 0 generate
          sDataIn_n               => TMDS_Data_n(iCh),                                       
          pOtherChRdy(1 downto 0) => pRdy((iCh+1) mod 3) & pRdy((iCh+2) mod 3), -- tie channels together for channel de-skew
          pOtherChVld(1 downto 0) => pVld((iCh+1) mod 3) & pVld((iCh+2) mod 3), -- tie channels together for channel de-skew
-   
-         pAlignErr               => pAlignErr(iCh),             
+         
          pC0                     => pC0(iCh),
          pC1                     => pC1(iCh),                    
          pMeRdy                  => pRdy(iCh),                
          pMeVld                  => pVld(iCh),                
          pVde                    => pDE(iCh),                  
          pDataIn(7 downto 0)     => pDataIn(iCh),   
-         pEyeSize                => pEyeSize(iCh)
+         dbg_pEyeSize            => dbg_pEyeSize(iCh),
+         dbg_pAlignErr           => dbg_pAlignErr(iCh),       
+         dbg_pBitslip            => dbg_pBitslip(iCh)
       );
 end generate DataDecoders;
 
@@ -259,5 +310,55 @@ GenerateDDC: if kEmulateDDC generate
          aSCL_O => SCL_O,
          aSCL_T => SCL_T);
 end generate GenerateDDC;
-   
+
+----------------------------------------------------------------------------------
+-- Debug module
+----------------------------------------------------------------------------------
+GenerateDebug: if kDebug generate
+
+ILA_RefClkx : ila_refclk
+PORT MAP (
+	clk => RefClk,
+	trig_out => rTrigOut,
+	trig_out_ack => rTrigOutAck,
+	probe0(0) => dbg_rDlyRst, 
+	probe1(0) => dbg_rRdyRst, 
+	probe2(0) => dbg_rMMCM_Reset, 
+	probe3(0) => dbg_rBUFR_Rst, 
+	probe4(0) => dbg_rMMCM_Locked,
+	probe5(0) => dbg_Clocking_aLocked
+);
+
+SyncAsyncTrigAck: entity work.SyncAsync
+   port map (
+      aReset => '0',
+      aIn => pTrigOutAck,
+      OutClk => RefClk,
+      oOut => rTrigOutAck);
+      
+SyncAsyncTrigOut: entity work.SyncAsync
+   port map (
+      aReset => '0',
+      aIn => rTrigOut,
+      OutClk => PixelClk_int,
+      oOut => pTrigOut);
+      
+ILA_PixClkx : ila_pixclk
+PORT MAP (
+	clk => PixelClk_int,
+	trig_in => pTrigOut,
+	trig_in_ack => pTrigOutAck,
+	probe0(0) => pLockLostRst, 
+   probe1 => dbg_pEyeSize(0),
+   probe2 => dbg_pEyeSize(1),
+   probe3 => dbg_pEyeSize(2), 
+   probe4 => dbg_pAlignErr,
+   probe5 => dbg_pBitslip,
+   probe6 => pVld,
+   probe7 => pRdy
+);
+
+
+end generate;
+
 end Behavioral;

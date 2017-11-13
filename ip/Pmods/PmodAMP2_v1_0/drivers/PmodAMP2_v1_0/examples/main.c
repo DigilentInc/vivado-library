@@ -22,17 +22,18 @@
 /*																		   */
 /***************************************************************************/
 /*  Revision History:													   */
-/*	04/26/2017(ArtVVB): validated										   */
+/*	04/26/2017(ArtVVB): 2016.4 Maintenance								   */
+/*	10/30/2017(ArtVVB): 2016.4 Maintenance								   */
 /***************************************************************************/
 
 #include "xparameters.h"
 #include "xil_printf.h"
 #include "xil_cache.h"
 #include "PmodAMP2.h"
+#include "sleep.h"
 
 #ifdef __MICROBLAZE__
 	#include "xintc.h"
-	#include "microblaze_sleep.h"
 
 	#define INTC 					XIntc
 	#define INTC_HANDLER			XIntc_InterruptHandler
@@ -41,7 +42,6 @@
 #else
 	#include "xscugic.h"
 	#include "xil_exception.h"
-	#include "sleep.h"
 
 	#define INTC 					XScuGic
 	#define INTC_HANDLER			Xil_InterruptHandler
@@ -56,12 +56,12 @@
 
 int DemoIntcInitialize(PmodAMP2 *InstancePtr, INTC *IntcInstancePtr, u16 IntcDeviceId, u32 InterruptId, void *Handler);
 void DemoInterruptHandler(PmodAMP2 *InstancePtr);
-void DemoSleep(int sec);
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
 void DemoSetFrequency(u32 freq_hz);
-
+void EnableCaches();
+void DisableCaches();
 
 INTC intc;
 PmodAMP2 amp;
@@ -81,31 +81,26 @@ int main (void)
 
 
 void DemoInitialize() {
-#ifdef __MICROBLAZE__
-#ifdef XPAR_MICROBLAZE_USE_ICACHE
-	Xil_ICacheEnable();
-#endif
-#ifdef XPAR_MICROBLAZE_USE_DCACHE
-	Xil_DCacheEnable();
-#endif
-#endif
+	XStatus status;
+
+	EnableCaches();
 	xil_printf("initializing\n\r");
 	AMP2_begin(&amp, PWM_BASEADDR, GPIO_BASEADDR, TIMER_BASEADDR);
 	xil_printf("initializing\n\r");
-	if (XST_SUCCESS != DemoIntcInitialize(&amp, &intc, INTC_DEVICE_ID, INTC_TMR_INTERRUPT_ID, (Xil_ExceptionHandler)DemoInterruptHandler))
+	status = DemoIntcInitialize(
+		&amp,
+		&intc,
+		INTC_DEVICE_ID,
+		INTC_TMR_INTERRUPT_ID,
+		(Xil_ExceptionHandler)DemoInterruptHandler
+	);
+	if (status != XST_SUCCESS)
 		xil_printf("intc setup failed\n\r");
 }
 
 void DemoCleanup()
 {
-#ifdef __MICROBLAZE__
-#ifdef XPAR_MICROBLAZE_USE_ICACHE
-	Xil_ICacheDisable();
-#endif
-#ifdef XPAR_MICROBLAZE_USE_DCACHE
-	Xil_DCacheDisable();
-#endif
-#endif
+	DisableCaches();
 }
 
 void DemoRun()
@@ -117,21 +112,12 @@ void DemoRun()
 
 	while(1) {
 		DemoSetFrequency(440);
-		DemoSleep(1);
+		sleep(1);
 		DemoSetFrequency(587);
-		DemoSleep(1);
+		sleep(1);
 	};
 
 	AMP2_stop(&amp);
-}
-
-void DemoSleep(int sec)
-{
-#ifdef __MICROBLAZE__
-	MB_Sleep(1000*sec);
-#else
-	sleep(sec);
-#endif
 }
 
 void DemoInterruptHandler(PmodAMP2 *InstancePtr)
@@ -268,4 +254,28 @@ int DemoIntcInitialize(PmodAMP2 *InstancePtr, INTC *IntcInstancePtr, u16 IntcDev
 void DemoSetFrequency(u32 freq_hz)
 {
 	delta = (freq_hz * (double)(2.0 * AMP2_PWM_PERIOD * AMP2_PWM_PERIOD / 100000000));
+}
+
+void EnableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+	Xil_ICacheEnable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+	Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
+	Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+	Xil_ICacheDisable();
+#endif
+#endif
 }

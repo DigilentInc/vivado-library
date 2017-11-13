@@ -39,6 +39,7 @@
 
 PmodSF3 mySF3;
 
+// Interrupt Vector Table
 const ivt_t ivt[] = {
 		{SF3_SPI_INT_ADDR, (XInterruptHandler) XSpi_InterruptHandler, &mySF3.SF3Spi}
 };
@@ -101,7 +102,8 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 	u32 Address;
 	u8 TestByte;
 
-	u8 WriteBuffer[SF3_PAGE_SIZE + SF3_WRITE_EXTRA_BYTES]; // The buffers requires space to store SPI read/write commands as well as data
+	// Buffers require space to store SPI read/write commands as well as data
+	u8 WriteBuffer[SF3_PAGE_SIZE + SF3_WRITE_EXTRA_BYTES];
 	u8 ReadBuffer[SF3_PAGE_SIZE + SF3_READ_MAX_EXTRA_BYTES];
 	u8 *ReadBufferPtr;
 	u8 *WriteBufferPtr;
@@ -120,7 +122,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		return XST_FAILURE;
 	}
 
-	// Perform the sector Erase operation.
+	// Perform the sector erase operation.
 	Status = SF3_SectorErase(InstancePtr, Address);
 	if (Status != XST_SUCCESS) {
 		xil_printf("Quad-SPI Flash sector erase error\r\n");
@@ -134,7 +136,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		return XST_FAILURE;
 	}
 
-	// Write the data to the Page using Page Program command.
+	// Write the data to the page using page program command.
 	WriteBufferPtr = WriteBuffer;
 	Status = SF3_FlashWrite(InstancePtr, Address, SF3_PAGE_SIZE, SF3_COMMAND_PAGE_PROGRAM, &WriteBufferPtr);
 	if (Status != XST_SUCCESS) {
@@ -142,14 +144,14 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		return XST_FAILURE;
 	}
 
-	xil_printf("SPI Write Test Passed\r\n");
+	xil_printf("SPI Write Successful\r\n");
 
 	// Clear the read buffer
 	for (Index = 0; Index < SF3_PAGE_SIZE + SF3_READ_MAX_EXTRA_BYTES; Index++) {
 		ReadBuffer[Index] = 0x0;
 	}
 
-	// Read the data from the Page using Random Read command
+	// Read the data from the page using random read command
 	ReadBufferPtr = ReadBuffer;
 	Status = SF3_FlashRead(InstancePtr, Address, SF3_PAGE_SIZE, SF3_COMMAND_RANDOM_READ, &ReadBufferPtr);
 	if (Status != XST_SUCCESS) {
@@ -157,7 +159,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		return XST_FAILURE;
 	}
 
-	xil_printf("Flash Read");
+	xil_printf("Flash Read Successful\r\n");
 
 	// Compare the data read against data written
 	for (Index = 0; Index < SF3_PAGE_SIZE; Index++) {
@@ -174,7 +176,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		ReadBuffer[Index] = 0x0;
 	}
 
-	// Read the data from the Page using Dual Output Fast Read command.
+	// Read the data from the page using dual output fast read command.
 	ReadBufferPtr = ReadBuffer;
 	Status = SF3_FlashRead(InstancePtr, Address, SF3_PAGE_SIZE, SF3_COMMAND_DUAL_READ, &ReadBufferPtr);
 	if (Status != XST_SUCCESS) {
@@ -190,14 +192,14 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		}
 	}
 
-	xil_printf("Dual-SPI Read Test Passed\r\n");
+	xil_printf("Dual-SPI read test passed\r\n");
 
 	// Clear the read buffer
 	for (Index = 0; Index < SF3_PAGE_SIZE + SF3_READ_MAX_EXTRA_BYTES; Index++) {
 		ReadBuffer[Index] = 0x0;
 	}
 
-	// Read the data from the Page using Quad Output Fast Read command
+	// Read the data from the page using quad output fast read command
 	ReadBufferPtr = ReadBuffer;
 	Status = SF3_FlashRead(InstancePtr, Address, SF3_PAGE_SIZE, SF3_COMMAND_QUAD_READ, &ReadBufferPtr);
 	if (Status != XST_SUCCESS) {
@@ -213,7 +215,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		}
 	}
 
-	// Perform the Write Enable operation
+	// Perform the write enable operation
 	Status = SF3_FlashWriteEnable(InstancePtr);
 	if (Status != XST_SUCCESS) {
 		xil_printf("Quad-SPI Flash write enable error\r\n");
@@ -239,7 +241,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		return XST_SUCCESS;
 	}
 
-	xil_printf("Quad-SPI Write Test Passed\r\n");
+	xil_printf("Quad-SPI write successful\r\n");
 
 	// Wait while the flash is busy
 	Status = SF3_WaitForFlashReady(InstancePtr);
@@ -253,7 +255,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		ReadBuffer[Index] = 0x0;
 	}
 
-	// Read the data from the Page using Normal Read command
+	// Read the data from the page using normal read command
 	ReadBufferPtr = ReadBuffer;
 	Status = SF3_FlashRead(InstancePtr, Address, SF3_PAGE_SIZE, SF3_COMMAND_QUAD_IO_READ, &ReadBufferPtr);
 	if (Status != XST_SUCCESS) {
@@ -269,7 +271,7 @@ XStatus SF3_QuadSpiTest(PmodSF3* InstancePtr) {
 		}
 	}
 
-	xil_printf("Quad-SPI Read Test Passed\r\n");
+	xil_printf("Quad-SPI read test passed\r\n");
 
 	return XST_SUCCESS;
 }

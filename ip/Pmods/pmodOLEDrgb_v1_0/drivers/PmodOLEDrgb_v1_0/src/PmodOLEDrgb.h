@@ -1,99 +1,90 @@
-/************************************************************************/
-/*																		*/
-/* PmodOLEDrgb.h	--	Interface Declarations for PmodOLEDrgb.c		*/
-/*																		*/
-/************************************************************************/
-/*	Author:		Cristian Fatu, Thomas Kappenman							*/
-/*	Copyright 2015, Digilent Inc.										*/
-/************************************************************************/
-/*
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+/******************************************************************************/
+/*                                                                            */
+/* PmodOLEDrgb.h -- Interface Declarations for PmodOLEDrgb.c                  */
+/*                                                                            */
+/******************************************************************************/
+/* Author: Cristian Fatu, Thomas Kappenman                                    */
+/* Copyright 2015, Digilent Inc.                                              */
+/******************************************************************************/
+/* File Description:                                                          */
+/*                                                                            */
+/* This header file contains the object class declarations and other          */
+/* interface declarations need to use the PmodOLEDrgb display on any          */
+/* MicroBlaze/Zynq design                                                     */
+/*                                                                            */
+/******************************************************************************/
+/* Revision History:                                                          */
+/*                                                                            */
+/*    07/20/2015(CristianF): created                                          */
+/*    04/19/2015(TommyK):    Adapted for use with Microblaze/Zynq .c designs  */
+/*    08/25/2017(artvvb):    added OLEDrgb_sleep                              */
+/*    11/11/2017(atangzwj):  Validated for Vivado 2016.4                      */
+/*                                                                            */
+/******************************************************************************/
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-/************************************************************************/
-/*  File Description:													*/
-/*																		*/
-/*	This header file contains the object class declarations and other	*/
-/*	interface declarations need to use the PmodOLEDrgb display on any	*/
-/*	microblaze/zynq design												*/
-/*																		*/
-/************************************************************************/
-/*  Revision History:													*/
-/*																		*/
-/*	07/20/2015(CristianF): created										*/
-/*	04/19/2015(TommyK): Adapted for use with Microblaze/Zynq .c designs	*/
-/*	08/25/2017(artvvb):  added OLEDrgb_sleep							*/
-/*																		*/
-/************************************************************************/
 #ifndef PMODOLEDRGB_H
 #define PMODOLEDRGB_H
 
+/************ Include Files ************/
 
-/****************** Include Files ********************/
 #include "xil_types.h"
-#include "xstatus.h"
-#include "xspi_l.h"
 #include "xspi.h"
+#include "xspi_l.h"
+#include "xstatus.h"
 
-#define OLEDRGB_WIDTH                      96
-#define OLEDRGB_HEIGHT                     64
 
-#define OLEDRGB_CHARBYTES      				8      //number of bytes in a glyph
-#define	OLEDRGB_USERCHAR_MAX				0x20	//number of character defs in user font table
-#define OLEDRGB_CHARBYTES_USER  			(OLEDRGB_USERCHAR_MAX*OLEDRGB_CHARBYTES)  //number of bytes in user font table
+/************ Macro Definitions ************/
 
-#define CMD_DRAWLINE                       0x21
-#define CMD_DRAWRECTANGLE                  0x22
-#define CMD_COPYWINDOW                     0x23
-#define CMD_DIMWINDOW                      0x24
-#define CMD_CLEARWINDOW                    0x25
-#define CMD_FILLWINDOW                     0x26
-#define DISABLE_FILL    0x00
-#define ENABLE_FILL     0x01
-#define CMD_CONTINUOUSSCROLLINGSETUP      0x27
-#define CMD_DEACTIVESCROLLING              0x2E
-#define CMD_ACTIVESCROLLING                0x2F
+#define OLEDRGB_WIDTH  96
+#define OLEDRGB_HEIGHT 64
 
-#define CMD_SETCOLUMNADDRESS              	0x15
-#define CMD_SETROWADDRESS                 	0x75
-#define CMD_SETCONTRASTA                  	0x81
-#define CMD_SETCONTRASTB                  	0x82
-#define CMD_SETCONTRASTC                  	0x83
-#define CMD_MASTERCURRENTCONTROL          	0x87
-#define CMD_SETPRECHARGESPEEDA           	0x8A
-#define CMD_SETPRECHARGESPEEDB           	0x8B
-#define CMD_SETPRECHARGESPEEDC           	0x8C
-#define CMD_SETREMAP                       	0xA0
-#define CMD_SETDISPLAYSTARTLINE          	0xA1
-#define CMD_SETDISPLAYOFFSET              	0xA2
-#define CMD_NORMALDISPLAY                  	0xA4
-#define CMD_ENTIREDISPLAYON              	0xA5
-#define CMD_ENTIREDISPLAYOFF              	0xA6
-#define CMD_INVERSEDISPLAY                 	0xA7
-#define CMD_SETMULTIPLEXRATIO             	0xA8
-#define CMD_DIMMODESETTING                	0xAB
-#define CMD_SETMASTERCONFIGURE            	0xAD
-#define CMD_DIMMODEDISPLAYON             	0xAC
-#define CMD_DISPLAYOFF                     	0xAE
-#define CMD_DISPLAYON    					0xAF
-#define CMD_POWERSAVEMODE                 	0xB0
-#define CMD_PHASEPERIODADJUSTMENT         	0xB1
-#define CMD_DISPLAYCLOCKDIV               	0xB3
-#define CMD_SETGRAySCALETABLE            	0xB8
-#define CMD_ENABLELINEARGRAYSCALETABLE  	0xB9
-#define CMD_SETPRECHARGEVOLTAGE           	0xBB
-#define CMD_SETVVOLTAGE                   	0xBE
+#define OLEDRGB_CHARBYTES      8    // Number of bytes in a glyph
+#define	OLEDRGB_USERCHAR_MAX   0x20 // Number of character defs in user font
+                                    // table
+#define OLEDRGB_CHARBYTES_USER (OLEDRGB_USERCHAR_MAX*OLEDRGB_CHARBYTES)
+                               // Number of bytes in user font table
+
+#define CMD_DRAWLINE                 0x21
+#define CMD_DRAWRECTANGLE            0x22
+#define CMD_COPYWINDOW               0x23
+#define CMD_DIMWINDOW                0x24
+#define CMD_CLEARWINDOW              0x25
+#define CMD_FILLWINDOW               0x26
+#define DISABLE_FILL                 0x00
+#define ENABLE_FILL                  0x01
+#define CMD_CONTINUOUSSCROLLINGSETUP 0x27
+#define CMD_DEACTIVESCROLLING        0x2E
+#define CMD_ACTIVESCROLLING          0x2F
+
+#define CMD_SETCOLUMNADDRESS           0x15
+#define CMD_SETROWADDRESS              0x75
+#define CMD_SETCONTRASTA               0x81
+#define CMD_SETCONTRASTB               0x82
+#define CMD_SETCONTRASTC               0x83
+#define CMD_MASTERCURRENTCONTROL       0x87
+#define CMD_SETPRECHARGESPEEDA         0x8A
+#define CMD_SETPRECHARGESPEEDB         0x8B
+#define CMD_SETPRECHARGESPEEDC         0x8C
+#define CMD_SETREMAP                   0xA0
+#define CMD_SETDISPLAYSTARTLINE        0xA1
+#define CMD_SETDISPLAYOFFSET           0xA2
+#define CMD_NORMALDISPLAY              0xA4
+#define CMD_ENTIREDISPLAYON            0xA5
+#define CMD_ENTIREDISPLAYOFF           0xA6
+#define CMD_INVERSEDISPLAY             0xA7
+#define CMD_SETMULTIPLEXRATIO          0xA8
+#define CMD_DIMMODESETTING             0xAB
+#define CMD_SETMASTERCONFIGURE         0xAD
+#define CMD_DIMMODEDISPLAYON           0xAC
+#define CMD_DISPLAYOFF                 0xAE
+#define CMD_DISPLAYON                  0xAF
+#define CMD_POWERSAVEMODE              0xB0
+#define CMD_PHASEPERIODADJUSTMENT      0xB1
+#define CMD_DISPLAYCLOCKDIV            0xB3
+#define CMD_SETGRAySCALETABLE          0xB8
+#define CMD_ENABLELINEARGRAYSCALETABLE 0xB9
+#define CMD_SETPRECHARGEVOLTAGE        0xBB
+#define CMD_SETVVOLTAGE                0xBE
 
 /**************************** Type Definitions *****************************/
 /**
@@ -159,32 +150,40 @@
 XStatus PMODOLEDRGB_Reg_SelfTest(void * baseaddr_p);
 
 
-typedef struct{
-	u32 GPIO_addr;
-	XSpi OLEDSpi;
+/************ Type Definitions ************/
 
-	u8* pbOledrgbFontCur;
-	u8* pbOledrgbFontUser;
-	u8	rgbOledrgbFontUser[OLEDRGB_CHARBYTES_USER];
-	int	dxcoOledrgbFontCur;
-	int	dycoOledrgbFontCur;
-	uint16_t m_FontColor, m_FontBkColor;
-	int	xchOledCur;
-	int	ychOledCur;
+typedef struct {
+   u32 GPIO_addr;
+   XSpi OLEDSpi;
 
-	int	xchOledrgbMax;
-	int	ychOledrgbMax;
-}PmodOLEDrgb;
+   u8* pbOledrgbFontCur;
+   u8* pbOledrgbFontUser;
+   u8 rgbOledrgbFontUser[OLEDRGB_CHARBYTES_USER];
+   int dxcoOledrgbFontCur;
+   int dycoOledrgbFontCur;
+   uint16_t m_FontColor, m_FontBkColor;
+   int xchOledCur;
+   int ychOledCur;
 
+   int xchOledrgbMax;
+   int ychOledrgbMax;
+} PmodOLEDrgb;
+
+
+/************ Function Prototypes ************/
 
 void OLEDrgb_begin(PmodOLEDrgb* InstancePtr, u32 GPIO_Address, u32 SPI_Address);
 void OLEDrgb_end(PmodOLEDrgb* InstancePtr);
 
-void OLEDrgb_DrawPixel(PmodOLEDrgb* InstancePtr, u8 c, u8 r, uint16_t pixelColor);
-void OLEDrgb_DrawLine(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, uint16_t lineColor);
-void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, uint16_t lineColor, u8 bFill, uint16_t fillColor);
+void OLEDrgb_DrawPixel(PmodOLEDrgb* InstancePtr, u8 c, u8 r,
+      uint16_t pixelColor);
+void OLEDrgb_DrawLine(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2,
+      uint16_t lineColor);
+void OLEDrgb_DrawRectangle(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2,
+      uint16_t lineColor, u8 bFill, uint16_t fillColor);
 void OLEDrgb_Clear(PmodOLEDrgb* InstancePtr);
-void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, u8 *pBmp);
+void OLEDrgb_DrawBitmap(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2,
+      u8 *pBmp);
 
 void OLEDrgb_SetCursor(PmodOLEDrgb* InstancePtr, int xch, int ych);
 void OLEDrgb_GetCursor(PmodOLEDrgb* InstancePtr, int *pxch, int* pych);
@@ -197,11 +196,13 @@ void OLEDrgb_SetFontBkColor(PmodOLEDrgb* InstancePtr, uint16_t fontBkColor);
 void OLEDrgb_SetCurrentFontTable(PmodOLEDrgb* InstancePtr, u8 *pbFont);
 void OLEDrgb_SetCurrentUserFontTable(PmodOLEDrgb* InstancePtr, u8 *pbUserFont);
 void OLEDrgb_AdvanceCursor(PmodOLEDrgb* InstancePtr);
-void OLEDrgb_SetScrolling(PmodOLEDrgb* InstancePtr, u8 scrollH, u8 scrollV, u8 rowAddr, u8 rowNum, u8 timeInterval);
+void OLEDrgb_SetScrolling(PmodOLEDrgb* InstancePtr, u8 scrollH, u8 scrollV,
+      u8 rowAddr, u8 rowNum, u8 timeInterval);
 void OLEDrgb_EnableScrolling(PmodOLEDrgb* InstancePtr, u8 fEnable);
 void OLEDrgb_EnablePmod(PmodOLEDrgb* InstancePtr, u8 fEnable);
 void OLEDrgb_EnableBackLight(PmodOLEDrgb* InstancePtr, u8 fEnable);
-void OLEDrgb_Copy(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, u8 c3, u8 r3);
+void OLEDrgb_Copy(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2, u8 c3,
+      u8 r3);
 void OLEDrgb_Dim(PmodOLEDrgb* InstancePtr, u8 c1, u8 r1, u8 c2, u8 r2);
 void OLEDrgb_HostInit(PmodOLEDrgb* InstancePtr);
 void OLEDrgb_HostTerm(PmodOLEDrgb* InstancePtr);
@@ -210,7 +211,8 @@ void OLEDrgb_DevTerm(PmodOLEDrgb* InstancePtr);
 
 int OLEDrgb_SPIInit(XSpi *SpiInstancePtr);
 void OLEDrgb_WriteSPICommand(PmodOLEDrgb* InstancePtr, u8 cmd);
-void OLEDrgb_WriteSPI(PmodOLEDrgb* InstancePtr, u8 *pCmd, int nCmd, u8 *pData, int nData);
+void OLEDrgb_WriteSPI(PmodOLEDrgb* InstancePtr, u8 *pCmd, int nCmd, u8 *pData,
+      int nData);
 uint16_t OLEDrgb_BuildHSV(u8 hue, u8 sat, u8 val);
 uint16_t OLEDrgb_BuildRGB(u8 R, u8 G, u8 B);
 

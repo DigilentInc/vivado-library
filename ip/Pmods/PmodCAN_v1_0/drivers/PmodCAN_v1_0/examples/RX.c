@@ -31,13 +31,8 @@
 
 #include "xparameters.h"
 #include "xil_cache.h"
-
 #include "PmodCAN.h"
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 
 
@@ -46,7 +41,6 @@ void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
 void DemoPrintMessage(CAN_Message message);
-CAN_Message DemoComposeMessage();
 void EnableCaches();
 void DisableCaches();
 
@@ -92,27 +86,6 @@ void DemoPrintMessage(CAN_Message message)
     xil_printf("        %02x\r\n", message.data[i]);
 }
 
-CAN_Message DemoComposeMessage()
-{
-    CAN_Message message;
-
-    message.id = 0x100;
-    message.dlc = 6;
-    message.eid = 0x15a;
-    message.rtr = 0;
-    message.ide = 0;
-    message.data[0] = 0x01;
-    message.data[1] = 0x02;
-    message.data[2] = 0x04;
-    message.data[3] = 0x08;
-    message.data[4] = 0x10;
-    message.data[5] = 0x20;
-    message.data[6] = 0x40;
-    message.data[7] = 0x80;
-
-    return message;
-}
-
 void DemoRun()
 {
     CAN_Message RxMessage;
@@ -155,11 +128,7 @@ void DemoRun()
         xil_printf("received ");
         DemoPrintMessage(RxMessage);
 
-        #ifdef __MICROBLAZE__
-            MB_Sleep(1000);
-        #else
-            sleep(1);
-        #endif
+		sleep(1);
     }
 }
 

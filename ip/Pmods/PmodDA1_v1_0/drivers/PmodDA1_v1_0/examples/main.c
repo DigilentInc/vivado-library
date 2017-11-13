@@ -8,8 +8,8 @@
 /****************************************************************************/
 /*  File Description:                                                       */
 /*  This file defines a demonstration for the use of the Pmod DA1 ip        */
-/*  core. A triangle wave is output from the first digital to analog        */
-/*  converter (pins A1 and B1)                                              */
+/*  core. A 3V peak-to-peak triangle wave of an unspecified frequency is    */
+/*  output from the first digital to analog converter (pins A1 and B1)      */
 /*                                                                          */
 /*  to connect to UART, use a serial terminal such as TeraTerm attached to  */
 /*  the programmed FPGA's port at the proper baud rate                      */
@@ -30,12 +30,13 @@
 #include "PmodDA1.h"
 #include "xparameters.h"
 #include "xil_cache.h"
-#include <stdio.h>
 #include "xil_printf.h"
 
-void DemoInitialize(); // initializes
-void DemoRun();// reads the data and prints the integer and the analog floating point number
+void DemoInitialize();
+void DemoRun();
 void DemoCleanup();
+void EnableCaches();
+void DisableCaches();
 
 PmodDA1 myDevice;
 
@@ -49,15 +50,7 @@ int main(void)
 
 void DemoInitialize()
 {
-#ifdef __MICROBLAZE__
-#ifdef XPAR_MICROBLAZE_USE_ICACHE
-    Xil_ICacheEnable();
-#endif
-#ifdef XPAR_MICROBLAZE_USE_DCACHE
-    Xil_DCacheEnable();
-#endif
-#endif
-
+	EnableCaches();
     DA1_begin(&myDevice, XPAR_PMODDA1_0_AXI_LITE_SPI_BASEADDR);
 }
 
@@ -68,7 +61,7 @@ void DemoRun()
     float dStep = 0.05;
     float dValue;
 
-    xil_printf("starting Pmod DA1 demo...\n\r");
+    xil_printf("Starting Pmod DA1 demo...\n\r");
 
     while(1)
     {
@@ -90,13 +83,29 @@ void DemoRun()
 
 void DemoCleanup() {
     DA1_end(&myDevice);
+    DisableCaches();
+}
 
+void EnableCaches()
+{
 #ifdef __MICROBLAZE__
 #ifdef XPAR_MICROBLAZE_USE_ICACHE
-    Xil_ICacheDisable();
+    Xil_ICacheEnable();
 #endif
 #ifdef XPAR_MICROBLAZE_USE_DCACHE
+    Xil_DCacheEnable();
+#endif
+#endif
+}
+
+void DisableCaches()
+{
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
     Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+    Xil_ICacheDisable();
 #endif
 #endif
 }

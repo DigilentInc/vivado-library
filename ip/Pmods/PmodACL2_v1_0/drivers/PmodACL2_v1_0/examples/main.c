@@ -36,15 +36,10 @@
 #include "xparameters.h"
 #include "xil_cache.h"
 
-#ifdef __MICROBLAZE__
-#include "microblaze_sleep.h"
-#else
 #include "sleep.h"
-#endif
 
 void DemoInitialize();
 void DemoRun();
-void DemoSleep(u32 millis);
 void DemoCleanup();
 void EnableCaches();
 void DisableCaches();
@@ -69,7 +64,7 @@ void DemoInitialize()
 
 	//reset the ACL2
 	ACL2_reset(&myDevice);
-	DemoSleep(1);
+	usleep(1000);
 
 	//set ACL2 configuration data
 	ACL2_configure(&myDevice);
@@ -101,15 +96,6 @@ void DemoRun()
 	}
 
 	ACL2_end(&myDevice);
-}
-
-void DemoSleep(u32 millis)
-{
-#ifdef __MICROBLAZE__
-	MB_Sleep(millis);
-#else
-	usleep(millis*1000);
-#endif
 }
 
 void DemoCleanup()

@@ -45,8 +45,8 @@ typedef struct PmodDA1 {
 
 void DA1_begin(PmodDA1* InstancePtr, u32 SPI_Address);
 void DA1_end(PmodDA1* InstancePtr);
-int  DA1_SPIInit(XSpi *SpiInstancePtr);
-u8  DA1_WriteIntegerValue(PmodDA1* InstancePtr, u8 bIntegerValue);
-u8  DA1_WritePhysicalValue(PmodDA1* InstancePtr, float dPhysicalValue);
+int DA1_SPIInit(XSpi *SpiInstancePtr);
+u8 DA1_WriteIntegerValue(PmodDA1* InstancePtr, u8 bIntegerValue);
+u8 DA1_WritePhysicalValue(PmodDA1* InstancePtr, float dPhysicalValue);
 
 #endif // PMODDA1_H

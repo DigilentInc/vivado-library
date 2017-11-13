@@ -40,6 +40,7 @@
 #include "xil_printf.h"
 #include "xil_cache.h"
 #include "PmodOLED.h"
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*              Global Variables                                */
@@ -133,20 +134,20 @@ void DemoRun()
             OLED_MoveTo(&myDevice, 0, irow);
             OLED_LineTo(&myDevice, 127, irow);
             OLED_Update(&myDevice);
-            OLED_Delay(100);
+            usleep(100000);
         }
 
 
-        OLED_Delay(1000);
+		sleep(1);
         // Blink the display three times.
         for (i = 0; i < 3; i++)
         {
-            OLED_DisplayOff (&myDevice);
-            OLED_Delay      (500);
-            OLED_DisplayOn  (&myDevice);
-            OLED_Delay      (500);
+            OLED_DisplayOff(&myDevice);
+            usleep(500000);
+            OLED_DisplayOn(&myDevice);
+            usleep(500000);
         }
-        OLED_Delay(2000);
+        sleep(2);
 
         // Now erase the characters from the display
         for (irow = OledRowMax-1; irow >= 0; irow--) {
@@ -155,14 +156,14 @@ void DemoRun()
             OLED_MoveTo(&myDevice, 0, irow);
             OLED_LineTo(&myDevice, 127, irow);
             OLED_Update(&myDevice);
-            OLED_Delay(25);
+			usleep(25000);
             OLED_SetDrawMode(&myDevice, OledModeXor);
             OLED_MoveTo(&myDevice, 0, irow);
             OLED_LineTo(&myDevice, 127, irow);
             OLED_Update(&myDevice);
         }
 
-        OLED_Delay(1000);
+        sleep(1);
 
         // Draw a rectangle in center of screen
         // Display the 8 different patterns available
@@ -178,7 +179,7 @@ void DemoRun()
             OLED_DrawRect(&myDevice, 75, 27);
             OLED_Update(&myDevice);
 
-            OLED_Delay(1000);
+            sleep(1);
         }
 
 		#ifdef __MICROBLAZE__

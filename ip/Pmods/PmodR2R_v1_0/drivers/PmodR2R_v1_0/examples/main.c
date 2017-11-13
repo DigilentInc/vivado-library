@@ -30,19 +30,13 @@
 #include "PmodR2R.h"
 #include "math.h"
 #include "xil_printf.h"
-#ifdef __MICROBLAZE__
-	#include "microblaze_sleep.h"
-	//(deprecated in Vivado 2016.4)
-#else
-	#include "sleep.h"
-#endif
+#include "sleep.h"
 
 void DemoInitialize();
 void DemoRun();
 void DemoCleanup();
 void EnableCaches();
 void DisableCaches();
-void DemoSleep(int millis);
 
 PmodR2R myDevice;
 
@@ -50,19 +44,35 @@ int main(void)
 {
 	DemoInitialize();
 	DemoRun();
+	DemoCleanup();
 	return 0;
 }
 
 void DemoRun()
 {
-	int i=0;
+	const double one_degree_delta = 3.14159 / 180;
+	double i=0, voltage;
+	u32 data;
     xil_printf("Demo Initialized, producing 3.3 V sin wave, T=360ms\n\r");
 
     while(1)
     {
-    	R2R_writeVoltage(&myDevice, 3.3*(sin(6.28*(double)i/360.0)+1.0)/2.0);//convert degrees to radians, output 0->3.3V sin wave
-    	i = (i >= 359) ? (0) : (i+1);
-		DemoSleep(1);
+    	voltage = 3.3*(sin(i)+1.0)/2.0;
+
+    	if (voltage > 3.3)
+    		data = 0xFF;
+    	else if (voltage < 0.0)
+    		data = 0x00;
+    	else
+    		data = (int)(255.0 * voltage / 3.3);
+
+    	R2R_write(&myDevice, data);//convert degrees to radians, output 0->3.3V sin wave
+
+    	i = i + one_degree_delta;
+    	if (i >= 6.28318)
+			i -= 6.28318;
+
+		usleep(1000);
     }
 }
 
@@ -75,15 +85,6 @@ void DemoInitialize()
 void DemoCleanup()
 {
 	DisableCaches();
-}
-
-void DemoSleep(int millis)
-{
-#ifdef __MICROBLAZE__
-	MB_Sleep(millis);
-#else
-	usleep(1000 * millis);//delay for param microseconds
-#endif
 }
 
 void EnableCaches()
@@ -101,11 +102,11 @@ void EnableCaches()
 void DisableCaches()
 {
 #ifdef __MICROBLAZE__
-#ifdef XPAR_MICROBLAZE_USE_ICACHE
-	Xil_ICacheDisable();
-#endif
 #ifdef XPAR_MICROBLAZE_USE_DCACHE
 	Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
+	Xil_ICacheDisable();
 #endif
 #endif
 }

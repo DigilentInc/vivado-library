@@ -115,7 +115,6 @@ void OLED_SetRegisterBits       (PmodOLED* InstancePtr, u8 reg, u8 mask, u8 fVal
 u8   OLED_GetRegisterBits       (PmodOLED* InstancePtr, u8 bRegisterAddress, u8 bMask);
 void OLED_SetGPIOBits           (PmodOLED* InstancePtr, u8 mask, u8 fValue);
 void OLED_SetGPIOTristateBits   (PmodOLED* InstancePtr, u8 mask, u8 fValue);
-void OLED_Delay                 (int millis);
 
 /* ------------------------------------------------------------ */
 /*                  OLED Driver Procedure Declarations          */

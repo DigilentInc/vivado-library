@@ -16,6 +16,7 @@
 /*	04/19/2016(TommyK): Created 										*/
 /*	06/13/2016(ArtVVB): Edited for PmodR2R								*/
 /*	02/28/2017(ArtVVB): Validated										*/
+/*	08/25/2017(ArtVVB): Validated for 2016.4							*/
 /*																		*/
 /************************************************************************/
 
@@ -44,15 +45,17 @@
 void R2R_begin(PmodR2R* InstancePtr, u32 GPIO_Address)
 {
 	InstancePtr->GPIO_addr=GPIO_Address;
-	Xil_Out32(InstancePtr->GPIO_addr+4, 0x00);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc.
+
+	//set tristate direction to all output
+	Xil_Out32(InstancePtr->GPIO_addr+4, 0x00);
 }
 
 /* ------------------------------------------------------------ */
-/***	void R2R_writeVoltage(PmodR2R* InstancePtr, double voltage)
+/***	void R2R_write(PmodR2R* InstancePtr, u32 data)
 **
 **	Parameters:
-**		InstancePtr: A PmodR2R object to start
-**		voltage: the voltage level to output, accepts 0 to 3.3 Volts
+**		InstancePtr: A PmodR2R object to write to
+**		data: 8 bits of data to write to the R2R gpio pins. 0x00:0xFF at gpio -> 0:Vdd at Vout
 **
 **	Return Value:
 **		none
@@ -63,20 +66,7 @@ void R2R_begin(PmodR2R* InstancePtr, u32 GPIO_Address)
 **	Description:
 **		Set output voltage of R2R.
 */
-void R2R_writeVoltage(PmodR2R* InstancePtr, double voltage)
+void R2R_write(PmodR2R *InstancePtr, u32 data)
 {
-	u32 uv;
-	if (voltage > 3.3)
-	{
-		uv = 0xFF;
-	}
-	else if (voltage < 0.0)
-	{
-		uv = 0x00;
-	}
-	else
-	{
-		uv = (int)(255.0 * voltage / 3.3);
-	}
-	Xil_Out32(InstancePtr->GPIO_addr, uv);
+	Xil_Out32(InstancePtr->GPIO_addr, data);
 }

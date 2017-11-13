@@ -13,7 +13,8 @@
 /*  Revision History:                         							*/
 /*                                   									*/
 /*  06/08/2016(SLowe): Created                     						*/
-/*	04/19/2019(ArtVVB): Validated for 2015.4							*/
+/*	04/19/2017(ArtVVB): Validated for 2015.4							*/
+/*	10/31/2017(ArtVVB): Validated for 2016.4							*/
 /*                                    									*/
 /************************************************************************/
 
@@ -38,11 +39,10 @@ typedef struct PmodGPIO{
 	u32 cpuClockFreqHz;
 } PmodGPIO;
 
-void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap, u32 cpuClockFreqHz);
+void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap);
 u8 GPIO_getPins(PmodGPIO* InstancePtr);
 void GPIO_setPins(PmodGPIO* InstancePtr, u8 value);
 u8 GPIO_getPin(PmodGPIO* InstancePtr, u8 pinNumber);
 void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value);
-void GPIO_delay(PmodGPIO* InstancePtr, int micros);
 
 #endif // PmodGPIO_H

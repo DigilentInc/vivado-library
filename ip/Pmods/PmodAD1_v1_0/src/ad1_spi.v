@@ -103,8 +103,8 @@ module ad1_spi (
         end else begin
             count0 <= count0 + 1;
             if (count0 == BIT_HALFWAY_CLOCK-1) begin
-                shft0 <= {sdin0, shft0[15:1]};
-                shft1 <= {sdin1, shft1[15:1]};
+                shft0 <= {shft0[14:0], sdin0};
+                shft1 <= {shft1[14:0], sdin1};
             end
         end
         S_BACK_PORCH: if (count0 == CLOCKS_AFTER_DATA-1) begin

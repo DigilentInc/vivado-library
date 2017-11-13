@@ -32,12 +32,14 @@
 /*                                                                      */
 /*  11/16/2016(SamL): Created                                           */
 /*  03/16/2017(ArtVVB): Completed & Validated                           */
+/*  11/01/2017(ArtVVB): 2016.4 Maintenance                              */
 /*                                                                      */
 /************************************************************************/
 
 /***************************** Include Files *******************************/
 #include "PmodNAV.h"
 #include "microblaze_usleep.h"
+#include "sleep.h"
 
 XSpi_Config NAVConfig = {
     0, // u16 DeviceId
@@ -96,7 +98,7 @@ void NAV_DevTerm(PmodNAV* InstancePtr)
 **  Description:
 **      Initializes the SPI interface and the global variables of the library. This function must be called before any other functions in the library are called.
 */
-void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address, u32 CpuClockFreqHz)
+void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address)
 {
     InstancePtr->GPIO_addr=GPIO_Address;
     NAVConfig.BaseAddress=SPI_Address;
@@ -112,7 +114,6 @@ void NAV_begin(PmodNAV* InstancePtr, u32 GPIO_Address, u32 SPI_Address, u32 CpuC
     InstancePtr->m_GRangeLSB = NAV_GetXLRangeLSB(NAV_ACL_PAR_XL_2G);    // the startup range for the accelerometer is +/- 2g, which corresponds to a LSB value of 0.061mg/LSB
     InstancePtr->m_DPSRangeLSB = NAV_GetGRangeLSB(NAV_GYRO_PAR_G_245DPS);    // the startup range for the gyro is +/- 245dps, which corresponds to a LSB value of 8.75mdps/LSB
     InstancePtr->m_GaussRangeLSB = NAV_GetMAGRangeLSB(NAV_MAG_PAR_MAG_4GAUSS);// the startup range for the magnetometer is +/- 4Gauss, which corresponds to a LSB value of 0.14mGauss/LSB
-    InstancePtr->CpuClockFreqHz = CpuClockFreqHz;
 }
 
 /* ------------------------------------------------------------ */
@@ -234,9 +235,9 @@ void NAV_GetData(PmodNAV* InstancePtr)
 	NAV_ReadAccelG(InstancePtr, &(InstancePtr->acclData.X), &(InstancePtr->acclData.Y), &(InstancePtr->acclData.Z));
 	NAV_ReadGyroDps(InstancePtr, &(InstancePtr->gyroData.X), &(InstancePtr->gyroData.Y), &(InstancePtr->gyroData.Z));
     NAV_ReadMagGauss(InstancePtr);
-    NAV_usleep(InstancePtr, 10);
+    usleep(10);
     NAV_ReadPressurehPa(InstancePtr);
-    NAV_usleep(InstancePtr, 10);
+    usleep(10);
     NAV_ReadTempC(InstancePtr);
 }
 
@@ -265,16 +266,16 @@ void NAV_InitALT(PmodNAV* InstancePtr, bool fInit)
     {
         //clean start
         NAV_WriteSPI(InstancePtr, NAV_INST_ALT, NAV_ALT_CTRL_REG1, 0x00);
-        NAV_usleep(InstancePtr, 5000);
+        usleep(5000);
         //set active the device and ODR to 7Hz
         NAV_WriteSPI(InstancePtr, NAV_INST_ALT, NAV_ALT_CTRL_REG1, 0xA4);
-        NAV_usleep(InstancePtr, 5000);
+        usleep(5000);
         //increment address during multiple byte access disabled
         NAV_WriteSPI(InstancePtr, NAV_INST_ALT, NAV_ALT_CTRL_REG2, 0x00);
-        NAV_usleep(InstancePtr, 5000);
+        usleep(5000);
         //no modification to interrupt sources
         NAV_WriteSPI(InstancePtr, NAV_INST_ALT, NAV_ALT_CTRL_REG4, 0x00);
-        NAV_usleep(InstancePtr, 5000);
+        usleep(5000);
     }
     else
     {
@@ -2372,38 +2373,6 @@ float NAV_GetODR(PmodNAV* InstancePtr, u8 bInstMode)
         }
     else odrFinal = -1;
     return odrFinal;
-}
-
-
-
-/* ------------------------------------------------------------ */
-/*   void NAV_usleep (PmodNAV *InstancePtr, int micros)
-**
-**   Parameters:
-**     	InstancePtr - instance of PmodNAV
-**      micros - parameter representing how many microseconds the program will sleep for
-**
-**   Return Value:
-**      none
-**
-**   Errors:
-**		none
-**
-**   Description:
-**      The function sleeps for micros microseconds, returns after that much time has passed
-**
-**
-*/
-void NAV_usleep (PmodNAV *InstancePtr, int micros) {
-#ifdef __MICROBLAZE__
-	int i;
-	for (i=0; i<micros; i+=50) {
-		MB_uSleep(50, InstancePtr->CpuClockFreqHz);
-	}
-	MB_uSleep(micros%50, InstancePtr->CpuClockFreqHz);
-#else
-	usleep(micros);
-#endif
 }
 
 /*-------------------------------------------------------------*/

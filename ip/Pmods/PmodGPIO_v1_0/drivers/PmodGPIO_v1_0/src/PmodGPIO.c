@@ -16,6 +16,7 @@
 /*																		*/
 /*	06/09/2016(SamL): Created 											*/
 /*	04/19/2019(ArtVVB): Validated for 2015.4							*/
+/*	10/31/2017(ArtVVB): Validated for 2016.4							*/
 /*																		*/
 /************************************************************************/
 
@@ -42,10 +43,9 @@
 **	Description:
 **		Initialize the PmodGPIO and set the tristate
 */
-void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap, u32 cpuClockFreqHz)
+void GPIO_begin(PmodGPIO* InstancePtr, u32 GPIO_Address, u8 bitmap)
 {
 	InstancePtr->GPIO_addr=GPIO_Address;
-	InstancePtr->cpuClockFreqHz=cpuClockFreqHz;
 	Xil_Out32(InstancePtr->GPIO_addr+4, bitmap);//0b1111 for input 0b0000 for output, 0b0001 for pin1 in pin 2 out etc.
 }
 
@@ -150,32 +150,4 @@ void GPIO_setPin(PmodGPIO* InstancePtr, u8 pinNumber, u8 value)
 	else{
 		Xil_Out32(InstancePtr->GPIO_addr, (data & ~(1 << (pinNumber-1))));
 	}
-}
-
-/* ------------------------------------------------------------ */
-/***	void GPIO_delay(int micros)
-**
-**	Parameters:
-**		InstancePtr: A PmodGPIO object containing the cpu clock frequency
-**		micros: amount of microseconds to delay
-**
-**	Return Value:
-**		none
-**
-**	Errors:
-**		does not delay the same time in microblaze and zynq
-**
-**	Description:
-**		delays for a given amount of microseconds. Adapted from sleep and MB_Sleep
-*/
-void GPIO_delay(PmodGPIO *InstancePtr, int micros)
-{
-	int i;
-#ifdef __MICROBLAZE__
-	for(i = 0; i < (InstancePtr->cpuClockFreqHz*micros); i++){
-			asm("");
-	}
-#else
-	usleep(micros);
-#endif
 }

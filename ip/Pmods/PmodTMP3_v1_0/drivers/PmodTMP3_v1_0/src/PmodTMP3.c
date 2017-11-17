@@ -35,8 +35,7 @@ XIic_Config TMP3_Config =
 };
 
 /* ------------------------------------------------------------ */
-/*** void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address,
-**         u32 CpuClkFreqMHz)
+/*** void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address)
 **
 **   Parameters:
 **      InstancePtr:  A PmodTMP3 object to start
@@ -52,10 +51,8 @@ XIic_Config TMP3_Config =
 **   Description:
 **      Initialize the PmodTMP3.
 */
-void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address,
-      u32 CpuClkFreqMHz) {
+void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address) {
    TMP3_Config.BaseAddress = IIC_Address;
-   InstancePtr->ItersPerUSec = CpuClkFreqMHz;
    InstancePtr->chipAddr = Chip_Address;
    TMP3_IICInit(&InstancePtr->TMP3Iic);
    XIic_SetAddress(&InstancePtr->TMP3Iic, XII_ADDR_TO_SEND_TYPE,
@@ -305,31 +302,4 @@ double TMP3_CtoF(double tempC) {
    tempF = (tempC * 1.8) + 32.0;
 
    return tempF;
-}
-
-/* ------------------------------------------------------------ */
-/*** void TMP3_delay(PmodTMP3* InstancePtr,int micros)
-**
-**   Parameters:
-**      micros: the number of microseconds to delay for
-**      InstancePtr: A PmodTMP3 object to start
-**
-**   Return Value:
-**      none
-**
-**   Errors:
-**      Slower than expected on Microblaze
-**
-**   Description:
-**      Delays the processor for a number of microseconds
-*/
-void TMP3_delay(PmodTMP3* InstancePtr, int micros) {
-   int i;
-#ifdef __MICROBLAZE__
-   for(i = 0; i < ((InstancePtr->ItersPerUSec*micros))/4; i++) {
-      asm("");
-   }
-#else
-   usleep(micros);
-#endif
 }

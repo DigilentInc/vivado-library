@@ -54,8 +54,7 @@ void DemoInitialize() {
    xil_printf("\x1B[1K"); // Clear terminal
    xil_printf("Connected to PmodTMP3 Demo over UART\n\r");
 
-   TMP3_begin(&myDevice, XPAR_PMODTMP3_0_AXI_LITE_IIC_BASEADDR, TMP3_ADDR,
-         CPU_CLOCK_FREQ_MHZ);
+   TMP3_begin(&myDevice, XPAR_PMODTMP3_0_AXI_LITE_IIC_BASEADDR, TMP3_ADDR);
    xil_printf("Connected to PmodTMP3 over IIC on JB\n\r\n\r");
 }
 
@@ -97,7 +96,7 @@ void DemoRun() {
       xil_printf("Temperature: %d.%d in Fahrenheit\n\r", temp2_int, temp2_frac);
       xil_printf("Temperature: %d.%d in Celsius\n\r", temp3_int, temp3_frac);
       print("\n\r");
-      TMP3_delay(&myDevice, 1000000); // Delay
+      sleep(1); // Delay
    }
 }
 

@@ -76,14 +76,12 @@ typedef struct PmodTMP3 {
    u8 currentRegister;
    u8 recvbytes;
    u8* recv;
-   u32 ItersPerUSec;
 } PmodTMP3;
 
 
 /************ Function Prototypes ************/
 
-void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address,
-      u32 CpuClkFreqHz);
+void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address);
 void TMP3_end(PmodTMP3* InstancePtr);
 int  TMP3_IICInit(XIic *IicInstancePtr);
 void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData);
@@ -92,6 +90,5 @@ void TMP3_config(PmodTMP3 *InstancePtr, u8 configuration);
 double TMP3_getTemp(PmodTMP3 *InstancePtr);
 double TMP3_FtoC(double tempF);
 double TMP3_CtoF(double tempC);
-void TMP3_delay(PmodTMP3* InstancePtr, int micros );
 
 #endif // PMODTMP3_H

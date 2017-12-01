@@ -229,6 +229,8 @@ void DemoRun()
 			case ISLISTENING:
 				if((i = udpServer.isListening(&status)) > 0)
 				{
+                    deIPcK.getMyIP(ipServer);
+                    xil_printf("Server started on %d.%d.%d.%d:%d\r\n",ipServer.u8[0],ipServer.u8[1],ipServer.u8[2],ipServer.u8[3], portServer);
 					xil_printf("%d Sockets listening on port: %d\r\n",i,portServer);
 					state = AVAILABLECLIENT;
 				}

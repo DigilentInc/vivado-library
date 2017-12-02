@@ -2,7 +2,7 @@
 /*                                                                            */
 /* TCPEchoServer -- A DEWFcK TCP Server application to  demonstrate how to    */
 /*                  use the TcpServer Class. This can be used in conjunction  */
-/*                  with TCPEchoClient                                        */
+/*                  with TCPEchoClient.                                       */
 /*                                                                            */
 /******************************************************************************/
 /* Author: Keith Vogel                                                        */
@@ -44,7 +44,7 @@
 /*                                                                            */
 /*    05/14/2014 (KeithV):   Created                                          */
 /*    08/09/2016 (TommyK):   Modified to use Microblaze/Zynq                  */
-/*    12/01/2017 (atangzwj): Validated for Vivado 2016.4                      */
+/*    12/02/2017 (atangzwj): Validated for Vivado 2016.4                      */
 /*                                                                            */
 /******************************************************************************/
 
@@ -63,25 +63,24 @@
 /*                                                                      */
 /************************************************************************/
 
-
 IPv4 ipServer = {192,168,1,190}; // {0,0,0,0} for DHCP
 
-unsigned short portServer = DEIPcK::iPersonalPorts44 + 300;     // port 44300
+unsigned short portServer = DEIPcK::iPersonalPorts44 + 300; // Port 44300
 
 // Specify the SSID
-const char * szSsid = "myRouter";
+const char *szSsid = "myRouter";
 
-// select 1 for the security you want, or none for no security
+// Select 1 for the security you want, or none for no security
 #define USE_WPA2_PASSPHRASE
 //#define USE_WPA2_KEY
 //#define USE_WEP40
 //#define USE_WEP104
 //#define USE_WF_CONFIG_H
 
-// modify the security key to what you have.
+// Modify the security key to what you have.
 #if defined(USE_WPA2_PASSPHRASE)
 
-   const char * szPassPhrase = "myPassword";
+   const char *szPassPhrase = "myPassword";
    #define WiFiConnectMacro() deIPcK.wfConnect(szSsid, szPassPhrase, &status)
 
 #elif defined(USE_WPA2_KEY)
@@ -95,10 +94,10 @@ const char * szSsid = "myRouter";
 #elif defined(USE_WEP40)
 
    const int iWEPKey = 0;
-   DEWFcK::WEP40KEY keySet = { 0xBE, 0xC9, 0x58, 0x06, 0x97,     // Key 0
-                               0x00, 0x00, 0x00, 0x00, 0x00,     // Key 1
-                               0x00, 0x00, 0x00, 0x00, 0x00,     // Key 2
-                               0x00, 0x00, 0x00, 0x00, 0x00 };   // Key 3
+   DEWFcK::WEP40KEY keySet = { 0xBE, 0xC9, 0x58, 0x06, 0x97,   // Key 0
+                               0x00, 0x00, 0x00, 0x00, 0x00,   // Key 1
+                               0x00, 0x00, 0x00, 0x00, 0x00,   // Key 2
+                               0x00, 0x00, 0x00, 0x00, 0x00 }; // Key 3
    #define WiFiConnectMacro() deIPcK.wfConnect(szSsid, keySet, iWEPKey, &status)
 
 #elif defined(USE_WEP104)
@@ -114,7 +113,7 @@ const char * szSsid = "myRouter";
 
    #define WiFiConnectMacro() deIPcK.wfConnect(0, &status)
 
-#else   // no security - OPEN
+#else // No security - OPEN
 
    #define WiFiConnectMacro() deIPcK.wfConnect(szSsid, &status)
 

@@ -52,7 +52,7 @@ four elements. For the IP address 192.144.12.1, set the array equal to
 as a string, such as "192.144.12.1".
 
 Select your network's security type by uncommenting the corresponding macro
-definitions towards the top of the program.
+definition towards the top of the program.
 
 The router SSID and Wi-Fi password are taken as strings. Replace the strings
 "myRouter" and "myPassword" in the configuration section of the program you are

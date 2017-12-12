@@ -1,29 +1,29 @@
-/********************************************************************************/
-/*                                                                              */
-/*  MtdsDemo1.pde  --  MTDS Library Reference Example 1                         */
-/*                                                                              */
-/********************************************************************************/
-/*  Author: 	Gene Apperson	                                                */
-/*  Copyright 2016, Digilent Inc. All rights reserved.                          */
-/********************************************************************************/
-/*  Module Description:                                                         */
-/*                                                                              */
-/*  This program demonstrates using most of the graphical API functions in the  */
-/*  MTDS library. It cycles through a number of different screens demonstrating */
-/*  the use of the various API functions.                                       */
-/*                                                                              */
-/*  This program is made of of a number of different test functions that each   */
-/*  illustrate one or more aspects of using the MTDS library. Each function     */
-/*  contains detailed comments explaining various aspects of the MTDS system    */
-/*  and how to use it to render various kinds of graphics.                      */
-/*                                                                              */
-/********************************************************************************/
-/*  Revision History:                                                           */
-/*                                                                              */
-/*  2016/09/28(GeneApperson): Adapted from an earlier test program.             */
-/*  2017-02-14(SamB): Removed Serial references to port to Xilinx SDK           */
-/*                                                                              */
-/********************************************************************************/
+/******************************************************************************/
+/*                                                                            */
+/* MtdsDemo1.cc -- MTDS Library Reference Example 1                           */
+/*                                                                            */
+/******************************************************************************/
+/* Author: Gene Apperson                                                      */
+/* Copyright 2016, Digilent Inc. All rights reserved.                         */
+/******************************************************************************/
+/* Module Description:                                                        */
+/*                                                                            */
+/* This program demonstrates using most of the graphical API functions in the */
+/* MTDS library. It cycles through a number of different screens              */
+/* demonstrating the use of the various API functions.                        */
+/*                                                                            */
+/* This program consists of a number of different test functions that each    */
+/* illustrate one or more aspects of using the MTDS library. Each function    */
+/* contains detailed comments explaining various aspects of the MTDS system   */
+/* and how to use it to render various kinds of graphics.                     */
+/*                                                                            */
+/******************************************************************************/
+/* Revision History:                                                          */
+/*                                                                            */
+/*    09/28/2016(GeneA):    Adapted from an earlier test program.             */
+/*    02/14/2017(SamB):     Removed Serial references to port to Xilnx SDK    */
+/*                                                                            */
+/******************************************************************************/
 
 
 /* ------------------------------------------------------------ */
@@ -31,34 +31,33 @@
 /* ------------------------------------------------------------ */
 
 #include <mtds.h>
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*                Local Type Definitions                        */
 /* ------------------------------------------------------------ */
 
-
 /* ------------------------------------------------------------ */
 /*                Global Variables                              */
 /* ------------------------------------------------------------ */
 
-RCT      rctDisp;
-int      itstCur = 1;
+RCT rctDisp;
+int itstCur = 1;
 
-uint32_t  msDisp;
-uint32_t  msCur;
+uint32_t msDisp;
+uint32_t msCur;
 
 /* ------------------------------------------------------------ */
 /*                Local Type Definitions                        */
 /* ------------------------------------------------------------ */
 
-
 /* ------------------------------------------------------------ */
 /*                Global Variables                              */
 /* ------------------------------------------------------------ */
 
-int  itstMax = 26;
+int itstMax = 26;
 
 /* ------------------------------------------------------------ */
 /*                Forward Declarations                          */
@@ -94,53 +93,51 @@ void MtdsTest26();
 /* ------------------------------------------------------------ */
 /*                Procedure Definitions                         */
 /* ------------------------------------------------------------ */
-/***  setup()
+
+/*** setup()
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    Arduino/MPIDE sketch initialization function.
+**   Description:
+**      Arduino/MPIDE sketch initialization function.
 */
-
 void setup() {
-  bool  fStat;
+   bool fStat;
 
-  msDisp = millis() + 100000;
-  
-  rctDisp.xcoLeft = 0;
-  rctDisp.ycoTop = 0;
-  rctDisp.xcoRight = 239;
-  rctDisp.ycoBottom = 319;
-  
-  /* It is possible that we are trying to initialize the interface to the
-  ** display board before it has finished its power on initialization. If so,
-  ** then the first call to mtds.begin() will fail. We run in a loop trying
-  ** to initialize until it succeeds. This usually doesn't take more than one
-  ** or two iterations of the loop before it succeeds.
-  */
-  while(true) {
-    fStat = mtds.begin(pinMtdsSelStd, frqMtdsSpiDefault);
-    if (fStat) {
-      xil_printf("mtds.begin() succeeded\n\r");
-      break;
-    }
-    else {
-      xil_printf("mtds.begin() failed\n\r");
-      delay(1000);
-    }
-  }
- 
+   msDisp = millis() + 100000;
+
+   rctDisp.xcoLeft   = 0;
+   rctDisp.ycoTop    = 0;
+   rctDisp.xcoRight  = 239;
+   rctDisp.ycoBottom = 319;
+
+   /* It is possible that we are trying to initialize the interface to the
+   ** display board before it has finished its power on initialization. If so,
+   ** then the first call to mtds.begin() will fail. We run in a loop trying
+   ** to initialize until it succeeds. This usually doesn't take more than one
+   ** or two iterations of the loop before it succeeds.
+   */
+   while (true) {
+      fStat = mtds.begin(pinMtdsSelStd, frqMtdsSpiDefault);
+      if (fStat) {
+         xil_printf("mtds.begin() succeeded\n\r");
+         break;
+      } else {
+         xil_printf("mtds.begin() failed\n\r");
+         sleep(1);
+      }
+   }
 }
 
 /* ------------------------------------------------------------ */
-/***	loop()
+/***   loop()
 **
 **  Parameters:
 **    none
@@ -154,1382 +151,1399 @@ void setup() {
 **  Description:
 **    Arduino/MPIDE main sketch function
 */
-
 void loop() {
-  
-  msCur = millis();
-  if ((msCur - msDisp) > 3000) {
-    msDisp = msCur;
-    
-    mtds.ClearDisplay(clrBlack);
+   msCur = millis();
+   if ((msCur - msDisp) > 3000) {
+      msDisp = msCur;
 
-    /* Uncomment the following line and assign the test number to itstCur to
-    ** cause a specific test to be repeatedly displayed.
-    */
-    //itstCur = 1;
-    
-    switch(itstCur) {
+      mtds.ClearDisplay(clrBlack);
+
+      /* Uncomment the following line and assign the test number to itstCur to
+      ** cause a specific test to be repeatedly displayed.
+      */
+      //itstCur = 1;
+      switch (itstCur) {
       case 1:
-        MtdsTest1();
-        break;
-        
+         MtdsTest1();
+         break;
+
       case 2:
-        MtdsTest2();
-        break;
-        
+         MtdsTest2();
+         break;
+
       case 3:
-        MtdsTest3();
-        break;
+         MtdsTest3();
+         break;
 
       case 4:
-        MtdsTest4();
-        break;
-        
+         MtdsTest4();
+         break;
+
       case 5:
-        MtdsTest5();
-        break;
-        
+         MtdsTest5();
+         break;
+
       case 6:
-        MtdsTest6();
-        break;
-        
+         MtdsTest6();
+         break;
+
       case 7:
-        MtdsTest7();
-        break;
-        
+         MtdsTest7();
+         break;
+
       case 8:
-        MtdsTest8();
-        break;
-        
+         MtdsTest8();
+         break;
+
       case 9:
-        MtdsTest9();
-        break;
-      
+         MtdsTest9();
+         break;
+
       case 10:
-        MtdsTest10();
-        break;
-        
+         MtdsTest10();
+         break;
+
       case 11:
-        MtdsTest11();
-        break;
+         MtdsTest11();
+         break;
 
       case 12:
-        MtdsTest12();
-        break;
+         MtdsTest12();
+         break;
 
       case 13:
-        MtdsTest13();
-        break;
+         MtdsTest13();
+         break;
 
       case 14:
-        MtdsTest14();
-        break;
+         MtdsTest14();
+         break;
 
       case 15:
-        MtdsTest15();
-        break;
+         MtdsTest15();
+         break;
 
       case 16:
-        MtdsTest16();
-        break;
+         MtdsTest16();
+         break;
 
       case 17:
-        MtdsTest17();
-        break;
-        
+         MtdsTest17();
+         break;
+
       case 18:
-        MtdsTest18();
-        break;
-            
+         MtdsTest18();
+         break;
+
       case 19:
-        MtdsTest19();
-        break;
-        
+         MtdsTest19();
+         break;
+
       case 20:
-        MtdsTest20();
-        break;
-        
+         MtdsTest20();
+         break;
+
       case 21:
-        MtdsTest21();
-        break;
-        
+         MtdsTest21();
+         break;
+
       case 22:
-        MtdsTest22();
-        break;
-        
+         MtdsTest22();
+         break;
+
       case 23:
-        MtdsTest23();
-        break;
-        
+         MtdsTest23();
+         break;
+
       case 24:
-        MtdsTest24();
-        break;
-        
+         MtdsTest24();
+         break;
+
       case 25:
-        MtdsTest25();
-        break;
-        
+         MtdsTest25();
+         break;
+
       case 26:
-        MtdsTest26();
-        break;
-    }
-    itstCur += 1;
-    if (itstCur > itstMax) {
-      itstCur = 1;
-    }
-  }
+         MtdsTest26();
+         break;
+      }
+      itstCur += 1;
+      if (itstCur > itstMax) {
+         itstCur = 1;
+      }
+   }
 }
 
 /* ------------------------------------------------------------ */
 /*            Graphics Demo Functions                           */
 /* ------------------------------------------------------------ */
-/***	MtdsTest1()
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstrates the use of the basic graphics functions used to set up
-**    properties in the DS as well as to some of the rendering functions, such 
-**    as SetPixel(), MoveTo(), LineTo() and PolyLine().
-**
-*/
 
+/*** MtdsTest1()
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstrates the use of the basic graphics functions used to set up
+**      properties in the DS as well as some of the rendering functions, such as
+**      SetPixel(), MoveTo(), LineTo() and PolyLine().
+*/
 void MtdsTest1() {
-  HDS	hds;
-  HBMP  hbmp;
-  PNT	rgpnt[21] = {
-		{  30,  30 },
-		{ 210,  30 },
-		{ 210, 310 },
-		{  30, 310 },
-		{  30,  50 },
-		{ 190,  50 },
-		{ 190, 290 },
-		{  50, 290 },
-		{  50,  70 },
-		{ 170,  70 },
-		{ 170, 270 },
-		{  70, 270 },
-		{  70,  90 },
-		{ 150,  90 },
-		{ 150, 250 },
-		{  90, 250 },
-		{  90, 110 },
-		{ 130, 110 },
-		{ 130, 230 },
-		{ 110, 230 },
-		{ 110, 130 }
-  };
-  RCT	rct;
-  PNT      pntS;
-  PNT      pntT;
-  uint32_t clr;
-  uint32_t  clrS;
-  uint32_t  clrT;
+   HDS   hds;
+   HBMP  hbmp;
+   PNT   rgpnt[21] = {
+      {  30,  30 },
+      { 210,  30 },
+      { 210, 310 },
+      {  30, 310 },
+      {  30,  50 },
+      { 190,  50 },
+      { 190, 290 },
+      {  50, 290 },
+      {  50,  70 },
+      { 170,  70 },
+      { 170, 270 },
+      {  70, 270 },
+      {  70,  90 },
+      { 150,  90 },
+      { 150, 250 },
+      {  90, 250 },
+      {  90, 110 },
+      { 130, 110 },
+      { 130, 230 },
+      { 110, 230 },
+      { 110, 130 }
+   };
+   RCT rct;
+   PNT pntS;
+   PNT pntT;
+   uint32_t clr;
+   uint32_t clrS;
+   uint32_t clrT;
 
-  hds = mtds.GetDisplayDs();
+   hds = mtds.GetDisplayDs();
 
-  /* The following functions demonstrate and test the various functions to set and get
-  ** properties in the DS. The DS (drawing state object) holds all of the basic properties
-  ** that control rendering of graphical elements.
-  */
-  mtds.SetFgColor(hds, clrWhite);
-  clrS = mtds.GetFgColor(hds);
-  clrT = mtds.GetNearestColor(clrWhite);
-  if (clrS != clrT) {
-    xil_printf("Set/Get FG Color error: set = ");
-    xil_printf("0x%x", clrWhite);
-    xil_printf(" get = ");
-    xil_printf("0x%x", clrS);
-    xil_printf("\n\r");
-  }
-  
-  mtds.SetBgColor(hds, clrWhite);
-  clrS = mtds.GetBgColor(hds);
-  clrT = mtds.GetNearestColor(clrWhite);
-  if (clrS != clrT) {
-    xil_printf("Set/Get BG Color error: set = ");
-    xil_printf("0x%x", clrWhite);
-    xil_printf(" get = ");
-    xil_printf("0x%x", clrS);
-    xil_printf("\n\r");
-  }
-  
-  mtds.SetTransColor(hds, clrWhite);
-  clrS = mtds.GetTransColor(hds);
-  clrT = mtds.GetNearestColor(clrWhite);
-  if (clrS != clrT) {
-    xil_printf("Set/Get Trans Color error\n\r");
-  }
-  
-  mtds.SetIntensity(hds, 20);
-  if (mtds.GetIntensity(hds) != 20) {
-    xil_printf("Set/Get Intensity error\n\r");
-  }
-  
-  mtds.SetPen(hds, 0x8CC8);
-  if (mtds.GetPen(hds) != 0x8CC8) {
-    xil_printf("Set/Get Pen error\n\r");
-  }
-  
-  mtds.SetBkMode(hds, bkTransparent);
-  if (mtds.GetBkMode(hds) != bkTransparent) {
-    xil_printf("Set/Get Bk Mode error\n\r");
-  }
-  
-  mtds.SetDrwRop(hds, drwNotXorPen);
-  if (mtds.GetDrwRop(hds) != drwNotXorPen) {
-    xil_printf("Set/Get Drw Rop error\n\r");
-  }
-  
-  mtds.SetPixel(hds, 100, 100, clrRed);
-  clr = mtds.GetPixel(hds, 100, 100);
-  if (clr != mtds.GetNearestColor(clrRed)) {
-    xil_printf("Set/Get Pixel error\n\r");
-  }
-  
-  mtds.SetFont(hds, hfntMedium);
-  if (mtds.GetFont(hds) != hfntMedium) {
-    xil_printf("Set/Get Font error\n\r");
-  }
-  
-  mtds.SetBrush(hds, hbrWhite);
-  if (mtds.GetBrush(hds) != hbrWhite) {
-    xil_printf("Set/Get Brush error\n\r");
-  }
-  
-  hbmp = mtds.GetDisplayBitmap();
-  mtds.SetDrawingSurface(hds, hbmp);
-  if (mtds.GetDrawingSurface(hds) != hbmp) {
-    xil_printf("Set/Get Drawing Surface error\n\r");
-  }
-  
-  pntS.xco = 27;
-  pntS.yco = 43;
-  mtds.MoveTo(hds, pntS.xco, pntS.yco);
-  mtds.GetCurPos(hds, &pntT);
-  if ((pntS.xco != pntT.xco) || (pntS.yco != pntT.yco)) {
-    xil_printf("MoveTo/GetCurPos error\n\r");
-  }
-  
-  mtds.ReleaseDs(hds);
+   /* The following functions demonstrate and test the various functions to set
+   ** and get properties in the DS. The DS (drawing state object) holds all of
+   ** the basic properties that control rendering of graphical elements.
+   */
+   mtds.SetFgColor(hds, clrWhite);
+   clrS = mtds.GetFgColor(hds);
+   clrT = mtds.GetNearestColor(clrWhite);
+   if (clrS != clrT) {
+      xil_printf("Set/Get FG Color error: set = ");
+      xil_printf("0x%x", clrWhite);
+      xil_printf(" get = ");
+      xil_printf("0x%x", clrS);
+      xil_printf("\n\r");
+   }
 
-  /* By releasing and reacquiring the handle to the display DS, we reset all of the
-  ** DS properties, so the changes that were made earlier no longer apply.
-  ** Now we are getting the display DS and setting it up for some actual drawing.
-  */
-  hds = mtds.GetDisplayDs();
-  
-  /* The DS maintains a "current position". The current position is set by calling
-  ** MoveTo(). Many graphics functions use the current position as the starting point.
-  ** Some graphics functions update the current position to the ending point that was
-  ** drawn. Other graphics functions leave the current position unchanged. The ones
-  ** whose name ends in "To" update the current position, while functions whose name does
-  ** not end in "To" leave the current position unchanged. Thus, for example, LineTo()
-  ** draws a line from the current position to the specified endpoint and updates the
-  ** current position to the endpoint. Line(), however, draws a line starting at the
-  ** current position to the specified endpoint and leaves the current position unchanged.
-  ** This convention only applies to functions that use the current position as the 
-  ** starting point for drawing.
-  /*
-  /* Set up to draw white lines on a black background using a dot pattern pen. This is done
-  ** by selecting white as the foreground color and black as the background color. The pen
-  ** is set to penDot, which is one of the pre-defined pen patterns. It produces a dotted
-  ** line. The background transparency mode defaults to opaque, so the background color
-  ** gets drawn when we draw the dotted lines. The drwCopyPen drawing mode causes the pen
-  ** to overwrite whatever is in the pixles being drawn on.
-  */
-  mtds.SetFgColor(hds, clrWhite);
-  mtds.SetBgColor(hds, clrBlack);
-  mtds.SetPen(hds, penDot);
-  mtds.SetDrwRop(hds, drwCopyPen);
+   mtds.SetBgColor(hds, clrWhite);
+   clrS = mtds.GetBgColor(hds);
+   clrT = mtds.GetNearestColor(clrWhite);
+   if (clrS != clrT) {
+      xil_printf("Set/Get BG Color error: set = ");
+      xil_printf("0x%x", clrWhite);
+      xil_printf(" get = ");
+      xil_printf("0x%x", clrS);
+      xil_printf("\n\r");
+   }
 
-  /* Draw two diagonal lines that cross the entire display.
-  */
-  mtds.MoveTo(hds, 0, 0);
-  mtds.LineTo(hds, 240, 320);
-  mtds.MoveTo(hds, 239, 0);
-  mtds.LineTo(hds, 0, 320);
+   mtds.SetTransColor(hds, clrWhite);
+   clrS = mtds.GetTransColor(hds);
+   clrT = mtds.GetNearestColor(clrWhite);
+   if (clrS != clrT) {
+      xil_printf("Set/Get Trans Color error\n\r");
+   }
 
-  /* The following will draw two red lines. The foreground color is set to red, and the
-  ** pen is set to penSolid, so we get solid red lines with no dot pattern. The background
-  ** color remains black as was sete above. The LineTo() function is used to draw the lines,
-  ** so the current position is updated to the endpoint of the first one when it is drawn.
-  ** This then becomes the starting point of the second line.
-  */
-  mtds.SetFgColor(hds, clrRed);
-  mtds.SetPen(hds, penSolid);
-  mtds.MoveTo(hds, 20, 60);
-  mtds.LineTo(hds, 120, 20);
-  mtds.LineTo(hds, 220, 60);
+   mtds.SetIntensity(hds, 20);
+   if (mtds.GetIntensity(hds) != 20) {
+      xil_printf("Set/Get Intensity error\n\r");
+   }
 
-  /* This will draw two blue lines beginning at 120,30. Because the Line() function is
-  ** being used, the current position in the DS doesn't change when drawing the lines.
-  ** Each line drawn starts at the same point.
-  */  
-  mtds.SetFgColor(hds, clrBlue);
-  mtds.MoveTo(hds, 120, 30);
-  mtds.Line(hds, 20, 70);
-  mtds.Line(hds, 220,70);
-  
-  /* We can read back the current drawing position, and see that it is unchanged from
-  ** what was set by MoveTo().
-  */
-  mtds.GetCurPos(hds, &pntT);
-  if ((pntT.xco != 120) || (pntT.yco != 30)) {
-    xil_printf("MoveTo/Line error\n\r");
-  }
+   mtds.SetPen(hds, 0x8CC8);
+   if (mtds.GetPen(hds) != 0x8CC8) {
+      xil_printf("Set/Get Pen error\n\r");
+   }
 
-  /* Now set up to draw green lines. Since the background color isn't being changed, it
-  ** stays what was set above, which is black. In this case a solid pen is selected, so
-  ** it draws a solid line without any dot/dash pattern. The FrameRect() function draws
-  ** the outline of the specified rectangle. This results in a green rectangle that spans
-  ** much of the display.
-  */
-  mtds.SetFgColor(hds, clrGreen);
-  mtds.SetPen(hds, penSolid);
-  rct.xcoLeft = 20;
-  rct.ycoTop = 20;
-  rct.xcoRight = 220;
-  rct.ycoBottom = 300;
-  mtds.FrameRect(hds, &rct);
+   mtds.SetBkMode(hds, bkTransparent);
+   if (mtds.GetBkMode(hds) != bkTransparent) {
+      xil_printf("Set/Get Bk Mode error\n\r");
+   }
 
-  /* Now, we are going to demonstrate a couple of other shapes. When filled shapes, 
-  ** such as Rectangle() or Ellipse() are drawn, the perimeter is drawn using the current
-  ** pen, foreground color, background color, etc. The interior is filled using the current
-  ** brush. To draw the perimeter without filling the interior, select a null brush (i.e.
-  ** hbrNull). To fill the interior without drawing the perimeter, select a null pen
-  ** (i.e. penNull).
-  ** In this case, we draw the perimeter of the rectangle with a dash pattern pen in light
-  ** gray, suppressing filling the interior, and draw an ellipse using a dot pattern pen
-  ** in medium gray, again supporessing filling the interior.
-  */
-  mtds.SetBrush(hds, hbrNull);
-  mtds.SetPen(hds, penDash);
-  mtds.SetFgColor(hds, clrLtGray);
-  mtds.Rectangle(hds, 25, 25, 215, 295);
-  mtds.SetPen(hds, penDot);
-  mtds.SetFgColor(hds, clrMedGray);
-  mtds.Ellipse(hds, 35, 35, 205, 285);
+   mtds.SetDrwRop(hds, drwNotXorPen);
+   if (mtds.GetDrwRop(hds) != drwNotXorPen) {
+      xil_printf("Set/Get Drw Rop error\n\r");
+   }
 
-  /* Now, we select a solid pen with the foreground color red. This will draw red pixels.
-  ** Since the drawing mode hasn't been changed from drwCopyPen set above, this will still
-  ** cause the pen pixels to overwrite whatever is being drawn on.
-  ** In this case, we are demonstrating the Polyline() function. This function draws a
-  ** series of line segments connecting the points in the array of PNT structures. The
-  ** array of points was initialized at the beginning of this function. In this case, we
-  ** are using the first point in the array as the starting point (we set the current
-  ** position to there using MoveTo()) and then use Polyline() to draw lines connecting
-  ** the rest of the points in the array.
-  */
-  mtds.SetFgColor(hds, clrRed);
-  mtds.SetPen(hds, penSolid);
-  mtds.MoveTo(hds, &rgpnt[0]);
-  mtds.PolyLineTo(hds, 20, &rgpnt[1]);
+   mtds.SetPixel(hds, 100, 100, clrRed);
+   clr = mtds.GetPixel(hds, 100, 100);
+   if (clr != mtds.GetNearestColor(clrRed)) {
+      xil_printf("Set/Get Pixel error\n\r");
+   }
 
-  /* This demonstrates using another drawing mode besides drwCopyPen. In this case, it
-  ** demonstrates the drwOrPen drawing mode. This mode causes the pen pixels to be bitwise
-  ** OR'd with the existing pixels being drawn on.
-  ** Set the color to dark red and drawing mode to drwCopy pen, then draw a line.
-  ** Then, set the color to blue, the drawing mode to drwOrPen and then draw another line
-  ** over the top of the previous one. This causes the blue pixels in the second line to
-  ** be OR'd with the dark red pixels drawn for the first line. The resulting color will be
-  ** the result of OR'ing the bits of dark red with blue, giving a medium magenta color.
-  */
-  mtds.SetFgColor(hds, clrDkRed);
-  mtds.SetPen(hds, penSolid);
-  mtds.SetDrwRop(hds, drwCopyPen);
-  mtds.MoveTo(hds, 20, 280);
-  mtds.LineTo(hds, 220, 280);
-  mtds.SetFgColor(hds, clrBlue);
-  mtds.SetDrwRop(hds, drwOrPen);
-  mtds.MoveTo(hds, 20, 280);
-  mtds.LineTo(hds, 220, 280);
+   mtds.SetFont(hds, hfntMedium);
+   if (mtds.GetFont(hds) != hfntMedium) {
+      xil_printf("Set/Get Font error\n\r");
+   }
 
-  /* The DS handle must be released once it is no longer being used. Since it was
-  ** acquired inside this function, it must be released before the function exits
-  ** or it is lost until the system is reset.
-  */
-  mtds.ReleaseDs(hds);
+   mtds.SetBrush(hds, hbrWhite);
+   if (mtds.GetBrush(hds) != hbrWhite) {
+      xil_printf("Set/Get Brush error\n\r");
+   }
+
+   hbmp = mtds.GetDisplayBitmap();
+   mtds.SetDrawingSurface(hds, hbmp);
+   if (mtds.GetDrawingSurface(hds) != hbmp) {
+      xil_printf("Set/Get Drawing Surface error\n\r");
+   }
+
+   pntS.xco = 27;
+   pntS.yco = 43;
+   mtds.MoveTo(hds, pntS.xco, pntS.yco);
+   mtds.GetCurPos(hds, &pntT);
+   if ((pntS.xco != pntT.xco) || (pntS.yco != pntT.yco)) {
+      xil_printf("MoveTo/GetCurPos error\n\r");
+   }
+
+   mtds.ReleaseDs(hds);
+
+   /* By releasing and reacquiring the handle to the display DS, we reset all of
+   ** the DS properties, so the changes that were made earlier no longer apply.
+   ** Now we are getting the display DS and setting it up for some actual
+   ** drawing.
+   */
+   hds = mtds.GetDisplayDs();
+
+   /* The DS maintains a "current position." The current position is set by
+   ** calling MoveTo(). Many graphics functions use the current position as the
+   ** starting point. Some graphics functions update the current position to the
+   ** ending point that was drawn. Other graphics functions leave the current
+   ** position unchanged. The ones whose name ends in "To" update the current
+   ** position, while functions whose name does not end in "To" leave the
+   ** current position unchanged.
+   **
+   ** For example:
+   **    LineTo(): Draws a line from the current position to the specified
+   **              endpoint and updates the current position to the endpoint.
+   **    Line():   Draws a line starting at the current position to the
+   **              specified endpoint and leaves the current position unchanged.
+   **
+   ** This convention only applies to functions that use the current position as
+   ** the starting point for drawing.
+   */
+
+   /* Set up to draw white lines on a black background using a dot pattern pen.
+   ** This is done by selecting white as the foreground color and black as the
+   ** background color. The pen is set to penDot, which is one of the
+   ** pre-defined pen patterns. It produces a dotted line. The background
+   ** transparency mode defaults to opaque, so the background color gets drawn
+   ** when we draw the dotted lines. The drwCopyPen drawing mode causes the pen
+   ** to overwrite whatever is in the pixels being drawn on.
+   */
+   mtds.SetFgColor(hds, clrWhite);
+   mtds.SetBgColor(hds, clrBlack);
+   mtds.SetPen(hds, penDot);
+   mtds.SetDrwRop(hds, drwCopyPen);
+
+   /* Draw two diagonal lines that cross the entire display.
+   */
+   mtds.MoveTo(hds, 0, 0);
+   mtds.LineTo(hds, 240, 320);
+   mtds.MoveTo(hds, 239, 0);
+   mtds.LineTo(hds, 0, 320);
+
+   /* The following will draw two red lines. The foreground color is set to red,
+   ** and the pen is set to penSolid, so we get solid red lines with no dot
+   ** pattern. The background color remains black as was set above. The LineTo()
+   ** function is used to draw the lines, so the current position is updated to
+   ** the endpoint of the first one when it is drawn. This then becomes the
+   ** starting point of the second line.
+   */
+   mtds.SetFgColor(hds, clrRed);
+   mtds.SetPen(hds, penSolid);
+   mtds.MoveTo(hds, 20, 60);
+   mtds.LineTo(hds, 120, 20);
+   mtds.LineTo(hds, 220, 60);
+
+   /* This will draw two blue lines beginning at (120, 30). Because the Line()
+   ** function is being used, the current position in the DS doesn't change when
+   ** drawing the lines. Each line drawn starts at the same point.
+   */
+   mtds.SetFgColor(hds, clrBlue);
+   mtds.MoveTo(hds, 120, 30);
+   mtds.Line(hds, 20, 70);
+   mtds.Line(hds, 220, 70);
+
+   /* We can read back the current drawing position, and see that it is
+   ** unchanged from what was set by MoveTo().
+   */
+   mtds.GetCurPos(hds, &pntT);
+   if ((pntT.xco != 120) || (pntT.yco != 30)) {
+      xil_printf("MoveTo/Line error\n\r");
+   }
+
+   /* Now set up to draw green lines. Since the background color isn't being
+   ** changed, it stays as what was set above, which is black. In this case a
+   ** solid pen is selected, so it draws a solid line without any dot/dash
+   ** pattern. The FrameRect() function draws the outline of the specified
+   ** rectangle. This results in a green rectangle that spans most of the
+   ** display.
+   */
+   mtds.SetFgColor(hds, clrGreen);
+   mtds.SetPen(hds, penSolid);
+   rct.xcoLeft = 20;
+   rct.ycoTop = 20;
+   rct.xcoRight = 220;
+   rct.ycoBottom = 300;
+   mtds.FrameRect(hds, &rct);
+
+   /* Now, we are going to demonstrate a couple of other shapes. When filled
+   ** shapes, such as Rectangle() or Ellipse() are drawn, the perimeter is drawn
+   ** using the current pen, foreground color, background color, etc. The
+   ** interior is filled using the current brush. To draw the perimeter without
+   ** filling the interior, select a null brush (i.e. hbrNull). To fill the
+   ** interior without drawing the perimeter, select a null pen (i.e. penNull).
+   ** In this case, we draw the perimeter of the rectangle with a dash pattern
+   ** pen in light gray, suppressing filling the interior, and draw an ellipse
+   ** using a dot pattern pen in medium gray, again suppressing filling the
+   ** interior.
+   */
+   mtds.SetBrush(hds, hbrNull);
+   mtds.SetPen(hds, penDash);
+   mtds.SetFgColor(hds, clrLtGray);
+   mtds.Rectangle(hds, 25, 25, 215, 295);
+   mtds.SetPen(hds, penDot);
+   mtds.SetFgColor(hds, clrMedGray);
+   mtds.Ellipse(hds, 35, 35, 205, 285);
+
+   /* Now, we select a solid pen with the foreground color red. This will draw
+   ** red pixels. Since the drawing mode hasn't been changed from drwCopyPen set
+   ** above, this will still cause the pen pixels to overwrite whatever is being
+   ** drawn on. In this case, we are demonstrating the Polyline() function. This
+   ** function draws a series of line segments connecting the points in the
+   ** array of PNT structures. The array of points was initialized at the
+   ** beginning of this function. In this case, we are using the first point in
+   ** the array as the starting point (we set the current position to there
+   ** using MoveTo()) and then use Polyline() to draw lines connecting the rest
+   ** of the points in the array.
+   */
+   mtds.SetFgColor(hds, clrRed);
+   mtds.SetPen(hds, penSolid);
+   mtds.MoveTo(hds, &rgpnt[0]);
+   mtds.PolyLineTo(hds, 20, &rgpnt[1]);
+
+   /* This demonstrates using another drawing mode besides drwCopyPen. In this
+   ** case, it demonstrates the drwOrPen drawing mode. This mode causes the pen
+   ** pixels to be bitwise OR'd with the existing pixels being drawn on.
+   **
+   ** Set the color to dark red and drawing mode to drwCopy pen, then draw a
+   ** line. Then, set the color to blue, the drawing mode to drwOrPen and then
+   ** draw another line over the top of the previous one. This causes the blue
+   ** pixels in the second line to be OR'd with the dark red pixels drawn for
+   ** the first line. The resulting color will be the result of OR'ing the bits
+   ** of dark red with blue, giving a medium magenta color.
+   */
+   mtds.SetFgColor(hds, clrDkRed);
+   mtds.SetPen(hds, penSolid);
+   mtds.SetDrwRop(hds, drwCopyPen);
+   mtds.MoveTo(hds, 20, 280);
+   mtds.LineTo(hds, 220, 280);
+   mtds.SetFgColor(hds, clrBlue);
+   mtds.SetDrwRop(hds, drwOrPen);
+   mtds.MoveTo(hds, 20, 280);
+   mtds.LineTo(hds, 220, 280);
+
+   /* The DS handle must be released once it is no longer being used. Since it
+   ** was acquired inside this function, it must be released before the function
+   ** exits or it is lost until the system is reset.
+   */
+   mtds.ReleaseDs(hds);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest2()
+/*** MtdsTest2()
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This function demonstrates drawing lines that extend off of the display and
-**    are thus clipped.
-**    The coordinate system extends +/-32K in X and +/-32K in Y. Graphical elements
-**    can be rendered at any virtual coordinate and any portion of the element that
-**    isn't on the display is clipped.
+**   Description:
+**      This function demonstrates drawing lines that extend off of the display
+**      and are thus clipped.
+**
+**      The coordinate system extends +/-32K in X and +/-32K in Y. Graphical
+**      elements can be rendered at any virtual coordinate but any portion of
+**      the element that isn't on the display is clipped.
 */
-
 void MtdsTest2() {
-  HDS	  hds;
-  int16_t	  xcoT;
-  int16_t	  ycoT;
+   HDS hds;
+   int16_t xcoT;
+   int16_t ycoT;
 
-  /* We're going to be drawing on the display, so get the handle to the display DS.
-  ** Then set the pen to solid as we want to draw solid lines. Actually, setting the
-  ** pen to solid here is redundant as penSolid is the default when the DS is
-  ** obtained.
-  */
-  hds = mtds.GetDisplayDs();
-  mtds.SetPen(hds, penSolid);
+   /* We're going to be drawing on the display, so get the handle to the display
+   ** DS. Then set the pen to solid as we want to draw solid lines. Actually,
+   ** setting the pen to solid here is redundant as penSolid is the default when
+   ** the DS is obtained.
+   */
+   hds = mtds.GetDisplayDs();
+   mtds.SetPen(hds, penSolid);
 
-  /* Set the foreground color to red so that we draw red lines.
-  ** Note: The first iteration of the loop below draws a line from (120,-200) to (10,340).
-  ** This is from a point well above the center of the top of the screen to a point below
-  ** the lower edge.
-  ** It also draws a line from (120,520) to (10,-20). Again, this is from a point well
-  ** below the center to the screen to above the upper edge.
-  ** These lines get clipped at both ends and only the part visible on the display is
-  ** actually rendered. This demonstrates clipping in Y.
-  */
-  mtds.SetFgColor(hds, clrRed);
-  for (xcoT = 10; xcoT < 240; xcoT += 10) {
-    mtds.MoveTo(hds, 120, -200);
-    mtds.LineTo(hds, xcoT, 340);
-    mtds.MoveTo(hds, 120, 520);
-    mtds.LineTo(hds, xcoT, -20);
-  }
+   /* Set the foreground color to red so that we draw red lines.
+   **
+   ** The first iteration of the loop below draws a line from (120,-200) to
+   ** (10,340). This is from a point well above the center of the top of the
+   ** screen to a point below the lower edge. It also draws a line from
+   ** (120,520) to (10,-20). Again, this is from a point well below the center
+   ** to the screen to above the upper edge. These lines get clipped at both
+   ** ends and only the part visible on the display is actually rendered. This
+   ** demonstrates clipping in Y.
+   */
+   mtds.SetFgColor(hds, clrRed);
+   for (xcoT = 10; xcoT < 240; xcoT += 10) {
+      mtds.MoveTo(hds, 120, -200);
+      mtds.LineTo(hds, xcoT, 340);
+      mtds.MoveTo(hds, 120, 520);
+      mtds.LineTo(hds, xcoT, -20);
+   }
 
-  /* Draw some green lines that demonstrate clipping in X.
-  */
-  mtds.SetFgColor(hds, clrDkGreen);
-  for (xcoT = 10; xcoT < 240; xcoT += 20) {
-    mtds.MoveTo(hds, -30, 160);
-    mtds.LineTo(hds, xcoT, 330);
-    mtds.MoveTo(hds, -30, 160);
-    mtds.LineTo(hds, xcoT, -10);
-    mtds.MoveTo(hds, 270, 160);
-    mtds.LineTo(hds, xcoT, 330);
-    mtds.MoveTo(hds, 270, 160);
-    mtds.LineTo(hds, xcoT, -10);
-  }
+   /* Draw some green lines that demonstrate clipping in X.
+   */
+   mtds.SetFgColor(hds, clrDkGreen);
+   for (xcoT = 10; xcoT < 240; xcoT += 20) {
+      mtds.MoveTo(hds, -30, 160);
+      mtds.LineTo(hds, xcoT, 330);
+      mtds.MoveTo(hds, -30, 160);
+      mtds.LineTo(hds, xcoT, -10);
+      mtds.MoveTo(hds, 270, 160);
+      mtds.LineTo(hds, xcoT, 330);
+      mtds.MoveTo(hds, 270, 160);
+      mtds.LineTo(hds, xcoT, -10);
+   }
 
-  /* Draw some dark cyan lines that demonstrate more clipping.
-  */
-  mtds.SetFgColor(hds, clrDkCyan);
-  for (ycoT = 10; ycoT < 320; ycoT += 10) {
-    mtds.MoveTo(hds, -200, 160);
-    mtds.LineTo(hds, 260, ycoT);
-    mtds.MoveTo(hds, 440, 160);
-    mtds.LineTo(hds, -20, ycoT);
-  }
+   /* Draw some dark cyan lines that demonstrate more clipping.
+   */
+   mtds.SetFgColor(hds, clrDkCyan);
+   for (ycoT = 10; ycoT < 320; ycoT += 10) {
+      mtds.MoveTo(hds, -200, 160);
+      mtds.LineTo(hds, 260, ycoT);
+      mtds.MoveTo(hds, 440, 160);
+      mtds.LineTo(hds, -20, ycoT);
+   }
 
-  /* Always release the DS when it is no longer used. Since it was acquired inside this
-  ** function, it must be released before the functions exits.
-  */
-  mtds.ReleaseDs(hds);
-
+   /* Always release the DS when it is no longer used. Since it was acquired
+   ** inside this function, it must be released before the functions exits.
+   */
+   mtds.ReleaseDs(hds);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest3()
+/*** MtdsTest3()
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstrates drawing filled shapes using a brush.
+**   Description:
+**      This demonstrates drawing filled shapes using a brush.
 */
-
 void MtdsTest3() {
-  HDS   hdsDisp;
-  HBR   hbrDiagCross;
-  int   xcoL;
-  int   ycoT;
-  int   xcoR;
-  int   ycoB;
+   HDS hdsDisp;
+   HBR hbrDiagCross;
+   int xcoL;
+   int ycoT;
+   int xcoR;
+   int ycoB;
 
-  /* Set up the coordinates of the upper left and lower right corners of a rectangle.
-  */
-  xcoL = 10;
-  ycoT = 20;
-  xcoR = 230;
-  ycoB = 120;
+   /* Set up the coordinates of the upper left and lower right corners of a
+   ** rectangle.
+   */
+   xcoL = 10;
+   ycoT = 20;
+   xcoR = 230;
+   ycoB = 120;
 
-  /* Get the display DS so that we can draw on it.
-  ** Create a pattern brush that will be used for fill. In this case, we're creating
-  ** a pattern brush with a diagonal crosshatch pattern with foreground color of red
-  ** and background color of black.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hbrDiagCross = mtds.CreatePatternBrush(idpsDiagCross, clrRed, clrBlack);
-  
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   /* Get the display DS so that we can draw on it.
+   ** Create a pattern brush that will be used for fill. In this case, we're
+   ** creating a pattern brush with a diagonal crosshatch pattern with
+   ** foreground color of red and background color of black.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hbrDiagCross = mtds.CreatePatternBrush(idpsDiagCross, clrRed, clrBlack);
 
-  /* Select foreground color white, solid pen and null brush. The Rectangle() function
-  ** will draw the perimeter of the rectangle with solid white lines and not fill the
-  ** interior.
-  */
-  mtds.SetFgColor(hdsDisp, clrWhite);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrNull);
-  mtds.Rectangle(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
 
-  /* Now, we select foreground color green and select the brush created above. The Ellipse()
-  ** function is given the same rectangle, so it will draw the ellipse tangent to the
-  ** rectangle drawn above. It will have the perimeter drawn in green and the interior
-  ** filled with the red and black brush created above.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrDiagCross);
-  mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+   /* Select foreground color white, solid pen and null brush. The Rectangle()
+   ** function will draw the perimeter of the rectangle with solid white lines
+   ** and not fill the interior.
+   */
+   mtds.SetFgColor(hdsDisp, clrWhite);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrNull);
+   mtds.Rectangle(hdsDisp, xcoL, ycoT, xcoR, ycoB);
 
-  /* Set up the coordinates of a different rectangle.
-  */
-  xcoL = 70;
-  ycoT = 140;
-  xcoR = 170;
-  ycoB = 300;
+   /* Now, we select foreground color green and select the brush created above.
+   ** The Ellipse() function is given the same rectangle, so it will draw the
+   ** ellipse tangent to the rectangle drawn above. It will have the perimeter
+   ** drawn in green and the interior filled with the red and black brush
+   ** created above.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrDiagCross);
+   mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
 
-  /* Now, we are going to do essentially the same thing as above, buth with a different
-  ** rectangle.
-  */
-  mtds.SetFgColor(hdsDisp, clrWhite);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrNull);
-  mtds.Rectangle(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+   /* Set up the coordinates of a different rectangle.
+   */
+   xcoL = 70;
+   ycoT = 140;
+   xcoR = 170;
+   ycoB = 300;
 
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrDiagCross);
-  mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+   /* Now, we are going to do essentially the same thing as above, but with a
+   ** different rectangle.
+   */
+   mtds.SetFgColor(hdsDisp, clrWhite);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrNull);
+   mtds.Rectangle(hdsDisp, xcoL, ycoT, xcoR, ycoB);
 
-  /* We always have to release or destroy any resources that we no longer need, so that
-  ** the memory isn't lost. In this case since the brush was created inside this function
-  ** and we aren't saving the handle anywhere, it must be destroyed before the function
-  ** exits.
-  ** Again, since we acquired the display DS in this function we must release it before
-  ** we return.
-  */
-  mtds.DestroyBrush(hbrDiagCross);
-  mtds.ReleaseDs(hdsDisp);
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrDiagCross);
+   mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+
+   /* We always have to release or destroy any resources that we no longer need,
+   ** so that the memory isn't lost. In this case since the brush was created
+   ** inside this function and we aren't saving the handle anywhere, it must be
+   ** destroyed before the function exits. Again, since we acquired the display
+   ** DS in this function we must release it before we return.
+   */
+   mtds.DestroyBrush(hbrDiagCross);
+   mtds.ReleaseDs(hdsDisp);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest4()
+/*** MtdsTest4()
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    Demonstrate drawing some concentric ellipses. This draws two sets of
-**    concentric ellipses without filling the interiors.
-**    The first set of ellipses aren't strictly concentric, but each one drawn
-**    contains the previous ones drawn.
-**    Since the bounding rectangles that specify the second set of ellipses are
-**    actually squares, the ellipses are actually circles.
+**   Description:
+**      Demonstrates drawing some concentric ellipses. This draws two sets of
+**      concentric ellipses without filling the interiors. The first set of
+**      ellipses aren't strictly concentric, but each one drawn contains the
+**      previous ones drawn. Since the bounding rectangles that specify the
+**      second set of ellipses are actually squares, the ellipses are actually
+**      circles.
 */
-
 void MtdsTest4() {
-  HDS			hdsDisp;
-  int			i;
-  int16_t		xcoL;
-  int16_t		ycoT;
-  int16_t		xcoR;
-  int16_t		ycoB;
+   HDS hdsDisp;
+   int i;
+   int16_t xcoL;
+   int16_t ycoT;
+   int16_t xcoR;
+   int16_t ycoB;
 
-  /* Get the display DS and select a null brush to suppress filling the ellipses.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetBrush(hdsDisp, hbrNull);
+   /* Get the display DS and select a null brush to suppress filling the
+   ** ellipses.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetBrush(hdsDisp, hbrNull);
 
-  /* Draw red ellipses with solid perimeter.
-  */
-  mtds.SetFgColor(hdsDisp, clrRed);
-  mtds.SetPen(hdsDisp, penSolid);
+   /* Draw red ellipses with solid perimeter.
+   */
+   mtds.SetFgColor(hdsDisp, clrRed);
+   mtds.SetPen(hdsDisp, penSolid);
 
-  /* Set up the initial bounding rectangle for the first set of ellipses.
-  */  
-  xcoL = 30;
-  ycoT = 70;
-  xcoR = 20;
-  ycoB = 70;
+   /* Set up the initial bounding rectangle for the first set of ellipses.
+   */
+   xcoL = 30;
+   ycoT = 70;
+   xcoR = 20;
+   ycoB = 70;
 
-  for (i = 0; i < 10; i++) {
-    /* Move the sides of the rectangle out a bit and then draw the ellipse.
-    */
-    xcoL -= 2;
-    xcoR += 20;
-    ycoT -= 5;
-    ycoB += 5;
-    mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
-  }
+   for (i = 0; i < 10; i++) {
+      /* Move the sides of the rectangle out a bit and then draw the ellipse.
+      */
+      xcoL -= 2;
+      xcoR += 20;
+      ycoT -= 5;
+      ycoB += 5;
+      mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+   }
 
-  /* Draw green ellipses with a dotted perimeter.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penDot);
+   /* Draw green ellipses with a dotted perimeter.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penDot);
 
-  /* Set up the initial bounding rectangle for the second set of ellipses.
-  */
-  xcoL = 119;
-  ycoT = 219;
-  xcoR = 121;
-  ycoB = 221;
+   /* Set up the initial bounding rectangle for the second set of ellipses.
+   */
+   xcoL = 119;
+   ycoT = 219;
+   xcoR = 121;
+   ycoB = 221;
 
-  for (i = 0; i < 15; i++) {
-    /* Move the sides of the rectangle out a bit and then draw the ellipse.
-    */
-    xcoL -= 5;
-    xcoR += 5;
-    ycoT -= 5;
-    ycoB += 5;
-    mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
-  }
+   for (i = 0; i < 15; i++) {
+      /* Move the sides of the rectangle out a bit and then draw the ellipse.
+      */
+      xcoL -= 5;
+      xcoR += 5;
+      ycoT -= 5;
+      ycoB += 5;
+      mtds.Ellipse(hdsDisp, xcoL, ycoT, xcoR, ycoB);
+   }
 
-  /* Releae the DS before we leave.
-  */
-  mtds.ReleaseDs(hdsDisp);
+   /* Release the DS before we leave.
+   */
+   mtds.ReleaseDs(hdsDisp);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest5
+/*** MtdsTest5
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstration tiles the display with two interleaved sets of concentric
-**    circles.
+**   Description:
+**      This demonstration tiles the display with two interleaved sets of
+**      concentric circles.
 */
-
 void MtdsTest5() {
-  HDS        hdsDisp;
-  int16_t    xco;
-  int16_t    yco;
+   HDS hdsDisp;
+   int16_t xco;
+   int16_t yco;
 
-  /* Get the display DS and initialize the parameters we care about. Note that the only
-  ** one we actually need to set is the brush, as we are setting the others to the
-  ** default values. Setting the brush to null suppresses filling the circles.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetBrush(hdsDisp, hbrNull);
+   /* Get the display DS and initialize the parameters we care about. Note that
+   ** the only one we actually need to set is the brush, as we are setting the
+   ** others to the default values. Setting the brush to null suppresses filling
+   ** the circles.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetBrush(hdsDisp, hbrNull);
 
-  /* Iterate over the surface of the display, tiling it with sets of blue circles.
-  */
-  mtds.SetFgColor(hdsDisp, clrBlue);
-  for (yco = 25; yco <= 255; yco += 45) {
-    for (xco = 30; xco <= 170; xco += 45) {
-      /* Draw four concentric circles centered at the current position.
-      */
-      mtds.Ellipse(hdsDisp, xco, yco, xco+39, yco+39);
-      mtds.Ellipse(hdsDisp, xco+5, yco+5, xco+34, yco+34);
-      mtds.Ellipse(hdsDisp, xco+10, yco+10, xco+29, yco+29);
-      mtds.Ellipse(hdsDisp, xco+15, yco+15, xco+24, yco+24);
-    }
-  }    
+   /* Iterate over the surface of the display, tiling it with sets of blue
+   ** circles.
+   */
+   mtds.SetFgColor(hdsDisp, clrBlue);
+   for (yco = 25; yco <= 255; yco += 45) {
+      for (xco = 30; xco <= 170; xco += 45) {
+         /* Draw four concentric circles centered at the current position.
+         */
+         mtds.Ellipse(hdsDisp, xco, yco, xco + 39, yco + 39);
+         mtds.Ellipse(hdsDisp, xco + 5, yco + 5, xco + 34, yco + 34);
+         mtds.Ellipse(hdsDisp, xco + 10, yco + 10, xco + 29, yco + 29);
+         mtds.Ellipse(hdsDisp, xco + 15, yco + 15, xco + 24, yco + 24);
+      }
+   }
 
-  /* Iterate over the surface of the display, tiling it with sets of red circles that
-  ** are interleaved between the blue ones drawn above.
-  */  
-  mtds.SetFgColor(hdsDisp, clrRed);
-  for (yco = 5; yco <= 275; yco += 45) {
-    for (xco = 10; xco <= 190; xco += 45) {
-      /* Draw four concentric circles centered at the current position.
-      */
-      mtds.Ellipse(hdsDisp, xco, yco, xco+39, yco+39);
-      mtds.Ellipse(hdsDisp, xco+5, yco+5, xco+34, yco+34);
-      mtds.Ellipse(hdsDisp, xco+10, yco+10, xco+29, yco+29);
-      mtds.Ellipse(hdsDisp, xco+15, yco+15, xco+24, yco+24);
-    }
-  }
- 
-  /* Release the display DS before we leave.
-  */
-  mtds.ReleaseDs(hdsDisp);
+   /* Iterate over the surface of the display, tiling it with sets of red
+   ** circles that are interleaved between the blue ones drawn above.
+   */
+   mtds.SetFgColor(hdsDisp, clrRed);
+   for (yco = 5; yco <= 275; yco += 45) {
+      for (xco = 10; xco <= 190; xco += 45) {
+         /* Draw four concentric circles centered at the current position.
+         */
+         mtds.Ellipse(hdsDisp, xco, yco, xco + 39, yco + 39);
+         mtds.Ellipse(hdsDisp, xco + 5, yco + 5, xco + 34, yco + 34);
+         mtds.Ellipse(hdsDisp, xco + 10, yco + 10, xco + 29, yco + 29);
+         mtds.Ellipse(hdsDisp, xco + 15, yco + 15, xco + 24, yco + 24);
+      }
+   }
 
+   /* Release the display DS before we leave.
+   */
+   mtds.ReleaseDs(hdsDisp);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest6
+/*** MtdsTest6
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstrates drawing both filled and non-filled rectangles and
-**    rounded rectangles. The RoundRect() function draws a rectangle with
-**    rounded corners.
+**   Description:
+**      This demonstrates drawing both filled and non-filled rectangles and
+**      rounded rectangles. The RoundRect() function draws a rectangle with
+**      rounded corners.
 */
-
 void MtdsTest6() {
-  HDS   hdsDisp;
-  HBR   hbrChecker;
+   HDS hdsDisp;
+   HBR hbrChecker;
 
-  /* Get the display DS so that we can use it to draw on the display.
-  ** Create a pattern brush with a checkerboard pattern with foreground color red and
-  ** background color black.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hbrChecker = mtds.CreatePatternBrush(idpsChecker, clrRed, clrBlack);
-  
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   /* Get the display DS so that we can use it to draw on the display.
+   ** Create a pattern brush with a checkerboard pattern with foreground color
+   ** red and background color black.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hbrChecker = mtds.CreatePatternBrush(idpsChecker, clrRed, clrBlack);
 
-  /* Draw a rectangle with solid green pen and no fill.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrNull);
-  mtds.Rectangle(hdsDisp, 10, 10, 100, 80);
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
 
-  /* Draw the same size rectangle to the right of it, but this time filled with the
-  ** brush that we created above.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.Rectangle(hdsDisp, 120, 10, 220, 80);
+   /* Draw a rectangle with solid green pen and no fill.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrNull);
+   mtds.Rectangle(hdsDisp, 10, 10, 110, 80);
 
-  /* Draw a rounded rectangle with solid green brush and no fill. In this case, the 
-  ** corners are rounded with circlular arcs of radius 30.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrNull);
-  mtds.RoundRect(hdsDisp, 10, 140, 110, 300, 30, 30);
+   /* Draw the same size rectangle to the right of it, but this time filled with
+   ** the brush that we created above.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.Rectangle(hdsDisp, 120, 10, 220, 80);
 
-  /* Draw the same size rounded rectangle to the right of it, but filled with the 
-  ** above brush.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.RoundRect(hdsDisp, 120, 140, 220, 300, 30, 30);
+   /* Draw a rounded rectangle with solid green brush and no fill. In this case,
+   ** the corners are rounded with circular arcs of radius 30.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrNull);
+   mtds.RoundRect(hdsDisp, 10, 140, 110, 300, 30, 30);
 
-  /* Destroy the brush and release the DS before we leave so that the resources aren't
-  ** lost.
-  */
-  mtds.DestroyBrush(hbrChecker);
-  mtds.ReleaseDs(hdsDisp);
-  
+   /* Draw the same size rounded rectangle to the right of it, but filled with
+   ** the above brush.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.RoundRect(hdsDisp, 120, 140, 220, 300, 30, 30);
+
+   /* Destroy the brush and release the DS before we leave so that the resources
+   ** aren't lost.
+   */
+   mtds.DestroyBrush(hbrChecker);
+   mtds.ReleaseDs(hdsDisp);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest7
+/*** MtdsTest7
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstrates the use of the Arc() function for drawing an elliptical arc.
-**    In this case, though, rather than drawing directly on the display bitmap, it creates
-**    a window and does all of the rendering inside of the window.
+**   Description:
+**      This demonstrates the use of the Arc() function for drawing an
+**      elliptical arc. In this case, though, rather than drawing directly on
+**      the display bitmap, it creates a window and does all of the rendering
+**      inside of the window.
 */
-
 void MtdsTest7() {
-  HDS		hdsDisp;
-  HWIN		hwin;
-  int16_t	xcoLeft;
-  int16_t	ycoTop;
-  int16_t	xcoRight;
-  int16_t	ycoBottom;
-  int16_t	xcoStart;
-  int16_t	ycoStart;
-  int16_t	xcoEnd;
-  int16_t	ycoEnd;
-  int16_t	xcoC;
-  int16_t	ycoC;
-  RCT		rct;
+   HDS     hdsDisp;
+   HWIN    hwin;
+   int16_t xcoLeft;
+   int16_t ycoTop;
+   int16_t xcoRight;
+   int16_t ycoBottom;
+   int16_t xcoStart;
+   int16_t ycoStart;
+   int16_t xcoEnd;
+   int16_t ycoEnd;
+   int16_t xcoC;
+   int16_t ycoC;
+   RCT     rct;
 
-  /* The following code clears the display to white by initializing a RCT structure with the
-  ** coordinates of the boundary of the display and then using FillRect to fill the resulting
-  ** rectangle with white. This could be done more easily with ClearDisplay(), however, this
-  ** demonstrates a technique that could be used to clear portions of the display.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  rct.xcoLeft = 0;
-  rct.ycoTop  = 0;
-  rct.xcoRight = 239;
-  rct.ycoBottom = 319;
-  mtds.FillRect(hdsDisp, &rct, hbrWhite);
-  
-  mtds.ReleaseDs(hdsDisp);
+   /* The following code clears the display to white by initializing an RCT
+   ** structure with the coordinates of the boundary of the display and then
+   ** using FillRect to fill the resulting rectangle with white. This could be
+   ** done more easily with ClearDisplay(), however, this demonstrates a
+   ** technique that could be used to clear portions of the display.
+   */
+   hdsDisp = mtds.GetDisplayDs();
 
-  /* Create the window that we are going to use to contain the graphics rendered by this
-  ** demonstration.
-  */
-  hwin = mtws.CreateWindow(hwinDesktop, wclsUser, wstlVisible|wstlThinBorder, 5, 5, 230, 200);
-  mtws.GetClientRect(hwin, &rct);
+   rct.xcoLeft   = 0;
+   rct.ycoTop    = 0;
+   rct.xcoRight  = 239;
+   rct.ycoBottom = 319;
+   mtds.FillRect(hdsDisp, &rct, hbrWhite);
 
-  /* Get a DS handle that can be used to draw on the client area of the window and then fill
-  ** the client area with dark gray.
-  */  
-  hdsDisp = mtws.BeginUpdate(hwin);
-  mtws.DrawBorder(hwin);
-  mtds.FillRect(hdsDisp, &rct, hbrDkGray);
+   mtds.ReleaseDs(hdsDisp);
 
-  /* Set up the drawing parameters that we are going to use.
-  */
-  mtds.SetFgColor(hdsDisp, clrRed);
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetPen(hdsDisp, penSolid);
-  mtds.SetBrush(hdsDisp, hbrNull);
+   /* Create the window that we are going to use to contain the graphics
+   ** rendered by this demonstration.
+   */
+   hwin = mtws.CreateWindow(hwinDesktop, wclsUser, wstlVisible | wstlThinBorder,
+         5, 5, 230, 200);
+   mtws.GetClientRect(hwin, &rct);
 
-  /* Set up the bounding rectangle that will be used to define the ellipse for the elliptical
-  ** arc section.
-  */
-  xcoLeft = 10;
-  ycoTop = 10;
-  xcoRight = 210;
-  ycoBottom = 110;
-  
-  /* Compute the center of the ellipse.
-  */
-  xcoC = (xcoRight + xcoLeft) / 2;
-  ycoC = (ycoBottom + ycoTop) / 2;
+   /* Get a DS handle that can be used to draw on the client area of the window
+   ** and then fill the client area with dark gray.
+   */
+   hdsDisp = mtws.BeginUpdate(hwin);
+   mtws.DrawBorder(hwin);
+   mtds.FillRect(hdsDisp, &rct, hbrDkGray);
 
-  /* Following section has code to initialize variables with the endpoints of the radial 
-  ** lines that define the starting angle and the ending angle of the arc. This code merely
-  ** has a number of different initializations that can be turned on or off using
-  ** conditional compilation. All but one of them do not get compiled because they
-  ** are depenendent on defined(DEAD) (DEAD should not be defined). By having one of 
-  ** these bedependent on !defined(DEAD), it is easy to switch in one set or another
-  ** without having to retype a lot of values. This makes it easy to see how changing the
-  ** endpoints of the radial lines changes the arc that gets drawn.
-  */
+   /* Set up the drawing parameters that we are going to use.
+   */
+   mtds.SetFgColor(hdsDisp, clrRed);
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetPen(hdsDisp, penSolid);
+   mtds.SetBrush(hdsDisp, hbrNull);
+
+   /* Set up the bounding rectangle that will be used to define the ellipse for
+   ** the elliptical arc section.
+   */
+   xcoLeft = 10;
+   ycoTop = 10;
+   xcoRight = 210;
+   ycoBottom = 110;
+
+   /* Compute the center of the ellipse.
+   */
+   xcoC = (xcoRight + xcoLeft) / 2;
+   ycoC = (ycoBottom + ycoTop) / 2;
+
+   /* Following section has code to initialize variables with the endpoints of
+   ** the radial lines that define the starting angle and the ending angle of
+   ** the arc. This code merely has a number of different initializations that
+   ** can be turned on or off using conditional compilation. All but one of them
+   ** do not get compiled because they are dependent on defined(DEAD) (DEAD
+   ** should not be defined). By having one of these be dependent on
+   ** !defined(DEAD), it is easy to switch in one set or another without having
+   ** to retype a lot of values. This makes it easy to see how changing the
+   ** endpoints of the radial lines changes the arc that gets drawn.
+   */
 #if defined(DEAD)
-  xcoStart = 25;
-  ycoStart = -50;
-  xcoEnd = 50;
-  ycoEnd = -25;
-#endif
-#if defined(DEAD)
-  xcoStart = 50;
-  ycoStart = -25;
-  xcoEnd = 50;
-  ycoEnd = 25;
+   xcoStart = 25;
+   ycoStart = -50;
+   xcoEnd = 50;
+   ycoEnd = -25;
 #endif
 #if defined(DEAD)
-  xcoStart = 50;
-  ycoStart = 25;
-  xcoEnd = 25;
-  ycoEnd = 50;
-#endif
-#if !defined(DEAD)    //NOTE: this one actually gets compiled
-  xcoStart = 25;
-  ycoStart = 50;
-  xcoEnd = -25;
-  ycoEnd = 50;
+   xcoStart = 50;
+   ycoStart = -25;
+   xcoEnd = 50;
+   ycoEnd = 25;
 #endif
 #if defined(DEAD)
-  xcoStart = -25;
-  ycoStart = 50;
-  xcoEnd = -50;
-  ycoEnd = 25;
+   xcoStart = 50;
+   ycoStart = 25;
+   xcoEnd = 25;
+   ycoEnd = 50;
+#endif
+#if !defined(DEAD) // NOTE: this one actually gets compiled
+   xcoStart = 25;
+   ycoStart = 50;
+   xcoEnd = -25;
+   ycoEnd = 50;
 #endif
 #if defined(DEAD)
-  xcoStart = -50;
-  ycoStart = 25;
-  xcoEnd = -50;
-  ycoEnd = -25;
+   xcoStart = -25;
+   ycoStart = 50;
+   xcoEnd = -50;
+   ycoEnd = 25;
 #endif
 #if defined(DEAD)
-  xcoStart = -50;
-  ycoStart = -25;
-  xcoEnd = -25;
-  ycoEnd = -50;
+   xcoStart = -50;
+   ycoStart = 25;
+   xcoEnd = -50;
+   ycoEnd = -25;
 #endif
 #if defined(DEAD)
-  xcoStart = -25;
-  ycoStart = -50;
-  xcoEnd = 25;
-  ycoEnd = -50;
+   xcoStart = -50;
+   ycoStart = -25;
+   xcoEnd = -25;
+   ycoEnd = -50;
 #endif
 #if defined(DEAD)
-  xcoStart = 25;
-  ycoStart = -50;
-  xcoEnd = -25;
-  ycoEnd = -50;
+   xcoStart = -25;
+   ycoStart = -50;
+   xcoEnd = 25;
+   ycoEnd = -50;
 #endif
 #if defined(DEAD)
-  xcoStart = 0;
-  ycoStart = -50;
-  xcoEnd = 0;
-  ycoEnd = 50;
+   xcoStart = 25;
+   ycoStart = -50;
+   xcoEnd = -25;
+   ycoEnd = -50;
+#endif
+#if defined(DEAD)
+   xcoStart = 0;
+   ycoStart = -50;
+   xcoEnd = 0;
+   ycoEnd = 50;
 #endif
 
-  /* This section draws an ellipse with the same bounding rectangle as the ellipse that
-  ** will define the arc. It also draws the lines that are used to define the starting
-  ** and ending angles for the arc.
-  */
-  mtds.SetFgColor(hdsDisp, clrWhite);
-  mtds.Ellipse(hdsDisp, xcoLeft, ycoTop, xcoRight, ycoBottom);
-  mtds.MoveTo(hdsDisp, xcoC, ycoC);
-  mtds.LineTo(hdsDisp, xcoC+xcoStart, ycoC+ycoStart);
-  mtds.MoveTo(hdsDisp, xcoC, ycoC);
-  mtds.LineTo(hdsDisp, xcoC+xcoEnd, ycoC+ycoEnd);
+   /* This section draws an ellipse with the same bounding rectangle as the
+   ** ellipse that will define the arc. It also draws the lines that are used to
+   ** define the starting and ending angles for the arc.
+   */
+   mtds.SetFgColor(hdsDisp, clrWhite);
+   mtds.Ellipse(hdsDisp, xcoLeft, ycoTop, xcoRight, ycoBottom);
+   mtds.MoveTo(hdsDisp, xcoC, ycoC);
+   mtds.LineTo(hdsDisp, xcoC + xcoStart, ycoC + ycoStart);
+   mtds.MoveTo(hdsDisp, xcoC, ycoC);
+   mtds.LineTo(hdsDisp, xcoC + xcoEnd, ycoC + ycoEnd);
 
-  /* This now draws the actual arc in green over the white ellipse drawn above. This shows
-  ** how the ellipse and the radial lines define the arc that gets drawn.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.Arc(hdsDisp, xcoLeft, ycoTop, xcoRight, ycoBottom,
-				xcoC+xcoStart, ycoC+ycoStart, xcoC+xcoEnd, ycoC+ycoEnd);
+   /* This now draws the actual arc in green over the white ellipse drawn above.
+   ** This shows how the ellipse and the radial lines define the arc that gets
+   ** drawn.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.Arc(hdsDisp, xcoLeft, ycoTop, xcoRight, ycoBottom, xcoC + xcoStart,
+         ycoC + ycoStart, xcoC + xcoEnd, ycoC + ycoEnd);
 
-  /* Release the DS used for window update (this was obtained by calling BeginUpdate()) and
-  ** then destroy the window before we exit so that the resources aren't lost.
-  */
-  mtws.EndUpdate(hwin);
-  mtws.DestroyWindow(hwin);
-  
+   /* Release the DS used for window update (this was obtained by calling
+   ** BeginUpdate()) and then destroy the window before we exit so that the
+   ** resources aren't lost.
+   */
+   mtws.EndUpdate(hwin);
+   mtws.DestroyWindow(hwin);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest8
+/*** MtdsTest8
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    Demonstrate the use of BitBlt(). This draws a pattern in the center of the
-**    display and then uses BitBlt() to copy that pattern to eight other locations
-**    on the display.
-**    This illustrates the use of BitBlt() with the source and destination bitmaps
-**    being the display.
+**   Description:
+**      Demonstrate the use of BitBlt(). This draws a pattern in the center of
+**      the display and then uses BitBlt() to copy that pattern to eight other
+**      locations on the display. This illustrates the use of BitBlt() with the
+**      source and destination bitmaps being the display.
 */
-
 void MtdsTest8() {
-  HDS		hds;
+   HDS hds;
 
-  /* Get the DS for drawing on the display.
-  */
-  hds = mtds.GetDisplayDs();
+   /* Get the DS for drawing on the display.
+   */
+   hds = mtds.GetDisplayDs();
 
-  /* Draw a pattern in the center of the display. This is made up of two green diagonal
-  ** lines with a red square around them.
-  */
-  mtds.SetDrwRop(hds, drwCopyPen);
-  mtds.SetPen(hds, penSolid);
+   /* Draw a pattern in the center of the display. This is made up of two green
+   ** diagonal lines with a red square around them.
+   */
+   mtds.SetDrwRop(hds, drwCopyPen);
+   mtds.SetPen(hds, penSolid);
 
-  mtds.SetFgColor(hds, clrGreen);
-  mtds.MoveTo(hds, 100, 140);
-  mtds.LineTo(hds, 139, 179);
-  mtds.MoveTo(hds, 139, 140);
-  mtds.LineTo(hds, 100, 179);
+   mtds.SetFgColor(hds, clrGreen);
+   mtds.MoveTo(hds, 100, 140);
+   mtds.LineTo(hds, 139, 179);
+   mtds.MoveTo(hds, 139, 140);
+   mtds.LineTo(hds, 100, 179);
 
-  mtds.SetFgColor(hds, clrRed);
-  mtds.MoveTo(hds, 100, 140);
-  mtds.LineTo(hds, 139, 140);
-  mtds.LineTo(hds, 139, 179);
-  mtds.LineTo(hds, 100, 179);
-  mtds.LineTo(hds, 100, 140);
+   mtds.SetFgColor(hds, clrRed);
+   mtds.MoveTo(hds, 100, 140);
+   mtds.LineTo(hds, 139, 140);
+   mtds.LineTo(hds, 139, 179);
+   mtds.LineTo(hds, 100, 179);
+   mtds.LineTo(hds, 100, 140);
 
-  /* Now use BitBlt to copy that pattern to other locations on the display.
-  ** Note that the source location is the same each time, but that the destination
-  ** locations are different.
-  */
-  mtds.BitBlt(hds,  10,  10, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds, 100,  10, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds, 190,  10, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds,  10, 140, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds, 190, 140, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds,  10, 270, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds, 100, 270, 40, 40, hds, 100, 140, ropSrcCopy);
-  mtds.BitBlt(hds, 190, 270, 40, 40, hds, 100, 140, ropSrcCopy);
+   /* Now use BitBlt to copy that pattern to other locations on the display.
+   ** Note that the source location is the same each time, but that the
+   ** destination locations are different.
+   */
+   mtds.BitBlt(hds,  10,  10, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds, 100,  10, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds, 190,  10, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  10, 140, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds, 190, 140, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  10, 270, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds, 100, 270, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds, 190, 270, 40, 40, hds, 100, 140, ropSrcCopy);
 
-  /* Release the DS before we leave so that it doesn't get lost.
-  */
-  mtds.ReleaseDs(hds);
+   /* Release the DS before we leave so that it doesn't get lost.
+   */
+   mtds.ReleaseDs(hds);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest9
+/*** MtdsTest9
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    Demonstrate the use of BitBlt() to copy a rectangle of pixels from one place
-**    on the display to another. In this case it also illustrates the clipping that
-**    occurs when part of the destination rectangle is off of the display.
-**    This is essentially the same as MtdsTest8() above, except that the destination
-**    locations are partially off the display.
+**   Description:
+**      Demonstrate the use of BitBlt() to copy a rectangle of pixels from one
+**      place on the display to another. In this case it also illustrates the
+**      clipping that occurs when part of the destination rectangle is off of
+**      the display. This is essentially the same as MtdsTest8() above, except
+**      that the destination locations are partially off the display.
 */
-
 void MtdsTest9() {
-	HDS		hds;
+   HDS hds;
 
-	hds = mtds.GetDisplayDs();
+   hds = mtds.GetDisplayDs();
 
-	mtds.SetDrwRop(hds, drwCopyPen);
-	mtds.SetPen(hds, penSolid);
+   /* Draw a pattern in the center of the display. This is made up of two green
+   ** diagonal lines with a red square around them.
+   */
+   mtds.SetDrwRop(hds, drwCopyPen);
+   mtds.SetPen(hds, penSolid);
 
-	mtds.SetFgColor(hds, clrGreen);
-	mtds.MoveTo(hds, 100, 140);
-	mtds.LineTo(hds, 139, 179);
-	mtds.MoveTo(hds, 139, 140);
-	mtds.LineTo(hds, 100, 179);
+   mtds.SetFgColor(hds, clrGreen);
+   mtds.MoveTo(hds, 100, 140);
+   mtds.LineTo(hds, 139, 179);
+   mtds.MoveTo(hds, 139, 140);
+   mtds.LineTo(hds, 100, 179);
 
-	mtds.SetFgColor(hds, clrRed);
-	mtds.MoveTo(hds, 100, 140);
-	mtds.LineTo(hds, 139, 140);
-	mtds.LineTo(hds, 139, 179);
-	mtds.LineTo(hds, 100, 179);
-	mtds.LineTo(hds, 100, 140);
+   mtds.SetFgColor(hds, clrRed);
+   mtds.MoveTo(hds, 100, 140);
+   mtds.LineTo(hds, 139, 140);
+   mtds.LineTo(hds, 139, 179);
+   mtds.LineTo(hds, 100, 179);
+   mtds.LineTo(hds, 100, 140);
 
-	mtds.BitBlt(hds,  -20,  -20, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  100,  -20, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  220,  -20, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  -20,  140, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  220,  140, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  -20,  300, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  100,  300, 40, 40, hds, 100, 140, ropSrcCopy);
-	mtds.BitBlt(hds,  220,  300, 40, 40, hds, 100, 140, ropSrcCopy);
+   /* Now use BitBlt to copy that pattern to other locations on the display.
+   ** Note that the destination locations are all near the border of the display
+   ** causing the copies of the pattern to be clipped.
+   */
+   mtds.BitBlt(hds,  -20,  -20, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  100,  -20, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  220,  -20, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  -20,  140, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  220,  140, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  -20,  300, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  100,  300, 40, 40, hds, 100, 140, ropSrcCopy);
+   mtds.BitBlt(hds,  220,  300, 40, 40, hds, 100, 140, ropSrcCopy);
 
-    mtds.ReleaseDs(hds);
-
+   mtds.ReleaseDs(hds);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest10
+/*** MtdsTest10
 **
-**  Parameters:
+**   Parameters:
+**      none
 **
-**  Return Values:
+**   Return Values:
+**      none
 **
-**  Errors:
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstrates the use of an off-screen or memory bitmap. In the MTDS system
-**    any bitmap can be drawn on equivalently. This illustrates creation of an off-screen
-**    bitmap, selecting it as the drawing surface in a DS, drawing onto the off-screen
-**    bitmap, and then using BitBlt() to copy the off-screen bitmap onto the display.
+**   Description:
+**      This demonstrates the use of an off-screen or memory bitmap. In the MTDS
+**      system any bitmap can be drawn on equivalently. This illustrates
+**      creation of an off-screen bitmap, selecting it as the drawing surface in
+**      a DS, drawing onto the off-screen bitmap, and then using BitBlt() to
+**      copy the off-screen bitmap onto the display.
 */
-
 void MtdsTest10() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
-  int16_t  xco;
-  int16_t  yco;
+   HDS hdsDisp;
+   HDS hdsTest;
+   HBMP hbmpTest;
+   int16_t xco;
+   int16_t yco;
 
-  /* In this case, we are going to need two DS objects, one for drawing onto the display
-  ** and one for drawing onto the off-screen bitmap. GetDisplayDs() returns a handle to a
-  ** DS inialized for drawing on the display. GetDs() returns a DS that is not associated
-  ** with any bitmap as the drawing surface.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  
-  /* Create an off-screen bitmap in memory on the display board. In this case, we are
-  ** creating a 40x40 pixel, color bitmap. This bitmap is then selected as the drawing
-  ** surface for the DS whose handle is in hdsTest. Setting the bitmap as the drawing
-  ** surface in the DS makes that the bitmap that is drawn on when any drawing operations
-  ** occur using the DS.
-  */
-  hbmpTest = mtds.CreateBitmap(40, 40, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest10: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
+   /* In this case, we are going to need two DS objects, one for drawing onto
+   ** the display and one for drawing onto the off-screen bitmap. GetDisplayDs()
+   ** returns a handle to a DS initialized for drawing on the display. GetDs()
+   ** returns a DS that is not associated with any bitmap as the drawing
+   ** surface.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
 
-  /* Now that we have a DS with a drawing surface, initialize the other drawing 
-  ** parameters that we are going to use and then draw some graphics onto the off-screen
-  ** bitmap.
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penSolid);
+   /* Create an off-screen bitmap in memory on the display board. In this case,
+   ** we are creating a 40x40 pixel, color bitmap. This bitmap is then selected
+   ** as the drawing surface for the DS whose handle is in hdsTest. Setting the
+   ** bitmap as the drawing surface in the DS makes that the bitmap that is
+   ** drawn on when any drawing operations occur using the DS.
+   */
+   hbmpTest = mtds.CreateBitmap(40, 40, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest10: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
 
-  /* This draws a dark gray circle and then a filled dark gray circle inside it.
-  */
-  mtds.SetFgColor(hdsTest, clrMedGray);
-  mtds.SetBrush(hdsTest, hbrNull);
-  mtds.Ellipse(hdsTest, 1, 1, 38, 38);
-  mtds.SetBrush(hdsTest, hbrDkGray);
-  mtds.Ellipse(hdsTest, 6, 6, 33, 33);
- 
-  /* This draws two green diagonal lines from corner to corner of the bitmap.
-  */ 
-  mtds.SetFgColor(hdsTest, clrGreen);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.MoveTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest,  0, 39);
+   /* Now that we have a DS with a drawing surface, initialize the other drawing
+   ** parameters that we are going to use and then draw some graphics onto the
+   ** off-screen bitmap.
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penSolid);
 
-  /* This draws a red squard around the perimeter of the off-screen bitmap.
-  */
-  mtds.SetFgColor(hdsTest, clrRed);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.LineTo(hdsTest,  0, 39);
-  mtds.LineTo(hdsTest,  0,  0);
+   /* This draws a dark gray circle and a filled dark gray circle inside it.
+   */
+   mtds.SetFgColor(hdsTest, clrMedGray);
+   mtds.SetBrush(hdsTest, hbrNull);
+   mtds.Ellipse(hdsTest, 1, 1, 38, 38);
+   mtds.SetBrush(hdsTest, hbrDkGray);
+   mtds.Ellipse(hdsTest, 6, 6, 33, 33);
 
-  /* Now that we have drawn some graphics onto the off-screen bitmap, use BitBlt() to
-  ** copy it onto the display, tiling the surface of the display with it.
-  */
-  for (yco = 5; yco <= 275; yco += 45) {
-    for (xco = 10; xco <= 190; xco += 45) {
-      mtds.BitBlt(hdsDisp, xco, yco, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-    }
-  }
+   /* This draws two green diagonal lines from corner to corner of the bitmap.
+   */
+   mtds.SetFgColor(hdsTest, clrGreen);
+   mtds.MoveTo(hdsTest, 0, 0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.MoveTo(hdsTest, 39, 0);
+   mtds.LineTo(hdsTest, 0, 39);
 
-  /* We are finished with this demo, so we need to destroy and release all of the
-  ** resources used so that the memory isn't lost.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
+   /* This draws a red square around the perimeter of the off-screen bitmap.
+   */
+   mtds.SetFgColor(hdsTest, clrRed);
+   mtds.MoveTo(hdsTest, 0, 0);
+   mtds.LineTo(hdsTest, 39, 0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.LineTo(hdsTest, 0, 39);
+   mtds.LineTo(hdsTest, 0, 0);
 
+   /* Now that we have drawn some graphics onto the off-screen bitmap, use
+   ** BitBlt() to copy it onto the display, tiling the surface of the display
+   ** with it.
+   */
+   for (yco = 5; yco <= 275; yco += 45) {
+      for (xco = 10; xco <= 190; xco += 45) {
+         mtds.BitBlt(hdsDisp, xco, yco, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+      }
+   }
+
+   /* We are finished with this demo, so we need to destroy and release all of
+   ** the resources used so that the memory isn't lost.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest11
+/*** MtdsTest11
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstrates drawing onto an off-screen bitmap and then using BitBlt() to copy
-**    the off-screen bitmap onto the display with the result being clipped. The destination
-**    locations for the calls to BitBlt() result in the target being partially off the
-**    display and so part of the bitmap being copied is clipped to the display.
+**   Description:
+**      This demonstrates drawing onto an off-screen bitmap and then using
+**      BitBlt() to copy the off-screen bitmap onto the display with the result
+**      being clipped. The destination locations for the calls to BitBlt()
+**      result in the target being partially off the display and so part of the
+**      bitmap being copied is clipped to the display.
 */
-
 void MtdsTest11() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
 
-  /* In this case, we are going to need two DS objects, one for drawing onto the display
-  ** and one for drawing onto the off-screen bitmap. GetDisplayDs() returns a handle to a
-  ** DS inialized for drawing on the display. GetDs() returns a DS that is not associated
-  ** with any bitmap as the drawing surface.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  
-  /* Create an off-screen bitmap in memory on the display board. In this case, we are
-  ** creating a 40x40 pixel, color bitmap. This bitmap is then selected as the drawing
-  ** surface for the DS whose handle is in hdsTest. Setting the bitmap as the drawing
-  ** surface in the DS makes that the bitmap that is drawn on when any drawing operations
-  ** occur using the DS.
-  */
-  hbmpTest = mtds.CreateBitmap(40, 40, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest11: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
+   /* In this case, we are going to need two DS objects, one for drawing onto
+   ** the display and one for drawing onto the off-screen bitmap. GetDisplayDs()
+   ** returns a handle to a DS initialized for drawing on the display. GetDs()
+   ** returns a DS that is not associated with any bitmap as the drawing
+   ** surface.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
 
-  /* Now that we have a DS with a drawing surface, initialize the other drawing 
-  ** parameters that we are going to use and then draw some graphics onto the off-screen
-  ** bitmap.
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penSolid);
+   /* Create an off-screen bitmap in memory on the display board. In this case,
+   ** we are creating a 40x40 pixel, color bitmap. This bitmap is then selected
+   ** as the drawing surface for the DS whose handle is in hdsTest. Setting the
+   ** bitmap as the drawing surface in the DS makes that the bitmap that is
+   ** drawn on when any drawing operations occur using the DS.
+   */
+   hbmpTest = mtds.CreateBitmap(40, 40, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest11: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
 
-  /* Draw diagonal green lines from between the corners of the off-screen bitmap.
-  */
-  mtds.SetFgColor(hdsTest, clrGreen);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.MoveTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest,  0, 39);
+   /* Now that we have a DS with a drawing surface, initialize the other drawing
+   ** parameters that we are going to use and then draw some graphics onto the
+   ** off-screen bitmap.
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penSolid);
 
-  /* Draw a red square around the perimeter of the off-screen bitmap.
-  */
-  mtds.SetFgColor(hdsTest, clrRed);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.LineTo(hdsTest,  0, 39);
-  mtds.LineTo(hdsTest,  0,  0);
+   /* Draw diagonal green lines between the corners of the off-screen bitmap.
+   */
+   mtds.SetFgColor(hdsTest, clrGreen);
+   mtds.MoveTo(hdsTest,  0,  0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.MoveTo(hdsTest, 39,  0);
+   mtds.LineTo(hdsTest,  0, 39);
 
-  /* Use BitBlt() to copy the off-screen bitmap onto the display. The target
-  ** locations are all partially off the display, so portions of the bitmap
-  ** being copied will be clipped.
-  */
-  mtds.BitBlt(hdsDisp,  -20,  -20, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  100,  -20, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  220,  -20, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  -20,  140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  100,  140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  220,  140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  -20,  300, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  100,  300, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  220,  300, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   /* Draw a red square around the perimeter of the off-screen bitmap.
+   */
+   mtds.SetFgColor(hdsTest, clrRed);
+   mtds.MoveTo(hdsTest,  0,  0);
+   mtds.LineTo(hdsTest, 39,  0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.LineTo(hdsTest,  0, 39);
+   mtds.LineTo(hdsTest,  0,  0);
 
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
+   /* Use BitBlt() to copy the off-screen bitmap onto the display. The target
+   ** locations are all partially off the display, so portions of the bitmap
+   ** being copied will be clipped.
+   */
+   mtds.BitBlt(hdsDisp, -20, -20, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, -20, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 220, -20, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, -20, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 220, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, -20, 300, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 300, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 220, 300, 40, 40, hdsTest, 0, 0, ropSrcCopy);
 
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest12
+/*** MtdsTest12
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    This demonstrates drawing onto an off-screen bitmap and then using BitBlt() to
-**    copy the off-screen bitmap onto the display.
-**    This is similar to MtdsTest10 and MtdsTest11 above, except that in this case,
-**    the source rectangle to BitBlt() is specified in such a way that it causes the
-**    source bitmap to be clipped before it is copied. In all cases, the destination
-**    specified to BitBlt() is entirely on the display, but the source location specified
-**    causes part of the source rectangle to be off the source bitmap, requiring that
-**    the transfer be clipped.
-**    When doing BitBlt(), either the source rectangle or the destination rectangle can
-**    reference pixels that are outside the bounds of the bitmap. What gets transferred
-**    is the intersection of the visible part of the source rectangle and the visible
-**    part of the destination rectangle.
+**   Description:
+**      This demonstrates drawing onto an off-screen bitmap and then using
+**      BitBlt() to copy the off-screen bitmap onto the display. This is similar
+**      to MtdsTest10 and MtdsTest11 above, except that in this case, the source
+**      rectangle to BitBlt() is specified in such a way that it causes the
+**      source bitmap to be clipped before it is copied. In all cases, the
+**      destination specified to BitBlt() is entirely on the display, but the
+**      source location specified causes part of the source rectangle to be off
+**      the source bitmap, requiring that the transfer be clipped. When doing
+**      BitBlt(), either the source rectangle or the destination rectangle can
+**      reference pixels that are outside the bounds of the bitmap. What gets
+**      transferred is the intersection of the visible part of the source
+**      rectangle and the visible part of the destination rectangle.
 */
-
 void MtdsTest12() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
 
-  /* We need two DS objects, one for drawing onto the display and one for drawing onto
-  ** the off-screen bitmap. GetDisplayDs() returns a handle to a DS inialized for drawing
-  ** on the display. GetDs() returns a DS that is not associated with any bitmap as the
-  ** drawing surface.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(40, 40, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest12: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
+   /* We need two DS objects, one for drawing onto the display and one for
+   ** drawing onto the off-screen bitmap. GetDisplayDs() returns a handle to a
+   ** DS initialized for drawing on the display. GetDs() returns a DS that is
+   ** not associated with any bitmap as the drawing surface.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(40, 40, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest12: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
 
-  /* Now that we have a DS with a drawing surface, initialize the other drawing 
-  ** parameters that we are going to use and then draw some graphics onto the off-screen
-  ** bitmap.
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penSolid);
+   /* Now that we have a DS with a drawing surface, initialize the other drawing
+   ** parameters that we are going to use and then draw some graphics onto the
+   ** off-screen bitmap.
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penSolid);
 
-  /* Draw diagonal green lines from between the corners of the off-screen bitmap.
-  */
-  mtds.SetFgColor(hdsTest, clrGreen);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.MoveTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest,  0, 39);
+   /* Draw diagonal green lines between the corners of the off-screen bitmap.
+   */
+   mtds.SetFgColor(hdsTest, clrGreen);
+   mtds.MoveTo(hdsTest,  0,  0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.MoveTo(hdsTest, 39,  0);
+   mtds.LineTo(hdsTest,  0, 39);
 
-  /* Draw a red square around the perimeter of the off-screen bitmap.
-  */
-  mtds.SetFgColor(hdsTest, clrRed);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.LineTo(hdsTest,  0, 39);
-  mtds.LineTo(hdsTest,  0,  0);
+   /* Draw a red square around the perimeter of the off-screen bitmap.
+   */
+   mtds.SetFgColor(hdsTest, clrRed);
+   mtds.MoveTo(hdsTest,  0,  0);
+   mtds.LineTo(hdsTest, 39,  0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.LineTo(hdsTest,  0, 39);
+   mtds.LineTo(hdsTest,  0,  0);
 
-  /* Use BitBlt() to copy the off-screen bitmap onto the display. The source
-  ** locations are all partially off the bitmap, so portions of the bitmap
-  ** being copied will be clipped.
-  */
-  mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, -10, -10, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest,   0, -10, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest,  10, -10, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, -10,   0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest,   0,   0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest,  10,   0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, -10,  10, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest,   0,  10, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest,  10,  10, ropSrcCopy);
+   /* Use BitBlt() to copy the off-screen bitmap onto the display. The source
+   ** locations are all partially off the bitmap, so portions of the bitmap
+   ** being copied will be clipped.
+   */
+   mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, -10, -10, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest,   0, -10, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest,  10, -10, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, -10,   0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest,   0,   0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest,  10,   0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, -10,  10, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest,   0,  10, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest,  10,  10, ropSrcCopy);
 
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest13
+/***   MtdsTest13
 **
 **  Parameters:
 **    none
@@ -1552,9 +1566,9 @@ void MtdsTest12() {
 */
 
 void MtdsTest13() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
 
   /* We need two DS objects, one for drawing onto the display and one for drawing onto
   ** the off-screen bitmap. GetDisplayDs() returns a handle to a DS inialized for drawing
@@ -1626,7 +1640,7 @@ void MtdsTest13() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest14
+/***   MtdsTest14
 **
 **  Parameters:
 **    none
@@ -1647,9 +1661,9 @@ void MtdsTest13() {
 */
 
 void MtdsTest14() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
 
   /* We need two DS objects, one for drawing onto the display and one for drawing onto
   ** the off-screen bitmap. GetDisplayDs() returns a handle to a DS inialized for drawing
@@ -1737,7 +1751,7 @@ void MtdsTest14() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest15
+/***   MtdsTest15
 **
 **  Parameters:
 **    none
@@ -1759,16 +1773,16 @@ void MtdsTest14() {
 */
 
 void MtdsTest15() {
-  HDS 	hdsDisp;
-  HBR	hbrHorizontal;
-  HBR	hbrVertical;
-  HBR	hbrFwDiagonal;
-  HBR	hbrBkDiagonal;
-  HBR	hbrCross;
-  HBR	hbrDiagCross;
-  HBR	hbrChecker;
-  HBR	hbrBlock;
-  HBR	hbrHalfTone;
+  HDS    hdsDisp;
+  HBR   hbrHorizontal;
+  HBR   hbrVertical;
+  HBR   hbrFwDiagonal;
+  HBR   hbrBkDiagonal;
+  HBR   hbrCross;
+  HBR   hbrDiagCross;
+  HBR   hbrChecker;
+  HBR   hbrBlock;
+  HBR   hbrHalfTone;
 
   /* In this demo, we are only going to be drawing onto the display, so we only need
   ** the display Ds.
@@ -1837,7 +1851,7 @@ void MtdsTest15() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest16
+/***   MtdsTest16
 **
 **  Parameters:
 **    none
@@ -1856,16 +1870,16 @@ void MtdsTest15() {
 */
 
 void MtdsTest16() {
-  HDS 	hdsDisp;
-  HBR	hbrHorizontal;
-  HBR	hbrVertical;
-  HBR	hbrFwDiagonal;
-  HBR	hbrBkDiagonal;
-  HBR	hbrCross;
-  HBR	hbrDiagCross;
-  HBR	hbrChecker;
-  HBR	hbrBlock;
-  HBR	hbrHalfTone;
+  HDS    hdsDisp;
+  HBR   hbrHorizontal;
+  HBR   hbrVertical;
+  HBR   hbrFwDiagonal;
+  HBR   hbrBkDiagonal;
+  HBR   hbrCross;
+  HBR   hbrDiagCross;
+  HBR   hbrChecker;
+  HBR   hbrBlock;
+  HBR   hbrHalfTone;
 
   /* In this demo, we are only going to be drawing onto the display, so we only need
   ** the display Ds.
@@ -1934,7 +1948,7 @@ void MtdsTest16() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest17
+/***   MtdsTest17
 **
 **  Parameters:
 **    none
@@ -1953,18 +1967,18 @@ void MtdsTest16() {
 */
 
 void MtdsTest17() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
-  HBR	hbrHorizontal;
-  HBR	hbrVertical;
-  HBR	hbrFwDiagonal;
-  HBR	hbrBkDiagonal;
-  HBR	hbrCross;
-  HBR	hbrDiagCross;
-  HBR	hbrChecker;
-  HBR	hbrBlock;
-  HBR	hbrHalfTone;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
+  HBR   hbrHorizontal;
+  HBR   hbrVertical;
+  HBR   hbrFwDiagonal;
+  HBR   hbrBkDiagonal;
+  HBR   hbrCross;
+  HBR   hbrDiagCross;
+  HBR   hbrChecker;
+  HBR   hbrBlock;
+  HBR   hbrHalfTone;
 
   /* We are going to be drawing onto the display and onto an off-screen bitmap. So, get the
   ** DS handles that we are going to use and create the off-screen bitmap. In this case, the
@@ -2046,7 +2060,7 @@ void MtdsTest17() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest18
+/***   MtdsTest18
 **
 **  Parameters:
 **    none
@@ -2066,18 +2080,18 @@ void MtdsTest17() {
 */
 
 void MtdsTest18() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
-  HBR	hbrHorizontal;
-  HBR	hbrVertical;
-  HBR	hbrFwDiagonal;
-  HBR	hbrBkDiagonal;
-  HBR	hbrCross;
-  HBR	hbrDiagCross;
-  HBR	hbrChecker;
-  HBR	hbrBlock;
-  HBR	hbrHalfTone;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
+  HBR   hbrHorizontal;
+  HBR   hbrVertical;
+  HBR   hbrFwDiagonal;
+  HBR   hbrBkDiagonal;
+  HBR   hbrCross;
+  HBR   hbrDiagCross;
+  HBR   hbrChecker;
+  HBR   hbrBlock;
+  HBR   hbrHalfTone;
 
   /* We are going to be drawing onto the display and onto an off-screen bitmap. So, get the
   ** DS handles that we are going to use and create the off-screen bitmap. In this case, the
@@ -2162,7 +2176,7 @@ void MtdsTest18() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest19
+/***   MtdsTest19
 **
 **  Parameters:
 **    none
@@ -2185,11 +2199,11 @@ void MtdsTest18() {
 */
 
 void MtdsTest19() {
-  HDS 	hdsDisp;
-  HBR		hbrMyRed;
-  HBR		hbrMyGreen;
-  HBR		hbrMyBlue;
-  HBR		hbrBlock;
+  HDS    hdsDisp;
+  HBR      hbrMyRed;
+  HBR      hbrMyGreen;
+  HBR      hbrMyBlue;
+  HBR      hbrBlock;
 
   /* In this demo, we are only going to be drawing onto the display, so we only need
   ** the display Ds.
@@ -2257,7 +2271,7 @@ void MtdsTest19() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest20
+/***   MtdsTest20
 **
 **  Parameters:
 **    none
@@ -2273,9 +2287,9 @@ void MtdsTest19() {
 */
 
 void MtdsTest20() {
-  HDS 	hdsDisp;
-  HBR	hbrChecker;
-  HBR	hbrHalfTone;
+  HDS    hdsDisp;
+  HBR   hbrChecker;
+  HBR   hbrHalfTone;
 
   /* In this demo, we are only going to be drawing onto the display, so we only need
   ** the display Ds.
@@ -2387,7 +2401,7 @@ void MtdsTest20() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest21
+/***   MtdsTest21
 **
 **  Parameters:
 **    none
@@ -2404,10 +2418,10 @@ void MtdsTest20() {
 */
 
 void MtdsTest21() {
-  HDS 		hdsDisp;
-  int16_t	xco;
-  int16_t	yco;
-  int16_t	dyco;
+  HDS       hdsDisp;
+  int16_t   xco;
+  int16_t   yco;
+  int16_t   dyco;
   PNT           pntTxt;
 
   /* Declare the strings that we are going to print.
@@ -2419,7 +2433,7 @@ void MtdsTest21() {
   char rgchTest5[] = { "@[\\]^_`{|}~" };
 
   char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-  	        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+             0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
   char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
                 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
   char rgchTest8[] = { 0x7F };
@@ -2499,7 +2513,7 @@ void MtdsTest21() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest22
+/***   MtdsTest22
 **
 **  Parameters:
 **    none
@@ -2531,7 +2545,7 @@ void MtdsTest22() {
   char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
   char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-		0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
+      0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
   char rgchTest8[] = { 0x7F };
 
   /* Get the DS for drawing on the display and initialize it.
@@ -2686,7 +2700,7 @@ void MtdsTest22() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest23()
+/***   MtdsTest23()
 **
 **  Parameters:
 **    none
@@ -2704,14 +2718,14 @@ void MtdsTest22() {
 */
 
 void MtdsTest23() {
-  HDS 		hdsDisp;
-  HDS		hdsColor;
-  HBMP		hbmpColor;
-  HDS		hdsMono;
-  HBMP		hbmpMono;
-  int16_t	xco;
-  int16_t	yco;
-  int16_t	dyco;
+  HDS       hdsDisp;
+  HDS      hdsColor;
+  HBMP      hbmpColor;
+  HDS      hdsMono;
+  HBMP      hbmpMono;
+  int16_t   xco;
+  int16_t   yco;
+  int16_t   dyco;
 
   /* Define the text strings that we are going to be printing.
   */
@@ -2722,9 +2736,9 @@ void MtdsTest23() {
   char rgchTest5[] = { "@[\\]^_`{|}~" };
 
   char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-  	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+     0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
   char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-  	0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
+     0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
   char rgchTest8[] = { 0x7F };
 
   /* Get the display DS for drawing on the display.
@@ -2870,7 +2884,7 @@ void MtdsTest23() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest24()
+/***   MtdsTest24()
 **
 **  Parameters:
 **    none
@@ -2894,9 +2908,9 @@ void MtdsTest23() {
 */
 
 void MtdsTest24() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
 
   /* We are drawing on the display and onto a color off-screen bitmap. Get the
   ** two DS objects we will use, create the off-screen bitmap and set it as the
@@ -2961,7 +2975,7 @@ void MtdsTest24() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest25()
+/***   MtdsTest25()
 **
 **  Parameters:
 **    none
@@ -2980,9 +2994,9 @@ void MtdsTest24() {
 */
 
 void MtdsTest25() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
 
   /* We're going to be drawing onto the display and onto a monochrome offscreen bitmap.
   ** Get the two DS objects that we are going to use, create the offscreen bitmap and
@@ -3064,7 +3078,7 @@ void MtdsTest25() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsTest26()
+/***   MtdsTest26()
 **
 **  Parameters:
 **    none
@@ -3081,10 +3095,10 @@ void MtdsTest25() {
 */
 
 void MtdsTest26() {
-  HDS 	hdsDisp;
-  HDS 	hdsTest;
-  HBMP	hbmpTest;
-  int16_t	co;
+  HDS    hdsDisp;
+  HDS    hdsTest;
+  HBMP   hbmpTest;
+  int16_t   co;
 
   /* Get the DS for drawing on the display.
   */
@@ -3195,15 +3209,15 @@ void MtdsTest26() {
 }
 
 /* ------------------------------------------------------------ */
-/***	ProcName
+/***   ProcName
 **
-**	Parameters:
+**   Parameters:
 **
-**	Return Values:
+**   Return Values:
 **
-**	Errors:
+**   Errors:
 **
-**	Description:
+**   Description:
 **
 */
 

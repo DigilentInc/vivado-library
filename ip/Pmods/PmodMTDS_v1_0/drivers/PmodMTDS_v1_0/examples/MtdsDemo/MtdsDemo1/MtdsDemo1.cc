@@ -22,6 +22,7 @@
 /*                                                                            */
 /*    09/28/2016(GeneA):    Adapted from an earlier test program.             */
 /*    02/14/2017(SamB):     Removed Serial references to port to Xilnx SDK    */
+/*    12/13/2017(atangzwj): Validated for Vivado 2016.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -137,19 +138,19 @@ void setup() {
 }
 
 /* ------------------------------------------------------------ */
-/***   loop()
+/*** loop()
 **
-**  Parameters:
-**    none
+**   Parameters:
+**      none
 **
-**  Return Values:
-**    none
+**   Return Values:
+**      none
 **
-**  Errors:
-**    none
+**   Errors:
+**      none
 **
-**  Description:
-**    Arduino/MPIDE main sketch function
+**   Description:
+**      Arduino/MPIDE main sketch function
 */
 void loop() {
    msCur = millis();
@@ -442,7 +443,7 @@ void MtdsTest1() {
    /* Set up to draw white lines on a black background using a dot pattern pen.
    ** This is done by selecting white as the foreground color and black as the
    ** background color. The pen is set to penDot, which is one of the
-   ** pre-defined pen patterns. It produces a dotted line. The background
+   ** predefined pen patterns. It produces a dotted line. The background
    ** transparency mode defaults to opaque, so the background color gets drawn
    ** when we draw the dotted lines. The drwCopyPen drawing mode causes the pen
    ** to overwrite whatever is in the pixels being drawn on.
@@ -1543,1685 +1544,1684 @@ void MtdsTest12() {
 }
 
 /* ------------------------------------------------------------ */
-/***   MtdsTest13
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstrates drawing onto and off-screen bitmap and then using BitBlt() to
-**    copy pixels from one location in the off-screen bitmap to another location in the
-**    same off-screen bitmap. BitBlt() is then used to copy the resulting off-screen
-**    bitmap onto the display.
-**    This is very similar to MtdsTest10 above, except that a different pattern is drawn
-**    initially onto the off-screen bitmap, and then BitBlt() is used to copy some pixels
-**    within the off-screen bitmap before BitBlt() is used to copy the result to the 
-**    display.
-*/
-
-void MtdsTest13() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-
-  /* We need two DS objects, one for drawing onto the display and one for drawing onto
-  ** the off-screen bitmap. GetDisplayDs() returns a handle to a DS inialized for drawing
-  ** on the display. GetDs() returns a DS that is not associated with any bitmap as the
-  ** drawing surface.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(40, 40, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest13: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Now that we have a DS with a drawing surface, initialize the other drawing 
-  ** parameters that we are going to use and then draw some graphics onto the off-screen
-  ** bitmap.
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penSolid);
-
-  /* Draw a couple of diagonal green lines. These don't extend from corner to corner
-  ** of the entire off-screen bitmap. This is similar to the pattern drawn in MtdsTest11
-  ** and MtdsTest12, but smaller.
-  */
-  mtds.SetFgColor(hdsTest, clrGreen);
-  mtds.MoveTo(hdsTest, 10, 10);
-  mtds.LineTo(hdsTest, 29, 29);
-  mtds.MoveTo(hdsTest, 29, 10);
-  mtds.LineTo(hdsTest, 10, 29);
-
-  /* Draw a red square around the diagonal lines.
-  */
-  mtds.SetFgColor(hdsTest, clrRed);
-  mtds.MoveTo(hdsTest, 10, 10);
-  mtds.LineTo(hdsTest, 29, 10);
-  mtds.LineTo(hdsTest, 29, 29);
-  mtds.LineTo(hdsTest, 10, 29);
-  mtds.LineTo(hdsTest, 10, 10);
-
-  /* This BitBlt() copies pixels within the off-screen bitmap. Note that the source DS
-  ** and the destination DS are the same. This means that the source bitmap and the
-  ** destination bitmap will be the same. A 20x20 pixel rectangle of pixels is being
-  ** copied up and to the left by 10 pixels, which copies the pattern drawn above up
-  ** and to the left.
-  */
-  mtds.BitBlt(hdsTest,  0,  0, 20, 20, hdsTest, 10, 10, ropSrcCopy);
-
-  /* Now that we have the resulting pattern in the off-screen bitmap, use BitBlt() to
-  ** copy it onto the display in a few places. In this case all of the destination
-  ** rectangles are on the display, so no clipping is done.
-  */
-  mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest14
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstrates additional use of BitBlt(). In this case, it illustrates using
-**    BitBlt() to copy pixels from the display to an off-screen bitmap. It also illustrates
-**    that drawing can be done on the display or onto off-screen bitmaps equally.
-**    This program first draws a figure onto the display. It then copies that figure from
-**    the display onto an off-screen bitmap. It then draws some additional graphics onto
-**    the off-screen bitmap and then copies the result back onto the display.
-*/
-
-void MtdsTest14() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-
-  /* We need two DS objects, one for drawing onto the display and one for drawing onto
-  ** the off-screen bitmap. GetDisplayDs() returns a handle to a DS inialized for drawing
-  ** on the display. GetDs() returns a DS that is not associated with any bitmap as the
-  ** drawing surface.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(40, 40, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest14: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Now that we have a DS with a drawing surface, initialize the other drawing 
-  ** parameters that we are going to use and then draw some graphics onto the off-screen
-  ** bitmap.
-  */
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetPen(hdsDisp, penSolid);
-
-  /* Here we are drawing to the center of the display. We are drawing the same pattern
-  ** used in the previous demonstrations, a couple of green diagonal lines with a red
-  ** square around them. Since we are drawing against the DS in hdsDisp, and hdsDisp
-  ** was obtained by calling GetDisplayDs(), this draws on the display.
-  */  
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.MoveTo(hdsDisp, 100, 140);
-  mtds.LineTo(hdsDisp, 139, 179);
-  mtds.MoveTo(hdsDisp, 139, 140);
-  mtds.LineTo(hdsDisp, 100, 179);
-
-  mtds.SetFgColor(hdsDisp, clrRed);
-  mtds.MoveTo(hdsDisp, 100, 140);
-  mtds.LineTo(hdsDisp, 139, 140);
-  mtds.LineTo(hdsDisp, 139, 179);
-  mtds.LineTo(hdsDisp, 100, 179);
-  mtds.LineTo(hdsDisp, 100, 140);
-
-  /* Now that we have drawn the pattern in the center of the display, use BitBlt() to
-  ** copy it onto the off-screen bitmap we set up earlier. In this case, the source is
-  ** specified as hdsDisp and the destination is specified as hdsTest, so we are copying
-  ** from the display to the off-screen bitmap.
-  */
-  mtds.BitBlt(hdsTest, 0, 0, 40, 40, hdsDisp, 100, 140, ropSrcCopy);
-
-  /* We can continue to draw onto the off-screen bitmap by setting up additional drawing
-  ** parameters in hdsTest and drawing graphics using it. The following draws a white,
-  ** dotted square onto the off-screen bitmap.
-  ** Note that if we had done this drawing before the BitBlt(), it would have been written
-  ** over by the pixels copied by BitBlt().
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penDot);
-  mtds.SetFgColor(hdsTest, clrWhite);
-  mtds.MoveTo(hdsTest,  5,  5);
-  mtds.LineTo(hdsTest, 34,  5);
-  mtds.LineTo(hdsTest, 34, 34);
-  mtds.LineTo(hdsTest,  5, 34);
-  mtds.LineTo(hdsTest,  5,  5);
-
-  /* Now that we have the resulting off-screen bitmap, we can copy it onto the display
-  ** using BitBlt(). This copies it to various location on the display.
-  */
-  mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  /* Note that the following line would copy the off-screen bitmap over the top of the
-  ** figure that was originally drawn onto the display. It is commented out so that we
-  ** can see what the original figure looked like.
-  */
-  //mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest15
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstrates the use of CreatePatternBrush() and PatBlt().
-**    A pattern brush is one created using one of the predefined crosshatch patterns
-**    with user specified colors. A brush is used as the fill pattern when drawing a
-**    filled shape, or can be used with PatBlt() for various effects.
-**    PatBlt() can be used to copy the brush pattern onto a rectangle of the destination
-**    bitmap or by using different raster operation codes (raster-ops) other effects
-**    can be created, for example to do hi-lighting.
-*/
-
-void MtdsTest15() {
-  HDS    hdsDisp;
-  HBR   hbrHorizontal;
-  HBR   hbrVertical;
-  HBR   hbrFwDiagonal;
-  HBR   hbrBkDiagonal;
-  HBR   hbrCross;
-  HBR   hbrDiagCross;
-  HBR   hbrChecker;
-  HBR   hbrBlock;
-  HBR   hbrHalfTone;
-
-  /* In this demo, we are only going to be drawing onto the display, so we only need
-  ** the display Ds.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  /* Create pattern brushes illustrating the brush crosshatch patterns that are
-  ** available. The brushes are created with a red foreground and a black background.
-  */
-  hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrRed, clrBlack);
-  hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrRed, clrBlack);
-  hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrRed, clrBlack);
-  hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrRed, clrBlack);
-  hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrRed, clrBlack);
-  hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross , clrRed, clrBlack);
-  hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrRed, clrBlack);
-  hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrRed, clrBlack);
-  hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrRed, clrBlack);
-
-  /* Now, use PatBlt() to copy the patterns onto the display to illustrate what
-  ** they look like. By using the ropPatCopy raster-op, the pattern pixels are
-  ** written over the destination pixels.
-  */
-  mtds.SetBrush(hdsDisp, hbrHorizontal);
-  mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrVertical);
-  mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrFwDiagonal);
-  mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrBkDiagonal);
-  mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrCross);
-  mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrDiagCross);
-  mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 10, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrBlock);
-  mtds.PatBlt(hdsDisp, 80, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrHalfTone);
-  mtds.PatBlt(hdsDisp, 150, 210, 60, 90, ropPatCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBrush(hbrHorizontal);
-  mtds.DestroyBrush(hbrVertical);
-  mtds.DestroyBrush(hbrFwDiagonal);
-  mtds.DestroyBrush(hbrBkDiagonal);
-  mtds.DestroyBrush(hbrCross);
-  mtds.DestroyBrush(hbrDiagCross);
-  mtds.DestroyBrush(hbrChecker);
-  mtds.DestroyBrush(hbrBlock);
-  mtds.DestroyBrush(hbrHalfTone);
-  
-  mtds.ReleaseDs(hdsDisp);
-  
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest16
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration is very similar to MtdsTest15 above. The only real difference
-**    is that when it uses PatBlt() to copy the patterns onto the display, it specifies
-**    destination rectangles that are partially off of the display to illustrate that
-**    clipping occurs with PatBlt() the same way that it does with BitBlt().
-*/
-
-void MtdsTest16() {
-  HDS    hdsDisp;
-  HBR   hbrHorizontal;
-  HBR   hbrVertical;
-  HBR   hbrFwDiagonal;
-  HBR   hbrBkDiagonal;
-  HBR   hbrCross;
-  HBR   hbrDiagCross;
-  HBR   hbrChecker;
-  HBR   hbrBlock;
-  HBR   hbrHalfTone;
-
-  /* In this demo, we are only going to be drawing onto the display, so we only need
-  ** the display Ds.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  /* Create pattern brushes illustrating the brush crosshatch patterns that are
-  ** available. The brushes are created with a red foreground and a black background.
-  */
-  hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrRed, clrBlack);
-  hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrRed, clrBlack);
-  hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrRed, clrBlack);
-  hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrRed, clrBlack);
-  hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrRed, clrBlack);
-  hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross , clrRed, clrBlack);
-  hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrRed, clrBlack);
-  hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrRed, clrBlack);
-  hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrRed, clrBlack);
-
-  /* Now, use PatBlt() to copy the patterns onto the display to illustrate what
-  ** they look like. In this case, the destination of each call to PatBlt() is
-  ** specified such that clipping needs to occur when writing to the destination.
-  */
-  mtds.SetBrush(hdsDisp, hbrHorizontal);
-  mtds.PatBlt(hdsDisp, -30, -45, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrVertical);
-  mtds.PatBlt(hdsDisp, 90, -45, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrFwDiagonal);
-  mtds.PatBlt(hdsDisp, 210, -45, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrBkDiagonal);
-  mtds.PatBlt(hdsDisp, -30, 115, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrCross);
-  mtds.PatBlt(hdsDisp, 90, 115, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrDiagCross);
-  mtds.PatBlt(hdsDisp, 210, 115, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, -30, 275, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrBlock);
-  mtds.PatBlt(hdsDisp, 90, 275, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrHalfTone);
-  mtds.PatBlt(hdsDisp, 210, 275, 60, 90, ropPatCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.ReleaseDs(hdsDisp);
-  mtds.DestroyBrush(hbrHorizontal);
-  mtds.DestroyBrush(hbrVertical);
-  mtds.DestroyBrush(hbrFwDiagonal);
-  mtds.DestroyBrush(hbrBkDiagonal);
-  mtds.DestroyBrush(hbrCross);
-  mtds.DestroyBrush(hbrDiagCross);
-  mtds.DestroyBrush(hbrChecker);
-  mtds.DestroyBrush(hbrBlock);
-  
-  mtds.DestroyBrush(hbrHalfTone);
-
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest17
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration illustrates the use of pattern brushes and PatBlt(). It is
-**    very similar to MtdsTest15 above, except that the call to PatBlt() perform the
-**    operation on an off-screen bitmap. Once all of the PatBlt() operation have been
-**    completed, the off-screen bitmap is copied onto the display.
-*/
-
-void MtdsTest17() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-  HBR   hbrHorizontal;
-  HBR   hbrVertical;
-  HBR   hbrFwDiagonal;
-  HBR   hbrBkDiagonal;
-  HBR   hbrCross;
-  HBR   hbrDiagCross;
-  HBR   hbrChecker;
-  HBR   hbrBlock;
-  HBR   hbrHalfTone;
-
-  /* We are going to be drawing onto the display and onto an off-screen bitmap. So, get the
-  ** DS handles that we are going to use and create the off-screen bitmap. In this case, the
-  ** off-screen bitmap is a color bitmap that has the same dimensions as the display.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(240, 320, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest17: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Create pattern brushes illustrating the brush crosshatch patterns that are
-  ** available. The brushes are created with a green foreground and a black background.
-  */
-  hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrGreen, clrBlack);
-  hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrGreen, clrBlack);
-  hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrGreen, clrBlack);
-  hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrGreen, clrBlack);
-  hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrGreen, clrBlack);
-  hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross , clrGreen, clrBlack);
-  hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrGreen, clrBlack);
-  hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrGreen, clrBlack);
-  hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrGreen, clrBlack);
-
-  /* Now, use PatBlt() to copy the patterns onto the off-screen bitmap.
-  */
-  mtds.SetBrush(hdsTest, hbrHorizontal);
-  mtds.PatBlt(hdsTest, 10, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrVertical);
-  mtds.PatBlt(hdsTest, 80, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrFwDiagonal);
-  mtds.PatBlt(hdsTest, 150, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrBkDiagonal);
-  mtds.PatBlt(hdsTest, 10, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrCross);
-  mtds.PatBlt(hdsTest, 80, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrDiagCross);
-  mtds.PatBlt(hdsTest, 150, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrChecker);
-  mtds.PatBlt(hdsTest, 10, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrBlock);
-  mtds.PatBlt(hdsTest, 80, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrHalfTone);
-  mtds.PatBlt(hdsTest, 150, 210, 60, 90, ropPatCopy);
-
-  /* Now that we have rendered all of the patterns onto the off-screen bitmap,
-  ** use BitBlt() to copy the off-screen bitmap onto the display. In this case, we
-  ** are overwriting the entire display with the off-screen bitmap.
-  */
-  mtds.BitBlt(hdsDisp,  0,  0, 240, 320, hdsTest, 0, 0, ropSrcCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBrush(hbrHorizontal);
-  mtds.DestroyBrush(hbrVertical);
-  mtds.DestroyBrush(hbrFwDiagonal);
-  mtds.DestroyBrush(hbrBkDiagonal);
-  mtds.DestroyBrush(hbrCross);
-  mtds.DestroyBrush(hbrDiagCross);
-  mtds.DestroyBrush(hbrChecker);
-  mtds.DestroyBrush(hbrBlock);
-  mtds.DestroyBrush(hbrHalfTone);
-  
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-  
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest18
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration illustrates the use of pattern brushes, PatBlt() and off-screen
-**    bitmaps. It is essentially the same as MtdsTest17 above, except that in this case
-**    the destination rectangles specified for PatBlt() are all partially off the visible
-**    surface of the off-screen bitmap requiring that the result be clipped during the
-**    PatBlt() operation.
-*/
-
-void MtdsTest18() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-  HBR   hbrHorizontal;
-  HBR   hbrVertical;
-  HBR   hbrFwDiagonal;
-  HBR   hbrBkDiagonal;
-  HBR   hbrCross;
-  HBR   hbrDiagCross;
-  HBR   hbrChecker;
-  HBR   hbrBlock;
-  HBR   hbrHalfTone;
-
-  /* We are going to be drawing onto the display and onto an off-screen bitmap. So, get the
-  ** DS handles that we are going to use and create the off-screen bitmap. In this case, the
-  ** off-screen bitmap is a color bitmap that has the same dimensions as the display.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(240, 320, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest18: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Create pattern brushes illustrating the brush crosshatch patterns that are
-  ** available. The brushes are created with a green foreground and a black background.
-  */
-  hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrGreen, clrBlack);
-  hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrGreen, clrBlack);
-  hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrGreen, clrBlack);
-  hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrGreen, clrBlack);
-  hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrGreen, clrBlack);
-  hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross , clrGreen, clrBlack);
-  hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrGreen, clrBlack);
-  hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrGreen, clrBlack);
-  hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrGreen, clrBlack);
-
-  /* Now, use PatBlt() to copy the patterns onto the off-screen bitmap. In this
-  ** case, the destination rectangles have all been specified such that they are
-  ** all partially off the visible surface of the off-screen bitmap, requiring
-  ** that they be clipped during the PatBlt() operation.
-  */
-  mtds.SetBrush(hdsTest, hbrHorizontal);
-  mtds.PatBlt(hdsTest, -30, -45, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrVertical);
-  mtds.PatBlt(hdsTest, 90, -45, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrFwDiagonal);
-  mtds.PatBlt(hdsTest, 210, -45, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrBkDiagonal);
-  mtds.PatBlt(hdsTest, -30, 115, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrCross);
-  mtds.PatBlt(hdsTest, 90, 115, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrDiagCross);
-  mtds.PatBlt(hdsTest, 210, 115, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrChecker);
-  mtds.PatBlt(hdsTest, -30, 275, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrBlock);
-  mtds.PatBlt(hdsTest, 90, 275, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsTest, hbrHalfTone);
-  mtds.PatBlt(hdsTest, 210, 275, 60, 90, ropPatCopy);
-
-  /* Now that we have rendered all of the patterns onto the off-screen bitmap,
-  ** use BitBlt() to copy the off-screen bitmap onto the display. In this case, we
-  ** are overwriting the entire display with the off-screen bitmap.
-  */
-  mtds.BitBlt(hdsDisp,  0,  0, 240, 320, hdsTest, 0, 0, ropSrcCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave.
-  */
-  mtds.DestroyBrush(hbrHorizontal);
-  mtds.DestroyBrush(hbrVertical);
-  mtds.DestroyBrush(hbrFwDiagonal);
-  mtds.DestroyBrush(hbrBkDiagonal);
-  mtds.DestroyBrush(hbrCross);
-  mtds.DestroyBrush(hbrDiagCross);
-  mtds.DestroyBrush(hbrChecker);
-  mtds.DestroyBrush(hbrBlock);
-  mtds.DestroyBrush(hbrHalfTone);
-  
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest19
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demo illustrates the use of stock brushes and solid brushes as well as the
-**    use of a pattern brush. PatBlt() is used to render the various brushes onto the
-**    display to show their appearnce. It is similar to MtdsTest15 above, except for
-**    the brushes that are rendered.
-**
-**    A solid brush is one where all the pixels of the brush pattern are the same color.
-**    A solid brush of any given color can be created by the user. Stock brushes are 
-**    a small set of solid brushes that are pre-defined by the system and always available.
-*/
-
-void MtdsTest19() {
-  HDS    hdsDisp;
-  HBR      hbrMyRed;
-  HBR      hbrMyGreen;
-  HBR      hbrMyBlue;
-  HBR      hbrBlock;
-
-  /* In this demo, we are only going to be drawing onto the display, so we only need
-  ** the display Ds.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  /* Create some solid brushes and a pattern brush.
-  ** Note that there actually are red, green and blue stock brushes defined by the
-  ** the system, so these are somewhat redundant, but it illustrates creating a
-  ** solid brush.
-  ** Also note that there is a special stock brush, hbrNull, defined that is used to
-  ** suppress area fill when drawing a filled shape, such as Rectangle().
-  */
-  hbrMyRed     = mtds.CreateSolidBrush(clrRed);
-  hbrMyGreen   = mtds.CreateSolidBrush(clrGreen);
-  hbrMyBlue    = mtds.CreateSolidBrush(clrBlue);
-
-  hbrBlock   = mtds.CreatePatternBrush(idpsBlock,   clrRed, clrBlack);
-
-  /* Use PatBlt() to render the solid brushes onto the display.
-  */
-  mtds.SetBrush(hdsDisp, hbrMyRed);
-  mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatCopy);
-  
-  mtds.SetBrush(hdsDisp, hbrMyGreen);
-  mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrMyBlue);
-  mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatCopy);
-
-  /* Now use PatBlt() to render some of the stock brushes onto the display.
-  */
-  mtds.SetBrush(hdsDisp, hbrDkGray);
-  mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrMedGray);
-  mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrLtGray);
-  mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrWhite);
-  mtds.PatBlt(hdsDisp, 10, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrBlack);
-  mtds.PatBlt(hdsDisp, 80, 210, 60, 90, ropPatCopy);
-
-  /* Finally, use PatBlt() to render the pattern brush onto the display.
-  */
-  mtds.SetBrush(hdsDisp, hbrBlock);
-  mtds.PatBlt(hdsDisp, 150, 210, 60, 90, ropPatCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave. Stock brushes are pre-defined by the system and should not be
-  ** destroyed, although the system will ignore an attempt to do so. You only need
-  ** to destroy brushes that were created.
-  */
-  mtds.DestroyBrush(hbrMyRed);
-  mtds.DestroyBrush(hbrMyGreen);
-  mtds.DestroyBrush(hbrMyBlue);
-  mtds.DestroyBrush(hbrBlock);
-  
-  mtds.ReleaseDs(hdsDisp);
-  
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest20
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    
-*/
-
-void MtdsTest20() {
-  HDS    hdsDisp;
-  HBR   hbrChecker;
-  HBR   hbrHalfTone;
-
-  /* In this demo, we are only going to be drawing onto the display, so we only need
-  ** the display Ds.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  /* Create a couple of pattern brushes that will provide the pattern to illustrate
-  ** using different raster-ops with PatBlt().
-  */
-  hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrRed, clrBlack);
-  hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrRed, clrBlack);
-
-  /* Illustrate the ropPatDstXor raster-op. This will XOR the pattern pixels with the
-  ** destination pixels. The brush contains red pixels and black pixels. When the black
-  ** pixels are XOR'd with the white pixels in the display, they are left unchanged.
-  ** When the red pixels are XOR'd with the white pixels, the result will be cyan, so
-  ** we get a checkerboard of cyan and white squares.
-  */
-  mtds.SetBrush(hdsDisp, hbrWhite);
-  mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatCopy);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatDstXor);
-
-  /* Illustrate the ropPatDstOr raster-op. This will OR the pattern pixels with the
-  ** destination pixels. The brush contains red and black pixels. When the black pixels
-  ** in the brush are OR'd with the pixels in the destination, they are left unchanged, 
-  ** meaning that they are left green.
-  ** The color red has the following value: 0x00FF0000, the color green has the following
-  ** pattern: 0x0000FF00. When red and green are OR'd, the result is 0x00FFFF00, which
-  ** is the color yellow, so we get a checkerboard of green and yellow squares.
-  */
-  mtds.SetBrush(hdsDisp, hbrGreen);
-  mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatCopy);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatDstOr);
-
-  /* Illustrate the ropPatDstOr raster-op. This will OR the pattern pixels with the
-  ** destination pixels and then NOT the result. The brush contains red and black pixels.
-  ** When the black pixels in the brush are OR'd with the pixels in the destination, 
-  ** they are left unchanged, resulting in green pixels where the brush is black. This has
-  ** the value 0x0000FF00. When this is NOT'd, the result is 0xXXFF00FF, which is the
-  ** color magenta. (ignore the high 8 bits of the color as they are not used)
-  ** The color red has the following value: 0x00FF0000, the color green has the following
-  ** pattern: 0x0000FF00. When red and green are OR'd, the result is 0x00FFFF00. When
-  ** this is NOT'd, the result is 0xXX0000FF, which is the color blue. We get a checkerboard
-  ** of magenta and blue squares.
-  */
-  mtds.SetBrush(hdsDisp, hbrGreen);
-  mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatCopy);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatDstOrNot);
-
-  /* Illustrate the ropPatDstAnd raster-op. This will AND the pattern pixels with the
-  ** destination pixels. The brush contains red and black pixels. When the black pixels
-  ** in the brush are AND'd with the white pixels currently in the destination, the result
-  ** is black. When the red pixels are AND'd with the white pixels the result is red. So
-  ** we end up with a checkerboard of red and black squares.
-  */
-  mtds.SetBrush(hdsDisp, hbrWhite);
-  mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatCopy);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatDstAnd);
-
-  /* Illustrate the ropPatDstAndNot raster-op. this will AND the pattern pixels with the
-  ** destination pixels and then NOT the result. When the black pixels in the brush are
-  ** AND'd withe white pixels in the display, the result is black. When black is NOT'd, the
-  ** result is white. When the red pixles in the brush are AND'd with the white pixels in
-  ** the display, the result is red. When red is NOT'd, the result is cyan. So, we end up
-  ** with a checkerboard of white and cyan squares, which, as expected, is the inverse of the
-  ** first pattern that was drawn.
-  */
-  mtds.SetBrush(hdsDisp, hbrWhite);
-  mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatCopy);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatDstAndNot);
-
-  /* Illustrate the ropPatDstNotAnd raster-op. This will NOT the destination pixels and then
-  ** AND the result with the pattern. When the green in the destination is NOT'd, the result
-  ** is magenta. When the magenta is AND'd with red, the result is red. So we get a checkerboard
-  ** of red and black pixels.
-  */
-  mtds.SetBrush(hdsDisp, hbrGreen);
-  mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatCopy);
-  mtds.SetBrush(hdsDisp, hbrChecker);
-  mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatDstNotAnd);
-
-  /* The next three sections simply copy the patterns to the display. This shows the
-  ** hbrLtBlueGray and hbrMedBlueGray stock brushes and the hbrHalfTone pattern.
-  */
-  mtds.SetBrush(hdsDisp, hbrLtBlueGray);
-  mtds.PatBlt(hdsDisp, 10, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrMedBlueGray);
-  mtds.PatBlt(hdsDisp, 80, 210, 60, 90, ropPatCopy);
-
-  mtds.SetBrush(hdsDisp, hbrHalfTone);
-  mtds.PatBlt(hdsDisp, 150, 210, 60, 90, ropPatCopy);
-
-  /* Free all of the resources being used by this demonstration function before
-  ** we leave. Stock brushes are pre-defined by the system and should not be
-  ** destroyed, although the system will ignore an attempt to do so. You only need
-  ** to destroy brushes that were created.
-  */
-  mtds.DestroyBrush(hbrChecker);
-  mtds.DestroyBrush(hbrHalfTone);
-  
-  mtds.ReleaseDs(hdsDisp);
-  
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest21
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration illustrates drawing text on the display. It also shows
-**    all of the characters defined in the hfntConsole font.
-*/
-
-void MtdsTest21() {
-  HDS       hdsDisp;
-  int16_t   xco;
-  int16_t   yco;
-  int16_t   dyco;
-  PNT           pntTxt;
-
-  /* Declare the strings that we are going to print.
-  */
-  char rgchTest1[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-  char rgchTest2[] = { "abcdefghijklmnopqrstuvwxyz" };
-  char rgchTest3[] = { "0123456789" };
-  char rgchTest4[] = { " !\"#$%&'()*+,-./:;<=>?" };
-  char rgchTest5[] = { "@[\\]^_`{|}~" };
-
-  char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-             0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-  char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-                0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
-  char rgchTest8[] = { 0x7F };
-
-  /* Get the DS for drawing on the display and initialize it.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetFont(hdsDisp, hfntConsole);
-
-  /* We are going to be drawing several lines of text, so figure out how much space
-  ** needs to be allowed between lines. This can be done by calling GetTextExtent() with
-  ** any of the strings, as what we are looking for is the Y extent of the text.
-  /* Unfortunately, Ver 1.04 of the display firmware has a bug where calls to GetTextExtent()
-  ** return incorrect values until after TextOut() has been called the first time. It would
-  ** be better to be able to call GetTextExtent() before any text has been drawn, but it
-  ** won't work correctly in V1.04 firmware. This bug has been fixed in later versions of
-  ** the display device firmware.
-  */
-#if defined(DEAD)
-  mtds.GetTextExtent(hdsDisp, strlen(rgchTest1), rgchTest1, &pntTxt);
-  dyco = pntTxt.yco+1;
-  Serial.print("TextExtent: xco = ");
-  Serial.print(pntTxt.xco, DEC);
-  Serial.print(" yco = ");
-  Serial.println(pntTxt.yco, DEC);
-#endif
-
-  /* We'll use a two pixel margin at the top and left of the screen.
-  */  
-  xco = 2;
-  yco = 2;
-  
-  /* Print out the strings, advancing by a line each time.
-  */
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-
-  /* Use the line height plus one pixel of leading for the distance from the origin of
-  ** one line of text to the next. As mentioned above, it would be more convenient to
-  ** have set this up before the first call to TextOut(). Another option would have been
-  ** to do a dummy write of a single character to an off-screen location. The text output
-  ** would get clipped so that nothing is visible, but this would have the side effect of
-  ** working around the bug in GetTextExtent().
-  */
-  mtds.GetTextExtent(hdsDisp, strlen(rgchTest1), rgchTest1, &pntTxt);
-  dyco = pntTxt.yco+1;
-
-  yco += dyco;
-  
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest3), rgchTest3);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest4), rgchTest4);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest5), rgchTest5);
-  yco += dyco;
-  
-  mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest6);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest7);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, 1, rgchTest8);
-  yco += dyco;
-
-  /* Release the DS before we leave so that it doesn't get lost.
-  */
-  mtds.ReleaseDs(hdsDisp);
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest22
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration shows drawing text and shows how text is clipped if portions
-**    of the printed string are off the visible surface of the bitmap.
-*/
-
-void MtdsTest22() {
-  HDS        hdsDisp;
-  int16_t    xco;
-  int16_t    yco;
-  int16_t    dyco;
-  PNT        pnt;
-
-  char rgchTest1[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-  char rgchTest2[] = { "abcdefghijklmnopqrstuvwxyz" };
-  char rgchTest3[] = { "0123456789" };
-  char rgchTest4[] = { " !\"#$%&'()*+,-./:;<=>?" };
-  char rgchTest5[] = { "@[\\]^_`{|}~" };
-
-  char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-  char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-      0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
-  char rgchTest8[] = { 0x7F };
-
-  /* Get the DS for drawing on the display and initialize it.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.SetBgColor(hdsDisp, clrBlack);
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetFont(hdsDisp, hfntConsole);
-
-  /* Test clipping at the top of the bitmap.
-  */
-  xco = -4;
-  yco = -2;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 88;
-  yco = -2;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  /* Use GetTextExtent() to determine the Y extent of the font and use that
-  ** to compute the vertical spacing from the origin of one line to the next.
-  */  
-  mtds.GetTextExtent(hdsDisp, 8, rgchTest1, &pnt);
-  dyco = pnt.yco + 1;
-
-  xco = 180;
-  yco = -2;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-  yco += dyco;
-
-  xco = -4;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 88;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 180;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  /* Test clipping at the bottom of the bitmap.
-  */
-  xco = -4;
-  yco = 316;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 88;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 180;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-  yco -= dyco;
-
-  xco = -4;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 88;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  xco = 180;
-  mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
-
-  /* Test clipping on the left side of the bitmap.
-  */
-  xco = 2;
-  yco = 28;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  xco = -4;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  xco = -8;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  xco = -12;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  xco = -196;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  xco = -200;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  xco = -204;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  /* Test clipping on the right side of the bitmap.
-  */
-  xco = 2;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 32;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 36;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 40;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 224;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 228;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 232;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  xco = 236;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  /* Output some more characters just for something to do.
-  */
-  xco = 10;
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest3), rgchTest3);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest4), rgchTest4);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest5), rgchTest5);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest6);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest7);
-  yco += dyco;
-
-  mtds.TextOut(hdsDisp, xco, yco, 1, rgchTest8);
-  yco += dyco;
-
-  /* Release the display DS before we leave so that it doesn't get lost.
-  */
-  mtds.ReleaseDs(hdsDisp);
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest23()
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration illustrates drawing text onto off-screen bitmaps. It also
-**    illustrates using BitBlt() to copy from a monochrome off-screen bitmap onto
-**    the display.
-*/
-
-void MtdsTest23() {
-  HDS       hdsDisp;
-  HDS      hdsColor;
-  HBMP      hbmpColor;
-  HDS      hdsMono;
-  HBMP      hbmpMono;
-  int16_t   xco;
-  int16_t   yco;
-  int16_t   dyco;
-
-  /* Define the text strings that we are going to be printing.
-  */
-  char rgchTest1[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-  char rgchTest2[] = { "abcdefghijklmnopqrstuvwxyz" };
-  char rgchTest3[] = { "0123456789" };
-  char rgchTest4[] = { " !\"#$%&'()*+,-./:;<=>?" };
-  char rgchTest5[] = { "@[\\]^_`{|}~" };
-
-  char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-     0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-  char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-     0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
-  char rgchTest8[] = { 0x7F };
-
-  /* Get the display DS for drawing on the display.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-
-  /* We're going to use a color off-screen bitmap. Create the bitmap and then
-  ** set it as the drawing surface for a DS so that we can draw on it.
-  */
-  hdsColor = mtds.GetDs();
-  hbmpColor = mtds.CreateBitmap(210, 80, 16);
-  mtds.SetDrawingSurface(hdsColor, hbmpColor);
-
-  /* We're also going to use a monochrmoe off-screen bitmap. Create this bitmap
-  ** and set it as the drawing surface for another DS so that we can draw on it
-  ** as well. A monochrome bitmap has a single bit per pixel, so we specify 1 for
-  ** the pixel format when we create it.
-  */
-  hdsMono = mtds.GetDs();
-  hbmpMono = mtds.CreateBitmap(210, 80, 1);
-  mtds.SetDrawingSurface(hdsMono, hbmpMono);
-
-  /* Draw some text on the color bitmap and then BitBlt() the result to the display.
-  */
-  mtds.SetFgColor(hdsColor, clrGreen);
-  mtds.SetBgColor(hdsColor, clrBlack);
-  mtds.SetDrwRop(hdsColor, drwCopyPen);
-  mtds.SetFont(hdsColor, hfntConsole);
-
-  xco = 2;
-  yco = 3;
-  /* To be strictly "correct" we should use GetTextExtent() to determine what the
-  ** vertical extent of the text is when printed. However, we actually know that we
-  ** are using the hfntConsole font and that it's character height is 8 pixels.
-  ** As long as we know the environment (i.e. version of display card firmware,
-  ** specific font, version of the font, etc.) we can cheat and use the knowledge
-  ** about the font. This may, of course, break if anything about the system changes,
-  ** so it is better overall to do it "correctly" by calling GetTextExtent(). Certainly,
-  ** if the font being used can change, then GetTextExtent() must be used.
-  */
-  dyco = 9;
-
-  /* Drawing text onto an off-screen bitmap is exactly the same as drawing onto the
-  ** display bitmap, except that we use a different DS that has been set up to use
-  ** the off-screen bitmap as the drawing surface.
-  */
-  mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest3), rgchTest3);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest4), rgchTest4);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest5), rgchTest5);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, 16, rgchTest6);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, 16, rgchTest7);
-  yco += dyco;
-
-  mtds.TextOut(hdsColor, xco, yco, 1, rgchTest8);
-  yco += dyco;
-
-  /* Copy the off-screen bitmap onto the display. Color off-screen bitmaps use the
-  ** same color format as the display, so no conversions need to occur when copying
-  ** from a color bitmap (off-screen) to a color bitmap (the display).
-  */
-  mtds.BitBlt(hdsDisp, 15, 5, 210, 80, hdsColor, 0, 0, ropSrcCopy);
-
-  /* Draw some text on the monochrome bitmap and then copy the result to the display.
-  */
-  mtds.SetFgColor(hdsMono, clrWhite);
-  mtds.SetBgColor(hdsMono, clrBlack);
-  mtds.SetDrwRop(hdsMono, drwCopyPen);
-  mtds.SetFont(hdsMono, hfntConsole);
-
-  xco = 1;
-  yco = 2;
-  dyco = 9;
-
-  /* Again, there is no difference between drawing on different off-screen bitmaps. We
-  ** use a DS that has been set up with the appropriate off-screen bitmap as the drawing
-  ** surface. In this case, the drawing surface is a monochrome bitmap. When drawing text
-  ** or linear elements on a monochrome bitmap, the foreground and background colors should
-  ** be set to clrWhite or clrBlack. If foreground is clrWhite and background is clrBlack,
-  ** white figures will be drawn on a black background. When foreground is clrBlack and 
-  ** background is clrWhite, black figures will be drawn on a white background.
-  ** Background transparency mode works the same as with color bitmaps. If the transparency
-  ** mode is set to bkTransparent, background pixels are not drawn.
-  */ 
-  mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest1), rgchTest1);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest2), rgchTest2);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest3), rgchTest3);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest4), rgchTest4);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest5), rgchTest5);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, 16, rgchTest6);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, 16, rgchTest7);
-  yco += dyco;
-
-  mtds.TextOut(hdsMono, xco, yco, 1, rgchTest8);
-  yco += dyco;
-
-  /* Now, use BitBlt() to copy from the off-screen bitmap to the display bitmap. When copying
-  ** from a monochrome bitmap to a color bitmap, color conversion occurs. Pixels that are set
-  ** ('1') in the offscreen bitmap get translated to the foreground color, pixles that are
-  ** clear ('0') get translated to the background color. The foreground and background colors
-  ** that are used are the ones set in the destination DS.
-  ** Here, we are setting the foreground color to white and the background color to dark gray.
-  ** So after we have performed the BitBlt() we will see white text on a dark gray background.
-  */
-  mtds.SetFgColor(hdsDisp, clrWhite);
-  mtds.SetBgColor(hdsDisp, clrDkGray);
-  mtds.BitBlt(hdsDisp, 15, 120, 210, 80, hdsMono, 0, 0, ropSrcCopy);
-
-  /* Clean up. Destroy and release all resoures used before we return so that the memory
-  ** isn't lost.
-  */
-  mtds.DestroyBitmap(hbmpColor);
-  mtds.DestroyBitmap(hbmpMono);
-  mtds.ReleaseDs(hdsColor);
-  mtds.ReleaseDs(hdsMono);
-  mtds.ReleaseDs(hdsDisp);
-
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest24()
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demo illustrates using DrawBitmap() to copy pixels from an off-screen
-**    bitmap to the display. DrawBitmap() works very similarly to BitBlt(). The
-**    primary difference is that DrawBitmap() doesn't use a raster operation code
-**    and it uses only the source and destination bitmaps, not the brush pattern.
-**    Instead of a raster-op, DrawBitmap() uses the background transparency mode and
-**    intensity to control how the result gets drawn.
-**    This particular test doesn't use background transparency or intensity, so it
-**    illustrates the simplest use of DrawBitmap(). In this case, it is essentially
-**    identical to BitBlt() using the ropSrcCopy raster-op.
-*/
-
-void MtdsTest24() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-
-  /* We are drawing on the display and onto a color off-screen bitmap. Get the
-  ** two DS objects we will use, create the off-screen bitmap and set it as the
-  ** drawing surface for the DS we will use for drawing onto it.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(40, 40, 16);
-  if (hbmpTest == 0) {
-    xil_printf("MtdsTest24: CreateBitmap failed\n\r");
-  }
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Initialize for drawing onto the offscreen bitmap
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penSolid);
-
-  /* Draw a pattern onto the off-screen bitmap. In this case, we draw a red square with
-  ** a bunch of green radial lines going from the center of the square out to the edges.
-  */
-  mtds.SetFgColor(hdsTest, clrGreen);
-  for (int xco = 0; xco < 40; xco += 5) {
-    mtds.MoveTo(hdsTest,  20, 20);
-    mtds.LineTo(hdsTest, xco, 0);
-    mtds.MoveTo(hdsTest, 20, 20);
-    mtds.LineTo(hdsTest, xco, 39);
-  }
-  for (int yco = 0; yco < 40; yco += 5) {
-    mtds.MoveTo(hdsTest,  20, 20);
-    mtds.LineTo(hdsTest, 0, yco);
-    mtds.MoveTo(hdsTest, 20, 20);
-    mtds.LineTo(hdsTest, 39, yco);
-  }
-
-  mtds.SetFgColor(hdsTest, clrRed);
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.LineTo(hdsTest,  0, 39);
-  mtds.LineTo(hdsTest,  0,  0);
-
-  /* Now that we have drawn the pattern into the off-screen bitmap, copy it to the
-  ** display multiple times using DrawBitmap().
-  */
-  mtds.DrawBitmap(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0);
-  mtds.DrawBitmap(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0);
-
-  /* Free the resources that we used before we return so that the memory doesn't get lost.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest25()
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration illustrates the use of BitBlt() to copy pixels from a color
-**    bitmap to a monochrome bitmap and then back to the color bitmap. Essentially,
-**    this illustrates the color conversion that occurs when copying between bitmaps
-**    with different color formats.
-*/
-
-void MtdsTest25() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-
-  /* We're going to be drawing onto the display and onto a monochrome offscreen bitmap.
-  ** Get the two DS objects that we are going to use, create the offscreen bitmap and
-  ** set up one DS for drawing onto it. Note that a monochrome bitmap has a single bit
-  ** per pixel, so we specify a color format of 1 when we create it.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(40, 40, 1);
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Init the DS for drawing onto the display. In this case, we are not setting the
-  ** background color. It defaults to clrBlack, so we will be getting black as the
-  ** background color.
-  */
-  mtds.SetDrwRop(hdsDisp, drwCopyPen);
-  mtds.SetPen(hdsDisp, penSolid);
-
-  /* Draw the test pattern at the center of the display. This pattern is a pair of
-  ** green diagonal lines inside a red square.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-  mtds.MoveTo(hdsDisp, 100, 140);
-  mtds.LineTo(hdsDisp, 139, 179);
-  mtds.MoveTo(hdsDisp, 139, 140);
-  mtds.LineTo(hdsDisp, 100, 179);
-
-  mtds.SetFgColor(hdsDisp, clrRed);
-  mtds.MoveTo(hdsDisp, 100, 140);
-  mtds.LineTo(hdsDisp, 139, 140);
-  mtds.LineTo(hdsDisp, 139, 179);
-  mtds.LineTo(hdsDisp, 100, 179);
-  mtds.LineTo(hdsDisp, 100, 139);
-
-  /* Now, use BitBlt() to copy the pattern from the center of the display to the
-  ** offscreen bitmap. When doing a BitBlt() from a color bitmap to a monochrome
-  ** bitmap, pixels in the source that match the background color are copied as a 0 bit,
-  ** pixels in the source that don't match the background color are copied as a 1 bit.
-  ** The background color that is used is the one set in the destination DS.
-  ** In this case, the destination DS is the one for the off-screen bitmap. The background
-  ** color in this DS was never set, so it defaults to clrBlack. So, in this case, pixels
-  ** in the source that are black get copied as 0, and pixels that are not black get copied
-  ** as 1.
-  */
-  mtds.BitBlt(hdsTest, 0, 0, 40, 40, hdsDisp, 100, 140, ropSrcCopy);
-
-  /* We are now going to use BitBlt() to copy from the monochrome offscreen bitmap
-  ** back to the display. This will cause a color conversion from monochrome back to
-  ** color. When copying from a monochrome bitmap to a color bitmap, pixels in the
-  ** monochrome bitmap that are 0 are copied as the background color and pixels that are
-  ** 1 are copied as the foreground color. Here, we are setting the foreground color to
-  ** white and the background color to dark red. The result will be a white pattern on
-  ** a dark red background.
-  */
-  mtds.SetFgColor(hdsDisp, clrWhite);
-  mtds.SetBgColor(hdsDisp, clrDkRed);
-
-  /* Copy the pattern multiple time from the offscreen bitmap onto the display.
-  */
-  mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  /* This would copy the offscreen bitmap over the original pattern drawn onto the
-  ** display. It is commented out so that the original pattern can be seen.
-  */
-  //mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  /* Free all of the resource used before we leave so that the memory isn't lost.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsTest);
-  mtds.ReleaseDs(hdsDisp);
-
-}
-
-/* ------------------------------------------------------------ */
-/***   MtdsTest26()
-**
-**  Parameters:
-**    none
-**
-**  Return Values:
-**    none
-**
-**  Errors:
-**    none
-**
-**  Description:
-**    This demonstration illustrates drawing onto a monochrome offscreen bitmap
-**    and then using BitBlt() to copy the result onto the display.
-*/
-
-void MtdsTest26() {
-  HDS    hdsDisp;
-  HDS    hdsTest;
-  HBMP   hbmpTest;
-  int16_t   co;
-
-  /* Get the DS for drawing on the display.
-  */
-  hdsDisp = mtds.GetDisplayDs();
-  
-  /* Get the DS for drawing onto the off-screen bitmap, create the off-screen
-  ** bitmap, and then set it as the drawing surface for the DS. Note that when
-  ** we create the bitmap we specify the pixel format as 1 bit per pixel to make
-  ** it be a monochrome bitmap.
-  */
-  hdsTest = mtds.GetDs();
-  hbmpTest = mtds.CreateBitmap(40, 40, 1);
-  mtds.SetDrawingSurface(hdsTest, hbmpTest);
-
-  /* Set up the drawing parameters in the DS for drawing on the offscreen bitmap.
-  ** When drawing on a monochrome bitmap, the foreground color should be white and
-  ** the background color should be black. The calls to SetDrwRop, SetPen and SetFgColor
-  ** here are actually redundant as the values being set are the same as the default
-  ** values set in a DS when it is first obtained.
-  */
-  mtds.SetDrwRop(hdsTest, drwCopyPen);
-  mtds.SetPen(hdsTest, penSolid);
-  mtds.SetFgColor(hdsTest, clrWhite);
-
-  /* Draw the graphical pattern on the monochrome bitmap. This draws a square and a
-  ** series of radial lines from the center of the square around the edges. Note that
-  ** the method is exactly the same as it would be if we were drawing onto the display
-  ** or onto a color bitmap.
-  */
-  for (co = 0; co < 40; co += 5) {
-    mtds.MoveTo(hdsTest, 19, 19);
-    mtds.LineTo(hdsTest, co,  0);
-    mtds.MoveTo(hdsTest, 19, 19);
-    mtds.LineTo(hdsTest, co, 39);
-    mtds.MoveTo(hdsTest, 19, 19);
-    mtds.LineTo(hdsTest,  0, co);
-    mtds.MoveTo(hdsTest, 19, 19);
-    mtds.LineTo(hdsTest, 39, co);
-  }
-
-  mtds.MoveTo(hdsTest,  0,  0);
-  mtds.LineTo(hdsTest, 39,  0);
-  mtds.LineTo(hdsTest, 39, 39);
-  mtds.LineTo(hdsTest,  0, 39);
-  mtds.LineTo(hdsTest,  0,  0);
-
-  /* Set up for copying from the monochrome bitmap to the display. When using BitBlt()
-  ** to copy from a monochrome bitmap to a color bitmap, a color conversion occurs.
-  ** Pixels in the monochrome bitmap that are 0 are copied as the background color and
-  ** pixels that are 1 are copied as the foreground color. The foreground color is set
-  ** to green. Since the background color defaults to black and isn't being set, we will
-  ** get a green pattern on a black background.
-  ** When doing a BitBlt() from one color format to another, the color conversion is done
-  ** first, and then the raster-op function is applied.
-  */
-  mtds.SetFgColor(hdsDisp, clrGreen);
-
-  /* Copy the monochrome bitmap onto the display, tiling the surface.
-  */
-  mtds.BitBlt(hdsDisp,  10,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  mtds.BitBlt(hdsDisp,  10,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  mtds.BitBlt(hdsDisp,  10,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  mtds.BitBlt(hdsDisp,  10, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  mtds.BitBlt(hdsDisp,  10, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  mtds.BitBlt(hdsDisp,  10, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp,  55, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 100, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 145, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-  mtds.BitBlt(hdsDisp, 190, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
-
-  /* Free all of the resources used before we leave so that the memory isn't lost.
-  */
-  mtds.DestroyBitmap(hbmpTest);
-  mtds.ReleaseDs(hdsDisp);
-  mtds.ReleaseDs(hdsTest);
-
-}
-
-/* ------------------------------------------------------------ */
-/***   ProcName
+/*** MtdsTest13
 **
 **   Parameters:
+**      none
 **
 **   Return Values:
+**      none
 **
 **   Errors:
+**      none
 **
 **   Description:
-**
+**      This demonstrates drawing onto and off-screen bitmap and then using
+**      BitBlt() to copy pixels from one location in the off-screen bitmap to
+**      another location in the same off-screen bitmap. BitBlt() is then used to
+**      copy the resulting off-screen bitmap onto the display. This is very
+**      similar to MtdsTest10 above, except that a different pattern is drawn
+**      initially onto the off-screen bitmap, and then BitBlt() is used to copy
+**      some pixels within the off-screen bitmap before BitBlt() is used to copy
+**      the result to the display.
 */
+void MtdsTest13() {
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
+
+   /* We need two DS objects, one for drawing onto the display and one for
+   ** drawing onto the off-screen bitmap. GetDisplayDs() returns a handle to a
+   ** DS initialized for drawing on the display. GetDs() returns a DS that is
+   ** not associated with any bitmap as the drawing surface.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(40, 40, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest13: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
+
+   /* Now that we have a DS with a drawing surface, initialize the other drawing
+   ** parameters that we are going to use and then draw some graphics onto the
+   ** off-screen bitmap.
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penSolid);
+
+   /* Draw a couple of diagonal green lines. These don't extend from corner to
+   ** corner of the entire off-screen bitmap. This is similar to the pattern
+   ** drawn in MtdsTest11 and MtdsTest12, but smaller.
+   */
+   mtds.SetFgColor(hdsTest, clrGreen);
+   mtds.MoveTo(hdsTest, 10, 10);
+   mtds.LineTo(hdsTest, 29, 29);
+   mtds.MoveTo(hdsTest, 29, 10);
+   mtds.LineTo(hdsTest, 10, 29);
+
+   /* Draw a red square around the diagonal lines.
+   */
+   mtds.SetFgColor(hdsTest, clrRed);
+   mtds.MoveTo(hdsTest, 10, 10);
+   mtds.LineTo(hdsTest, 29, 10);
+   mtds.LineTo(hdsTest, 29, 29);
+   mtds.LineTo(hdsTest, 10, 29);
+   mtds.LineTo(hdsTest, 10, 10);
+
+   /* This BitBlt() copies pixels within the off-screen bitmap. Note that the
+   ** source DS and the destination DS are the same. This means that the source
+   ** bitmap and the destination bitmap will be the same. A 20x20 pixel
+   ** rectangle of pixels is being copied up and to the left by 10 pixels, which
+   ** copies the pattern drawn above up and to the left.
+   */
+   mtds.BitBlt(hdsTest, 0, 0, 20, 20, hdsTest, 10, 10, ropSrcCopy);
+
+   /* Now that we have the resulting pattern in the off-screen bitmap, use
+   ** BitBlt() to copy it onto the display in a few places. In this case all of
+   ** the destination rectangles are on the display, so no clipping is done.
+   */
+   mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
+}
 
 /* ------------------------------------------------------------ */
+/*** MtdsTest14
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstrates additional use of BitBlt(). In this case, it
+**      illustrates using BitBlt() to copy pixels from the display to an
+**      off-screen bitmap. It also illustrates that drawing can be done on the
+**      display or onto off-screen bitmaps equally. This program first draws a
+**      figure onto the display. It then copies that figure from the display
+**      onto an off-screen bitmap. It then draws some additional graphics onto
+**      the off-screen bitmap and then copies the result back onto the display.
+*/
+void MtdsTest14() {
+  HDS  hdsDisp;
+  HDS  hdsTest;
+  HBMP hbmpTest;
 
-/********************************************************************************/
+   /* We need two DS objects, one for drawing onto the display and one for
+   ** drawing onto the off-screen bitmap. GetDisplayDs() returns a handle to a
+   ** DS initialized for drawing on the display. GetDs() returns a DS that is
+   ** not associated with any bitmap as the drawing surface.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(40, 40, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest14: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
 
+   /* Now that we have a DS with a drawing surface, initialize the other drawing
+   ** parameters that we are going to use and then draw some graphics onto the
+   ** off-screen bitmap.
+   */
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetPen(hdsDisp, penSolid);
+
+   /* Here we are drawing to the center of the display. We are drawing the same
+   ** pattern used in the previous demonstrations, a couple of green diagonal
+   ** lines with a red square around them. Since we are drawing against the DS
+   ** in hdsDisp, and hdsDisp was obtained by calling GetDisplayDs(), this draws
+   ** on the display.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.MoveTo(hdsDisp, 100, 140);
+   mtds.LineTo(hdsDisp, 139, 179);
+   mtds.MoveTo(hdsDisp, 139, 140);
+   mtds.LineTo(hdsDisp, 100, 179);
+
+   mtds.SetFgColor(hdsDisp, clrRed);
+   mtds.MoveTo(hdsDisp, 100, 140);
+   mtds.LineTo(hdsDisp, 139, 140);
+   mtds.LineTo(hdsDisp, 139, 179);
+   mtds.LineTo(hdsDisp, 100, 179);
+   mtds.LineTo(hdsDisp, 100, 140);
+
+   /* Now that we have drawn the pattern in the center of the display, use
+   ** BitBlt() to copy it onto the off-screen bitmap we set up earlier. In this
+   ** case, the source is specified as hdsDisp and the destination is specified
+   ** as hdsTest, so we are copying from the display to the off-screen bitmap.
+   */
+   mtds.BitBlt(hdsTest, 0, 0, 40, 40, hdsDisp, 100, 140, ropSrcCopy);
+
+   /* We can continue to draw onto the off-screen bitmap by setting up
+   ** additional drawing parameters in hdsTest and drawing graphics using it.
+   ** The following draws a white, dotted square onto the off-screen bitmap.
+   ** Note that if we had done this drawing before the BitBlt(), it would have
+   ** been written over by the pixels copied by BitBlt().
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penDot);
+   mtds.SetFgColor(hdsTest, clrWhite);
+   mtds.MoveTo(hdsTest,  5,  5);
+   mtds.LineTo(hdsTest, 34,  5);
+   mtds.LineTo(hdsTest, 34, 34);
+   mtds.LineTo(hdsTest,  5, 34);
+   mtds.LineTo(hdsTest,  5,  5);
+
+   /* Now that we have the resulting off-screen bitmap, we can copy it onto the
+   ** display using BitBlt(). This copies it to various location on the display.
+   */
+   mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   /* Note that the following line would copy the off-screen bitmap over the top
+   ** of the figure that was originally drawn onto the display. It is commented
+   ** out so that we can see what the original figure looked like.
+   */
+   //mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest15
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstrates the use of CreatePatternBrush() and PatBlt().
+**      A pattern brush is one created using one of the predefined crosshatch
+**      patterns with user specified colors. A brush is used as the fill pattern
+**      when drawing a filled shape, or can be used with PatBlt() for various
+**      effects. PatBlt() can be used to copy the brush pattern onto a rectangle
+**      of the destination bitmap. Alternatively, different raster operation-
+**      codes (raster-ops) can be used to create other effects, such as
+**      highlighting.
+*/
+void MtdsTest15() {
+   HDS hdsDisp;
+   HBR hbrHorizontal;
+   HBR hbrVertical;
+   HBR hbrFwDiagonal;
+   HBR hbrBkDiagonal;
+   HBR hbrCross;
+   HBR hbrDiagCross;
+   HBR hbrChecker;
+   HBR hbrBlock;
+   HBR hbrHalfTone;
+
+   /* In this demo, we are only going to be drawing onto the display, so we only
+   ** need the display Ds.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+
+   /* Create pattern brushes illustrating the brush crosshatch patterns that are
+   ** available. The brushes are created with a red foreground and a black
+   ** background.
+   */
+   hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrRed, clrBlack);
+   hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrRed, clrBlack);
+   hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrRed, clrBlack);
+   hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrRed, clrBlack);
+   hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrRed, clrBlack);
+   hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross, clrRed, clrBlack);
+   hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrRed, clrBlack);
+   hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrRed, clrBlack);
+   hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrRed, clrBlack);
+
+   /* Now, use PatBlt() to copy the patterns onto the display to illustrate what
+   ** they look like. By using the ropPatCopy raster-op, the pattern pixels are
+   ** written over the destination pixels.
+   */
+   mtds.SetBrush(hdsDisp, hbrHorizontal);
+   mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrVertical);
+   mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrFwDiagonal);
+   mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrBkDiagonal);
+   mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrCross);
+   mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrDiagCross);
+   mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 10, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrBlock);
+   mtds.PatBlt(hdsDisp, 80, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrHalfTone);
+   mtds.PatBlt(hdsDisp, 150, 210, 60, 90, ropPatCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBrush(hbrHorizontal);
+   mtds.DestroyBrush(hbrVertical);
+   mtds.DestroyBrush(hbrFwDiagonal);
+   mtds.DestroyBrush(hbrBkDiagonal);
+   mtds.DestroyBrush(hbrCross);
+   mtds.DestroyBrush(hbrDiagCross);
+   mtds.DestroyBrush(hbrChecker);
+   mtds.DestroyBrush(hbrBlock);
+   mtds.DestroyBrush(hbrHalfTone);
+
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest16
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration is very similar to MtdsTest15 above. The only real
+**      difference is that when it uses PatBlt() to copy the patterns onto the
+**      display, it specifies destination rectangles that are partially off of
+**      the display to illustrate that clipping occurs with PatBlt() the same
+**      way that it does with BitBlt().
+*/
+void MtdsTest16() {
+   HDS hdsDisp;
+   HBR hbrHorizontal;
+   HBR hbrVertical;
+   HBR hbrFwDiagonal;
+   HBR hbrBkDiagonal;
+   HBR hbrCross;
+   HBR hbrDiagCross;
+   HBR hbrChecker;
+   HBR hbrBlock;
+   HBR hbrHalfTone;
+
+   /* In this demo, we are only going to be drawing onto the display, so we only
+   ** need the display Ds.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+
+   /* Create pattern brushes illustrating the brush crosshatch patterns that are
+   ** available. The brushes are created with a red foreground and a black
+   ** background.
+   */
+   hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrRed, clrBlack);
+   hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrRed, clrBlack);
+   hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrRed, clrBlack);
+   hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrRed, clrBlack);
+   hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrRed, clrBlack);
+   hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross,  clrRed, clrBlack);
+   hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrRed, clrBlack);
+   hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrRed, clrBlack);
+   hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrRed, clrBlack);
+
+   /* Now, use PatBlt() to copy the patterns onto the display to illustrate what
+   ** they look like. In this case, the destination of each call to PatBlt() is
+   ** specified such that clipping needs to occur when writing to the
+   ** destination.
+   */
+   mtds.SetBrush(hdsDisp, hbrHorizontal);
+   mtds.PatBlt(hdsDisp, -30, -45, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrVertical);
+   mtds.PatBlt(hdsDisp, 90, -45, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrFwDiagonal);
+   mtds.PatBlt(hdsDisp, 210, -45, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrBkDiagonal);
+   mtds.PatBlt(hdsDisp, -30, 115, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrCross);
+   mtds.PatBlt(hdsDisp, 90, 115, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrDiagCross);
+   mtds.PatBlt(hdsDisp, 210, 115, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, -30, 275, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrBlock);
+   mtds.PatBlt(hdsDisp, 90, 275, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrHalfTone);
+   mtds.PatBlt(hdsDisp, 210, 275, 60, 90, ropPatCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.ReleaseDs(hdsDisp);
+   mtds.DestroyBrush(hbrHorizontal);
+   mtds.DestroyBrush(hbrVertical);
+   mtds.DestroyBrush(hbrFwDiagonal);
+   mtds.DestroyBrush(hbrBkDiagonal);
+   mtds.DestroyBrush(hbrCross);
+   mtds.DestroyBrush(hbrDiagCross);
+   mtds.DestroyBrush(hbrChecker);
+   mtds.DestroyBrush(hbrBlock);
+
+   mtds.DestroyBrush(hbrHalfTone);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest17
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration illustrates the use of pattern brushes and PatBlt().
+**      It is very similar to MtdsTest15 above, except that the call to PatBlt()
+**      performs the operation on an off-screen bitmap. Once all of the PatBlt()
+**      operation have been completed, the off-screen bitmap is copied onto the
+**      display.
+*/
+void MtdsTest17() {
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
+   HBR  hbrHorizontal;
+   HBR  hbrVertical;
+   HBR  hbrFwDiagonal;
+   HBR  hbrBkDiagonal;
+   HBR  hbrCross;
+   HBR  hbrDiagCross;
+   HBR  hbrChecker;
+   HBR  hbrBlock;
+   HBR  hbrHalfTone;
+
+   /* We are going to be drawing onto the display and onto an off-screen bitmap.
+   ** So, get the DS handles that we are going to use and create the off-screen
+   ** bitmap. In this case, the off-screen bitmap is a color bitmap that has the
+   ** same dimensions as the display.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(240, 320, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest17: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
+
+   /* Create pattern brushes illustrating the brush crosshatch patterns that are
+   ** available. The brushes are created with a green foreground and a black
+   ** background.
+   */
+   hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrGreen, clrBlack);
+   hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrGreen, clrBlack);
+   hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrGreen, clrBlack);
+   hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrGreen, clrBlack);
+   hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrGreen, clrBlack);
+   hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross,  clrGreen, clrBlack);
+   hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrGreen, clrBlack);
+   hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrGreen, clrBlack);
+   hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrGreen, clrBlack);
+
+   /* Now, use PatBlt() to copy the patterns onto the off-screen bitmap.
+   */
+   mtds.SetBrush(hdsTest, hbrHorizontal);
+   mtds.PatBlt(hdsTest, 10, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrVertical);
+   mtds.PatBlt(hdsTest, 80, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrFwDiagonal);
+   mtds.PatBlt(hdsTest, 150, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrBkDiagonal);
+   mtds.PatBlt(hdsTest, 10, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrCross);
+   mtds.PatBlt(hdsTest, 80, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrDiagCross);
+   mtds.PatBlt(hdsTest, 150, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrChecker);
+   mtds.PatBlt(hdsTest, 10, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrBlock);
+   mtds.PatBlt(hdsTest, 80, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrHalfTone);
+   mtds.PatBlt(hdsTest, 150, 210, 60, 90, ropPatCopy);
+
+   /* Now that we have rendered all of the patterns onto the off-screen bitmap,
+   ** use BitBlt() to copy the off-screen bitmap onto the display. In this case,
+   ** we are overwriting the entire display with the off-screen bitmap.
+   */
+   mtds.BitBlt(hdsDisp, 0, 0, 240, 320, hdsTest, 0, 0, ropSrcCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBrush(hbrHorizontal);
+   mtds.DestroyBrush(hbrVertical);
+   mtds.DestroyBrush(hbrFwDiagonal);
+   mtds.DestroyBrush(hbrBkDiagonal);
+   mtds.DestroyBrush(hbrCross);
+   mtds.DestroyBrush(hbrDiagCross);
+   mtds.DestroyBrush(hbrChecker);
+   mtds.DestroyBrush(hbrBlock);
+   mtds.DestroyBrush(hbrHalfTone);
+
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest18
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration illustrates the use of pattern brushes, PatBlt(), and
+**      off-screen bitmaps. It is essentially the same as MtdsTest17 above,
+**      except that in this case the destination rectangles specified for
+**      PatBlt() are all partially off the visible surface of the off-screen
+**      bitmap requiring that the result be clipped during the PatBlt()
+**      operation.
+*/
+void MtdsTest18() {
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
+   HBR  hbrHorizontal;
+   HBR  hbrVertical;
+   HBR  hbrFwDiagonal;
+   HBR  hbrBkDiagonal;
+   HBR  hbrCross;
+   HBR  hbrDiagCross;
+   HBR  hbrChecker;
+   HBR  hbrBlock;
+   HBR  hbrHalfTone;
+
+   /* We are going to be drawing onto the display and onto an off-screen bitmap.
+   ** So, get the DS handles that we are going to use and create the off-screen
+   ** bitmap. In this case, the off-screen bitmap is a color bitmap that has the
+   ** same dimensions as the display.
+   **/
+   hdsDisp = mtds.GetDisplayDs();
+   hdsTest = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(240, 320, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest18: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
+
+   /* Create pattern brushes illustrating the brush crosshatch patterns that are
+   ** available. The brushes are created with a green foreground and a black
+   ** background.
+   */
+   hbrHorizontal = mtds.CreatePatternBrush(idpsHorizontal, clrGreen, clrBlack);
+   hbrVertical   = mtds.CreatePatternBrush(idpsVertical,   clrGreen, clrBlack);
+   hbrFwDiagonal = mtds.CreatePatternBrush(idpsFwDiagonal, clrGreen, clrBlack);
+   hbrBkDiagonal = mtds.CreatePatternBrush(idpsBkDiagonal, clrGreen, clrBlack);
+   hbrCross      = mtds.CreatePatternBrush(idpsCross,      clrGreen, clrBlack);
+   hbrDiagCross  = mtds.CreatePatternBrush(idpsDiagCross,  clrGreen, clrBlack);
+   hbrChecker    = mtds.CreatePatternBrush(idpsChecker,    clrGreen, clrBlack);
+   hbrBlock      = mtds.CreatePatternBrush(idpsBlock,      clrGreen, clrBlack);
+   hbrHalfTone   = mtds.CreatePatternBrush(idpsHalfTone,   clrGreen, clrBlack);
+
+   /* Now, use PatBlt() to copy the patterns onto the off-screen bitmap. In this
+   ** case, the destination rectangles have all been specified such that they
+   ** are all partially off the visible surface of the off-screen bitmap,
+   ** requiring that they be clipped during the PatBlt() operation.
+   */
+   mtds.SetBrush(hdsTest, hbrHorizontal);
+   mtds.PatBlt(hdsTest, -30, -45, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrVertical);
+   mtds.PatBlt(hdsTest, 90, -45, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrFwDiagonal);
+   mtds.PatBlt(hdsTest, 210, -45, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrBkDiagonal);
+   mtds.PatBlt(hdsTest, -30, 115, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrCross);
+   mtds.PatBlt(hdsTest, 90, 115, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrDiagCross);
+   mtds.PatBlt(hdsTest, 210, 115, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrChecker);
+   mtds.PatBlt(hdsTest, -30, 275, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrBlock);
+   mtds.PatBlt(hdsTest, 90, 275, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsTest, hbrHalfTone);
+   mtds.PatBlt(hdsTest, 210, 275, 60, 90, ropPatCopy);
+
+   /* Now that we have rendered all of the patterns onto the off-screen bitmap,
+   ** use BitBlt() to copy the off-screen bitmap onto the display. In this case,
+   ** we are overwriting the entire display with the off-screen bitmap.
+   */
+   mtds.BitBlt(hdsDisp, 0, 0, 240, 320, hdsTest, 0, 0, ropSrcCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave.
+   */
+   mtds.DestroyBrush(hbrHorizontal);
+   mtds.DestroyBrush(hbrVertical);
+   mtds.DestroyBrush(hbrFwDiagonal);
+   mtds.DestroyBrush(hbrBkDiagonal);
+   mtds.DestroyBrush(hbrCross);
+   mtds.DestroyBrush(hbrDiagCross);
+   mtds.DestroyBrush(hbrChecker);
+   mtds.DestroyBrush(hbrBlock);
+   mtds.DestroyBrush(hbrHalfTone);
+
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest19
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demo illustrates the use of stock brushes and solid brushes as well
+**      as the use of a pattern brush. PatBlt() is used to render the various
+**      brushes onto the display to show their appearance. It is similar to
+**      MtdsTest15 above, except for the brushes that are rendered.
+**
+**      A solid brush is one where all the pixels of the brush pattern are the
+**      same color. A solid brush of any given color can be created by the user.
+**      Stock brushes are a small set of solid brushes that are predefined by
+**      the system and always available.
+*/
+void MtdsTest19() {
+   HDS hdsDisp;
+   HBR hbrMyRed;
+   HBR hbrMyGreen;
+   HBR hbrMyBlue;
+   HBR hbrBlock;
+
+   /* In this demo, we are only going to be drawing onto the display, so we only
+   ** need the display Ds.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+
+   /* Create some solid brushes and a pattern brush.
+   ** Note that there actually are red, green, and blue stock brushes defined by
+   ** the system, so these are somewhat redundant, but it illustrates creating a
+   ** solid brush. Also note that there is a special stock brush, hbrNull,
+   ** that is defined to suppress area fill when drawing a filled shape, such as
+   ** Rectangle().
+   */
+   hbrMyRed   = mtds.CreateSolidBrush(clrRed);
+   hbrMyGreen = mtds.CreateSolidBrush(clrGreen);
+   hbrMyBlue  = mtds.CreateSolidBrush(clrBlue);
+
+   hbrBlock = mtds.CreatePatternBrush(idpsBlock, clrRed, clrBlack);
+
+   /* Use PatBlt() to render the solid brushes onto the display.
+   */
+   mtds.SetBrush(hdsDisp, hbrMyRed);
+   mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrMyGreen);
+   mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrMyBlue);
+   mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatCopy);
+
+   /* Now use PatBlt() to render some of the stock brushes onto the display.
+   */
+   mtds.SetBrush(hdsDisp, hbrDkGray);
+   mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrMedGray);
+   mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrLtGray);
+   mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrWhite);
+   mtds.PatBlt(hdsDisp, 10, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrBlack);
+   mtds.PatBlt(hdsDisp, 80, 210, 60, 90, ropPatCopy);
+
+   /* Finally, use PatBlt() to render the pattern brush onto the display.
+   */
+   mtds.SetBrush(hdsDisp, hbrBlock);
+   mtds.PatBlt(hdsDisp, 150, 210, 60, 90, ropPatCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave. Stock brushes are predefined by the system and should not be
+   ** destroyed, although the system will ignore an attempt to do so. You only
+   ** need to destroy brushes that were created.
+   */
+   mtds.DestroyBrush(hbrMyRed);
+   mtds.DestroyBrush(hbrMyGreen);
+   mtds.DestroyBrush(hbrMyBlue);
+   mtds.DestroyBrush(hbrBlock);
+
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest20
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstrates the use of raster-ops with PatBlt() to create
+**      different effects.
+*/
+void MtdsTest20() {
+   HDS hdsDisp;
+   HBR hbrChecker;
+   HBR hbrHalfTone;
+
+   /* In this demo, we are only going to be drawing onto the display, so we only
+   ** need the display Ds.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+
+   /* Create a couple of pattern brushes that will provide the pattern to
+   ** illustrate using different raster-ops with PatBlt().
+   */
+   hbrChecker  = mtds.CreatePatternBrush(idpsChecker,  clrRed, clrBlack);
+   hbrHalfTone = mtds.CreatePatternBrush(idpsHalfTone, clrRed, clrBlack);
+
+   /* Illustrate the ropPatDstXor raster-op. This will XOR the pattern pixels
+   ** with the destination pixels. The brush contains red pixels and black
+   ** pixels. When the black pixels are XOR'd with the white pixels in the
+   ** display, they are left unchanged. When the red pixels are XOR'd with the
+   ** white pixels, the result will be cyan, so we get a checkerboard of cyan
+   ** and white squares.
+   */
+   mtds.SetBrush(hdsDisp, hbrWhite);
+   mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatCopy);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 10, 10, 60, 90, ropPatDstXor);
+
+   /* Illustrate the ropPatDstOr raster-op. This will OR the pattern pixels with
+   ** the destination pixels. The brush contains red and black pixels. When the
+   ** black pixels in the brush are OR'd with the pixels in the destination,
+   ** they are left unchanged, meaning that they are left green. The color red
+   ** has the following value: 0x00FF0000, the color green has the following
+   ** pattern: 0x0000FF00. When red and green are OR'd, the result is
+   ** 0x00FFFF00, which is the color yellow, so we get a checkerboard of green
+   ** and yellow squares.
+   */
+   mtds.SetBrush(hdsDisp, hbrGreen);
+   mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatCopy);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 80, 10, 60, 90, ropPatDstOr);
+
+   /* Illustrate the ropPatDstOrNot raster-op. This will OR the pattern pixels
+   ** with the destination pixels and then NOT the result. The brush contains
+   ** red and black pixels. When the black pixels in the brush are OR'd with the
+   ** pixels in the destination, they are left unchanged, resulting in green
+   ** pixels where the brush is black. This has the value 0x0000FF00. When this
+   ** is NOT'd, the result is 0xXXFF00FF, which is the color magenta. (ignore
+   ** the high 8 bits of the color as they are not used) The color red has the
+   ** following value: 0x00FF0000, the color green has the following pattern:
+   ** 0x0000FF00. When red and green are OR'd, the result is 0x00FFFF00. When
+   ** this is NOT'd, the result is 0xXX0000FF, which is the color blue. We get a
+   ** checkerboard of magenta and blue squares.
+   */
+   mtds.SetBrush(hdsDisp, hbrGreen);
+   mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatCopy);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 150, 10, 60, 90, ropPatDstOrNot);
+
+   /* Illustrate the ropPatDstAnd raster-op. This will AND the pattern pixels
+   ** with the destination pixels. The brush contains red and black pixels. When
+   ** the black pixels in the brush are AND'd with the white pixels currently in
+   ** the destination, the result is black. When the red pixels are AND'd with
+   ** the white pixels the result is red. So we end up with a checkerboard of
+   ** red and black squares.
+   */
+   mtds.SetBrush(hdsDisp, hbrWhite);
+   mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatCopy);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 10, 110, 60, 90, ropPatDstAnd);
+
+   /* Illustrate the ropPatDstAndNot raster-op. this will AND the pattern pixels
+   ** with the destination pixels and then NOT the result. When the black pixels
+   ** in the brush are AND'd with white pixels in the display, the result is
+   ** black. When black is NOT'd, the result is white. When the red pixels in
+   ** the brush are AND'd with the white pixels in the display, the result is
+   ** red. When red is NOT'd, the result is cyan. So, we end up with a
+   ** checkerboard of white and cyan squares, which, as expected, is the inverse
+   ** of the first pattern that was drawn.
+   */
+   mtds.SetBrush(hdsDisp, hbrWhite);
+   mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatCopy);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 80, 110, 60, 90, ropPatDstAndNot);
+
+   /* Illustrate the ropPatDstNotAnd raster-op. This will NOT the destination
+   ** pixels and then AND the result with the pattern. When the green in the
+   ** destination is NOT'd, the result is magenta. When the magenta is AND'd
+   ** with red, the result is red. So we get a checkerboard of red and black
+   ** pixels.
+   */
+   mtds.SetBrush(hdsDisp, hbrGreen);
+   mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatCopy);
+   mtds.SetBrush(hdsDisp, hbrChecker);
+   mtds.PatBlt(hdsDisp, 150, 110, 60, 90, ropPatDstNotAnd);
+
+   /* The next three sections simply copy the patterns to the display. This
+   ** shows the hbrLtBlueGray and hbrMedBlueGray stock brushes and the
+   ** hbrHalfTone pattern.
+   */
+   mtds.SetBrush(hdsDisp, hbrLtBlueGray);
+   mtds.PatBlt(hdsDisp, 10, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrMedBlueGray);
+   mtds.PatBlt(hdsDisp, 80, 210, 60, 90, ropPatCopy);
+
+   mtds.SetBrush(hdsDisp, hbrHalfTone);
+   mtds.PatBlt(hdsDisp, 150, 210, 60, 90, ropPatCopy);
+
+   /* Free all of the resources being used by this demonstration function before
+   ** we leave. Stock brushes are predefined by the system and should not be
+   ** destroyed, although the system will ignore an attempt to do so. You only
+   ** need to destroy brushes that were created.
+   */
+   mtds.DestroyBrush(hbrChecker);
+   mtds.DestroyBrush(hbrHalfTone);
+
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest21
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration illustrates drawing text on the display. It also
+**      shows all of the characters defined in the hfntConsole font.
+*/
+void MtdsTest21() {
+   HDS     hdsDisp;
+   int16_t xco;
+   int16_t yco;
+   int16_t dyco;
+   PNT     pntTxt;
+
+   /* Declare the strings that we are going to print.
+   */
+   char rgchTest1[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+   char rgchTest2[] = { "abcdefghijklmnopqrstuvwxyz" };
+   char rgchTest3[] = { "0123456789" };
+   char rgchTest4[] = { " !\"#$%&'()*+,-./:;<=>?" };
+   char rgchTest5[] = { "@[\\]^_`{|}~" };
+
+   char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+   char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+                        0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
+   char rgchTest8[] = { 0x7F };
+
+   /* Get the DS for drawing on the display and initialize it.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetFont(hdsDisp, hfntConsole);
+
+   /* We are going to be drawing several lines of text, so figure out how much
+   ** space needs to be allowed between lines. This can be done by calling
+   ** GetTextExtent() with any of the strings, as what we are looking for is the
+   ** Y extent of the text.
+   **
+   ** Unfortunately, Ver 1.04 of the display firmware has a bug where calls to
+   ** GetTextExtent() return incorrect values until after TextOut() has been
+   ** called the first time. It would be better to be able to call
+   ** GetTextExtent() before any text has been drawn, but it won't work
+   ** correctly in V1.04 firmware. This bug has been fixed in later versions of
+   ** the display device firmware.
+   */
+#if defined(DEAD)
+   mtds.GetTextExtent(hdsDisp, strlen(rgchTest1), rgchTest1, &pntTxt);
+   xil_printf("TextExtent: xco = %d yco = %d\n\r", pntTxt.xco, pntTxt.yco);
+#endif
+
+   /* We'll use a two pixel margin at the top and left of the screen.
+   */
+   xco = 2;
+   yco = 2;
+  
+   /* Print out the strings, advancing by a line each time.
+   */
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+
+   /* Use the line height plus one pixel of leading for the distance from the
+   ** origin of one line of text to the next. As mentioned above, it would be
+   ** more convenient to have set this up before the first call to TextOut().
+   ** Another option would have been to do a dummy write of a single character
+   ** to an off-screen location. The text output would get clipped so that
+   ** nothing is visible, but this would have the side effect of working around
+   ** the bug in GetTextExtent().
+   */
+   mtds.GetTextExtent(hdsDisp, strlen(rgchTest1), rgchTest1, &pntTxt);
+   dyco = pntTxt.yco + 1;
+
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest3), rgchTest3);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest4), rgchTest4);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest5), rgchTest5);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest6);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest7);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, 1, rgchTest8);
+   yco += dyco;
+
+   /* Release the DS before we leave so that it doesn't get lost.
+   */
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest22
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration shows drawing text and shows how text is clipped if
+**      portions of the printed string are off the visible surface of the
+**      bitmap.
+*/
+void MtdsTest22() {
+   HDS     hdsDisp;
+   int16_t xco;
+   int16_t yco;
+   int16_t dyco;
+   PNT     pnt;
+
+   char rgchTest1[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+   char rgchTest2[] = { "abcdefghijklmnopqrstuvwxyz" };
+   char rgchTest3[] = { "0123456789" };
+   char rgchTest4[] = { " !\"#$%&'()*+,-./:;<=>?" };
+   char rgchTest5[] = { "@[\\]^_`{|}~" };
+
+   char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+   char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+                        0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
+   char rgchTest8[] = { 0x7F };
+
+   /* Get the DS for drawing on the display and initialize it.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.SetBgColor(hdsDisp, clrBlack);
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetFont(hdsDisp, hfntConsole);
+
+   /* Test clipping at the top of the bitmap.
+   */
+   xco = -4;
+   yco = -2;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 88;
+   yco = -2;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   /* Use GetTextExtent() to determine the Y extent of the font and use that
+   ** to compute the vertical spacing from the origin of one line to the next.
+   */
+   mtds.GetTextExtent(hdsDisp, 8, rgchTest1, &pnt);
+   dyco = pnt.yco + 1;
+
+   xco = 180;
+   yco = -2;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+   yco += dyco;
+
+   xco = -4;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 88;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 180;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   /* Test clipping at the bottom of the bitmap.
+   */
+   xco = -4;
+   yco = 316;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 88;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 180;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+   yco -= dyco;
+
+   xco = -4;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 88;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   xco = 180;
+   mtds.TextOut(hdsDisp, xco, yco, 8, rgchTest1);
+
+   /* Test clipping on the left side of the bitmap.
+   */
+   xco = 2;
+   yco = 28;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   xco = -4;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   xco = -8;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   xco = -12;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   xco = -196;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   xco = -200;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   xco = -204;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   /* Test clipping on the right side of the bitmap.
+   */
+   xco = 2;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 32;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 36;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 40;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 224;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 228;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 232;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   xco = 236;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   /* Output some more characters just for something to do.
+   */
+   xco = 10;
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest3), rgchTest3);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest4), rgchTest4);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, strlen(rgchTest5), rgchTest5);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest6);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, 16, rgchTest7);
+   yco += dyco;
+
+   mtds.TextOut(hdsDisp, xco, yco, 1, rgchTest8);
+   yco += dyco;
+
+   /* Release the display DS before we leave so that it doesn't get lost.
+   */
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest23()
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration illustrates drawing text onto off-screen bitmaps. It
+**      also illustrates using BitBlt() to copy from a monochrome off-screen
+**      bitmap onto the display.
+*/
+void MtdsTest23() {
+   HDS     hdsDisp;
+   HDS     hdsColor;
+   HBMP    hbmpColor;
+   HDS     hdsMono;
+   HBMP    hbmpMono;
+   int16_t xco;
+   int16_t yco;
+   int16_t dyco;
+
+   /* Define the text strings that we are going to be printing.
+   */
+   char rgchTest1[] = { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+   char rgchTest2[] = { "abcdefghijklmnopqrstuvwxyz" };
+   char rgchTest3[] = { "0123456789" };
+   char rgchTest4[] = { " !\"#$%&'()*+,-./:;<=>?" };
+   char rgchTest5[] = { "@[\\]^_`{|}~" };
+
+   char rgchTest6[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+   char rgchTest7[] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+                        0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
+   char rgchTest8[] = { 0x7F };
+
+   /* Get the display DS for drawing on the display.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+
+   /* We're going to use a color off-screen bitmap. Create the bitmap and then
+   ** set it as the drawing surface for a DS so that we can draw on it.
+   */
+   hdsColor = mtds.GetDs();
+   hbmpColor = mtds.CreateBitmap(210, 80, 16);
+   mtds.SetDrawingSurface(hdsColor, hbmpColor);
+
+   /* We're also going to use a monochrome off-screen bitmap. Create this bitmap
+   ** and set it as the drawing surface for another DS so that we can draw on it
+   ** as well. A monochrome bitmap has a single bit per pixel, so we specify 1
+   ** for the pixel format when we create it.
+   */
+   hdsMono = mtds.GetDs();
+   hbmpMono = mtds.CreateBitmap(210, 80, 1);
+   mtds.SetDrawingSurface(hdsMono, hbmpMono);
+
+   /* Draw some text on the color bitmap and then BitBlt() the result to the
+   ** display.
+   */
+   mtds.SetFgColor(hdsColor, clrGreen);
+   mtds.SetBgColor(hdsColor, clrBlack);
+   mtds.SetDrwRop(hdsColor, drwCopyPen);
+   mtds.SetFont(hdsColor, hfntConsole);
+
+   xco = 2;
+   yco = 3;
+
+   /* To be strictly "correct" we should use GetTextExtent() to determine what
+   ** the vertical extent of the text is when printed. However, we actually know
+   ** that we are using the hfntConsole font and that its character height is 8
+   ** pixels. As long as we know the environment (i.e. version of display card
+   ** firmware, specific font, version of the font, etc.) we can cheat and use
+   ** the knowledge about the font. This may, of course, break if anything about
+   ** the system changes, so it is better overall to do it "correctly" by
+   ** calling GetTextExtent(). Certainly, if the font being used can change,
+   ** then GetTextExtent() must be used.
+   */
+   dyco = 9;
+
+   /* Drawing text onto an off-screen bitmap is exactly the same as drawing onto
+   ** the display bitmap, except that we use a different DS that has been set up
+   ** to use the off-screen bitmap as the drawing surface.
+   */
+   mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest3), rgchTest3);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest4), rgchTest4);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, strlen(rgchTest5), rgchTest5);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, 16, rgchTest6);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, 16, rgchTest7);
+   yco += dyco;
+
+   mtds.TextOut(hdsColor, xco, yco, 1, rgchTest8);
+   yco += dyco;
+
+   /* Copy the off-screen bitmap onto the display. Color off-screen bitmaps use
+   ** the same color format as the display, so no conversions need to occur when
+   ** copying from a color bitmap (off-screen) to a color bitmap (the display).
+   */
+   mtds.BitBlt(hdsDisp, 15, 5, 210, 80, hdsColor, 0, 0, ropSrcCopy);
+
+   /* Draw some text on the monochrome bitmap and then copy the result to the
+   ** display.
+   */
+   mtds.SetFgColor(hdsMono, clrWhite);
+   mtds.SetBgColor(hdsMono, clrBlack);
+   mtds.SetDrwRop(hdsMono, drwCopyPen);
+   mtds.SetFont(hdsMono, hfntConsole);
+
+   xco  = 1;
+   yco  = 2;
+   dyco = 9;
+
+   /* Again, there is no difference between drawing on different off-screen
+   ** bitmaps. We use a DS that has been set up with the appropriate off-screen
+   ** bitmap as the drawing surface. In this case, the drawing surface is a
+   ** monochrome bitmap. When drawing text or linear elements on a monochrome
+   ** bitmap, the foreground and background colors should be set to clrWhite or
+   ** clrBlack. If foreground is clrWhite and background is clrBlack, white
+   ** figures will be drawn on a black background. When foreground is clrBlack
+   ** and background is clrWhite, black figures will be drawn on a white
+   ** background. Background transparency mode works the same as with color
+   ** bitmaps. If the transparency mode is set to bkTransparent, background
+   ** pixels are not drawn.
+   */
+   mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest1), rgchTest1);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest2), rgchTest2);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest3), rgchTest3);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest4), rgchTest4);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, strlen(rgchTest5), rgchTest5);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, 16, rgchTest6);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, 16, rgchTest7);
+   yco += dyco;
+
+   mtds.TextOut(hdsMono, xco, yco, 1, rgchTest8);
+   yco += dyco;
+
+   /* Now, use BitBlt() to copy from the off-screen bitmap to the display
+   ** bitmap. When copying from a monochrome bitmap to a color bitmap, color
+   ** conversion occurs. Pixels that are set ('1') in the off-screen bitmap get
+   ** translated to the foreground color, pixels that are clear ('0') get
+   ** translated to the background color. The foreground and background colors
+   ** that are used are the ones set in the destination DS. Here, we are setting
+   ** the foreground color to white and the background color to dark gray. So
+   ** after we have performed the BitBlt() we will see white text on a dark gray
+   ** background.
+   */
+   mtds.SetFgColor(hdsDisp, clrWhite);
+   mtds.SetBgColor(hdsDisp, clrDkGray);
+   mtds.BitBlt(hdsDisp, 15, 120, 210, 80, hdsMono, 0, 0, ropSrcCopy);
+
+   /* Clean up. Destroy and release all resources used before we return so that
+   ** the memory isn't lost.
+   */
+   mtds.DestroyBitmap(hbmpColor);
+   mtds.DestroyBitmap(hbmpMono);
+   mtds.ReleaseDs(hdsColor);
+   mtds.ReleaseDs(hdsMono);
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest24()
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demo illustrates using DrawBitmap() to copy pixels from an
+**      off-screen bitmap to the display. DrawBitmap() works very similarly to
+**      BitBlt(). The primary difference is that DrawBitmap() doesn't use a
+**      raster operation code and it uses only the source and destination
+**      bitmaps, not the brush pattern. Instead of a raster-op, DrawBitmap()
+**      uses the background transparency mode and intensity to control how the
+**      result gets drawn. This particular test doesn't use background
+**      transparency or intensity, so it illustrates the simplest use of
+**      DrawBitmap(). In this case, it is essentially identical to BitBlt()
+**      using the ropSrcCopy raster-op.
+*/
+void MtdsTest24() {
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
+
+   /* We are drawing on the display and onto a color off-screen bitmap. Get the
+   ** two DS objects we will use, create the off-screen bitmap and set it as the
+   ** drawing surface for the DS we will use for drawing onto it.
+   */
+   hdsDisp  = mtds.GetDisplayDs();
+   hdsTest  = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(40, 40, 16);
+   if (hbmpTest == 0) {
+      xil_printf("MtdsTest24: CreateBitmap failed\n\r");
+   }
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
+
+   /* Initialize for drawing onto the off-screen bitmap
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penSolid);
+
+   /* Draw a pattern onto the off-screen bitmap. In this case, we draw a red
+   ** square with a bunch of green radial lines going from the center of the
+   ** square out to the edges.
+   */
+   mtds.SetFgColor(hdsTest, clrGreen);
+   for (int xco = 0; xco < 40; xco += 5) {
+      mtds.MoveTo(hdsTest, 20, 20);
+      mtds.LineTo(hdsTest, xco, 0);
+      mtds.MoveTo(hdsTest, 20, 20);
+      mtds.LineTo(hdsTest, xco, 39);
+   }
+   for (int yco = 0; yco < 40; yco += 5) {
+      mtds.MoveTo(hdsTest, 20, 20);
+      mtds.LineTo(hdsTest, 0, yco);
+      mtds.MoveTo(hdsTest, 20, 20);
+      mtds.LineTo(hdsTest, 39, yco);
+   }
+
+   mtds.SetFgColor(hdsTest, clrRed);
+   mtds.MoveTo(hdsTest, 0, 0);
+   mtds.LineTo(hdsTest, 39, 0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.LineTo(hdsTest, 0, 39);
+   mtds.LineTo(hdsTest, 0, 0);
+
+   /* Now that we have drawn the pattern into the off-screen bitmap, copy it to
+   ** the display multiple times using DrawBitmap().
+   */
+   mtds.DrawBitmap(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0);
+   mtds.DrawBitmap(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0);
+
+   /* Free the resources that we used before we return so that the memory
+   ** doesn't get lost.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest25()
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration illustrates the use of BitBlt() to copy pixels from a
+**      color bitmap to a monochrome bitmap and then back to the color bitmap.
+**      Essentially, this illustrates the color conversion that occurs when
+**      copying between bitmaps with different color formats.
+*/
+void MtdsTest25() {
+   HDS  hdsDisp;
+   HDS  hdsTest;
+   HBMP hbmpTest;
+
+   /* We're going to be drawing onto the display and onto a monochrome
+   ** off-screen bitmap. Get the two DS objects that we are going to use, create
+   ** the off-screen bitmap and set up one DS for drawing onto it. Note that a
+   ** monochrome bitmap has a single bit per pixel, so we specify a color format
+   ** of 1 when we create it.
+   */
+   hdsDisp  = mtds.GetDisplayDs();
+   hdsTest  = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(40, 40, 1);
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
+
+   /* Init the DS for drawing onto the display. In this case, we are not setting
+   ** the background color. It defaults to clrBlack, so we will be getting black
+   ** as the background color.
+   */
+   mtds.SetDrwRop(hdsDisp, drwCopyPen);
+   mtds.SetPen(hdsDisp, penSolid);
+
+   /* Draw the test pattern at the center of the display. This pattern is a pair
+   ** of green diagonal lines inside a red square.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+   mtds.MoveTo(hdsDisp, 100, 140);
+   mtds.LineTo(hdsDisp, 139, 179);
+   mtds.MoveTo(hdsDisp, 139, 140);
+   mtds.LineTo(hdsDisp, 100, 179);
+
+   mtds.SetFgColor(hdsDisp, clrRed);
+   mtds.MoveTo(hdsDisp, 100, 140);
+   mtds.LineTo(hdsDisp, 139, 140);
+   mtds.LineTo(hdsDisp, 139, 179);
+   mtds.LineTo(hdsDisp, 100, 179);
+   mtds.LineTo(hdsDisp, 100, 139);
+
+   /* Now, use BitBlt() to copy the pattern from the center of the display to
+   ** the off-screen bitmap. When doing a BitBlt() from a color bitmap to a
+   ** monochrome bitmap, pixels in the source that match the background color
+   ** are copied as a 0 bit, pixels in the source that don't match the
+   ** background color are copied as a 1 bit. The background color that is used
+   ** is the one set in the destination DS. In this case, the destination DS is
+   ** the one for the off-screen bitmap. The background color in this DS was
+   ** never set, so it defaults to clrBlack. So, in this case, pixels in the
+   ** source that are black get copied as 0, and pixels that are not black get
+   ** copied as 1.
+   */
+   mtds.BitBlt(hdsTest, 0, 0, 40, 40, hdsDisp, 100, 140, ropSrcCopy);
+
+   /* We are now going to use BitBlt() to copy from the monochrome off-screen
+   ** bitmap back to the display. This will cause a color conversion from
+   ** monochrome back to color. When copying from a monochrome bitmap to a color
+   ** bitmap, pixels in the monochrome bitmap that are 0 are copied as the
+   ** background color and pixels that are 1 are copied as the foreground color.
+   ** Here, we are setting the foreground color to white and the background
+   ** color to dark red. The result will be a white pattern on a dark red
+   ** background.
+   */
+   mtds.SetFgColor(hdsDisp, clrWhite);
+   mtds.SetBgColor(hdsDisp, clrDkRed);
+
+   /* Copy the pattern multiple time from the off-screen bitmap onto the
+   ** display.
+   */
+   mtds.BitBlt(hdsDisp,  10,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,  10, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   /* This would copy the off-screen bitmap over the original pattern drawn onto
+   ** the display. It is commented out so that the original pattern can be seen.
+   */
+   //mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  10, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 270, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   /* Free all of the resource used before we leave so that the memory isn't
+   ** lost.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsTest);
+   mtds.ReleaseDs(hdsDisp);
+}
+
+/* ------------------------------------------------------------ */
+/*** MtdsTest26()
+**
+**   Parameters:
+**      none
+**
+**   Return Values:
+**      none
+**
+**   Errors:
+**      none
+**
+**   Description:
+**      This demonstration illustrates drawing onto a monochrome off-screen
+**      bitmap and then using BitBlt() to copy the result onto the display.
+*/
+void MtdsTest26() {
+   HDS     hdsDisp;
+   HDS     hdsTest;
+   HBMP    hbmpTest;
+   int16_t co;
+
+   /* Get the DS for drawing on the display.
+   */
+   hdsDisp = mtds.GetDisplayDs();
+  
+   /* Get the DS for drawing onto the off-screen bitmap, create the off-screen
+   ** bitmap, and then set it as the drawing surface for the DS. Note that when
+   ** we create the bitmap we specify the pixel format as 1 bit per pixel to
+   ** make it a monochrome bitmap.
+   */
+   hdsTest = mtds.GetDs();
+   hbmpTest = mtds.CreateBitmap(40, 40, 1);
+   mtds.SetDrawingSurface(hdsTest, hbmpTest);
+
+   /* Set up the drawing parameters in the DS for drawing on the off-screen
+   ** bitmap. When drawing on a monochrome bitmap, the foreground color should
+   ** be white and the background color should be black. The calls to SetDrwRop,
+   ** SetPen, and SetFgColor here are actually redundant as the values being set
+   ** are the same as the default values set in a DS when it is first obtained.
+   */
+   mtds.SetDrwRop(hdsTest, drwCopyPen);
+   mtds.SetPen(hdsTest, penSolid);
+   mtds.SetFgColor(hdsTest, clrWhite);
+
+   /* Draw the graphical pattern on the monochrome bitmap. This draws a square
+   ** and a series of radial lines from the center of the square around the
+   ** edges. Note that the method is exactly the same as it would be if we were
+   ** drawing onto the display or onto a color bitmap.
+   */
+   for (co = 0; co < 40; co += 5) {
+      mtds.MoveTo(hdsTest, 19, 19);
+      mtds.LineTo(hdsTest, co,  0);
+      mtds.MoveTo(hdsTest, 19, 19);
+      mtds.LineTo(hdsTest, co, 39);
+      mtds.MoveTo(hdsTest, 19, 19);
+      mtds.LineTo(hdsTest,  0, co);
+      mtds.MoveTo(hdsTest, 19, 19);
+      mtds.LineTo(hdsTest, 39, co);
+   }
+
+   mtds.MoveTo(hdsTest,  0,  0);
+   mtds.LineTo(hdsTest, 39,  0);
+   mtds.LineTo(hdsTest, 39, 39);
+   mtds.LineTo(hdsTest,  0, 39);
+   mtds.LineTo(hdsTest,  0,  0);
+
+   /* Set up for copying from the monochrome bitmap to the display. When using
+   ** BitBlt() to copy from a monochrome bitmap to a color bitmap, a color
+   ** conversion occurs. Pixels in the monochrome bitmap that are 0 are copied
+   ** as the background color and pixels that are 1 are copied as the foreground
+   ** color. The foreground color is set to green. Since the background color
+   ** defaults to black and isn't being set, we will get a green pattern on a
+   ** black background. When doing a BitBlt() from one color format to another,
+   ** the color conversion is done first, and then the raster-op function is
+   ** applied.
+   */
+   mtds.SetFgColor(hdsDisp, clrGreen);
+
+   /* Copy the monochrome bitmap onto the display, tiling the surface.
+   */
+   mtds.BitBlt(hdsDisp,  10,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,   5, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   mtds.BitBlt(hdsDisp,  10,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,  50, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   mtds.BitBlt(hdsDisp,  10,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190,  95, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   mtds.BitBlt(hdsDisp,  10, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 140, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   mtds.BitBlt(hdsDisp,  10, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 185, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   mtds.BitBlt(hdsDisp,  10, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 230, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   mtds.BitBlt(hdsDisp,  10, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp,  55, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 100, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 145, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+   mtds.BitBlt(hdsDisp, 190, 275, 40, 40, hdsTest, 0, 0, ropSrcCopy);
+
+   /* Free all of the resources used before we leave so that the memory isn't
+   ** lost.
+   */
+   mtds.DestroyBitmap(hbmpTest);
+   mtds.ReleaseDs(hdsDisp);
+   mtds.ReleaseDs(hdsTest);
+}

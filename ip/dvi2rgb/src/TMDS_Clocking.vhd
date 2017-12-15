@@ -253,7 +253,7 @@ PixelClkBuffer: BUFR
       CLR => rBUFR_Rst, -- 1-bit input: Active high, asynchronous clear (Divided modes only)        
       I => CLK_OUT_5x_hdmi_clk      -- 1-bit input: Clock buffer input driven by an IBUF, MMCM or local interconnect
    );     
-rBUFR_Rst <= rMMCM_LckdRisingFlag; --pulse CLR on BUFR one the clock returns
+rBUFR_Rst <= rMMCM_LckdRisingFlag; --pulse CLR on BUFR once the clock returns
 
 MMCM_Reset: process(rLockLostRst, RefClk)
 begin

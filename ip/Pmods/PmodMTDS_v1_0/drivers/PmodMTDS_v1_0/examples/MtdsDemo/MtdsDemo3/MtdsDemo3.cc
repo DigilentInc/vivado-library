@@ -50,7 +50,7 @@
 /*                                                                            */
 /*     09/30/2016(GeneA):    Created                                          */
 /*     02/14/2017(SamB):     Removed Serial references to port to Xilinx SDK  */
-/*     12/15/2017(atangzwj): Validated for Vivado 2016.4                      */
+/*     12/19/2017(atangzwj): Validated for Vivado 2016.4                      */
 /*                                                                            */
 /******************************************************************************/
 
@@ -74,9 +74,6 @@
 /* ------------------------------------------------------------ */
 
 int itstCur = 1;
-
-uint32_t msDisp;
-uint32_t msCur;
 
 /* ------------------------------------------------------------ */
 /*                Local Variables                               */
@@ -116,8 +113,6 @@ bool MtdsTestFs7();
 */
 void setup() {
    bool fStat;
-
-   msDisp = millis() + 100000;
 
    /* It is possible that we are trying to initialize the interface to the
    ** display board before it has finished its power on initialization. If so,
@@ -170,61 +165,56 @@ void setup() {
 **      Arduino/MPIDE main sketch function
 */
 void loop() {
-   msCur = millis();
+   mtds.ClearDisplay(clrBlack);
 
-   if ((msCur - msDisp) > 3000) {
-      msDisp = msCur;
-
-      mtds.ClearDisplay(clrBlack);
-
-      switch (itstCur) {
-      case 1:
-         if (!MtdsTestFs1()) {
-            while (true);
-         }
-         break;
-
-      case 2:
-         if (!MtdsTestFs2()) {
-            while (true);
-         }
-         break;
-
-      case 3:
-         if (!MtdsTestFs3()) {
-            while (true);
-         }
-         break;
-
-      case 4:
-         if (!MtdsTestFs4()) {
-            while (true);
-         }
-         break;
-
-      case 5:
-         if (!MtdsTestFs5()) {
-            while (true);
-         }
-         break;
-
-      case 6:
-         if (!MtdsTestFs6()) {
-            while (true);
-         }
-         break;
-
-      case 7:
-         if (!MtdsTestFs7()) {
-            while (true);
-         }
-         break;
+   switch (itstCur) {
+   case 1:
+      if (!MtdsTestFs1()) {
+         while (true);
       }
-      itstCur += 1;
-      if (itstCur > itstMax) {
-         itstCur = 1;
+      break;
+
+   case 2:
+      if (!MtdsTestFs2()) {
+         while (true);
       }
+      break;
+
+   case 3:
+      if (!MtdsTestFs3()) {
+         while (true);
+      }
+      break;
+
+   case 4:
+      if (!MtdsTestFs4()) {
+         while (true);
+      }
+      break;
+
+   case 5:
+      if (!MtdsTestFs5()) {
+         while (true);
+      }
+      break;
+
+   case 6:
+      if (!MtdsTestFs6()) {
+         while (true);
+      }
+      break;
+
+   case 7:
+      if (!MtdsTestFs7()) {
+         while (true);
+      }
+      break;
    }
+   itstCur += 1;
+   if (itstCur > itstMax) {
+      itstCur = 1;
+   }
+   sleep(3);
 }
 
 /* ------------------------------------------------------------ */

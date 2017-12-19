@@ -26,7 +26,7 @@
 /*                                                                            */
 /*    09/29/2016(GeneA):    Created                                           */
 /*    02/14/2017(SamB):     Removed Serial references to port to Xilinx SDK   */
-/*    12/15/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    12/19/2017(atangzwj): Validated for Vivado 2016.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -48,9 +48,6 @@
 /* ------------------------------------------------------------ */
 
 int itstCur = 1;
-
-uint32_t msDisp;
-uint32_t msCur;
 
 bool fWriteTest1;
 bool fWriteTest2;
@@ -89,8 +86,6 @@ bool MtdsTestFs2();
 void setup() {
    bool fStat;
    DTM  dtmSet;
-
-   msDisp = millis() + 100000;
 
    /* It is possible that we are trying to initialize the interface to the
    ** display board before it has finished its power on initialization. If so,
@@ -160,31 +155,26 @@ void setup() {
 **      Arduino/MPIDE main sketch function
 */
 void loop() {
-   msCur = millis();
+   mtds.ClearDisplay(clrBlack);
 
-   if ((msCur - msDisp) > 3000) {
-      msDisp = msCur;
-
-      mtds.ClearDisplay(clrBlack);
-
-      switch (itstCur) {
-      case 1:
-         if (!MtdsTestFs1()) {
-            while (true);
-         }
-         break;
-
-      case 2:
-         if (!MtdsTestFs2()) {
-            while (true);
-         }
-         break;
+   switch (itstCur) {
+   case 1:
+      if (!MtdsTestFs1()) {
+         while (true);
       }
-      itstCur += 1;
-      if (itstCur > itstMax) {
-         itstCur = 1;
+      break;
+
+   case 2:
+      if (!MtdsTestFs2()) {
+         while (true);
       }
+      break;
    }
+   itstCur += 1;
+   if (itstCur > itstMax) {
+      itstCur = 1;
+   }
+   sleep(3);
 }
 
 /* ------------------------------------------------------------ */

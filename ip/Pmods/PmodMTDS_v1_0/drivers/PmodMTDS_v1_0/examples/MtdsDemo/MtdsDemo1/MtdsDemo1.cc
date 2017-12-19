@@ -22,7 +22,7 @@
 /*                                                                            */
 /*    09/28/2016(GeneA):    Adapted from an earlier test program.             */
 /*    02/14/2017(SamB):     Removed Serial references to port to Xilnx SDK    */
-/*    12/13/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    12/19/2017(atangzwj): Validated for Vivado 2016.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -46,9 +46,6 @@
 
 RCT rctDisp;
 int itstCur = 1;
-
-uint32_t msDisp;
-uint32_t msCur;
 
 /* ------------------------------------------------------------ */
 /*                Local Type Definitions                        */
@@ -112,8 +109,6 @@ void MtdsTest26();
 void setup() {
    bool fStat;
 
-   msDisp = millis() + 100000;
-
    rctDisp.xcoLeft   = 0;
    rctDisp.ycoTop    = 0;
    rctDisp.xcoRight  = 239;
@@ -130,7 +125,8 @@ void setup() {
       if (fStat) {
          xil_printf("mtds.begin() succeeded\n\r");
          break;
-      } else {
+      }
+      else {
          xil_printf("mtds.begin() failed\n\r");
          sleep(1);
       }
@@ -153,126 +149,122 @@ void setup() {
 **      Arduino/MPIDE main sketch function
 */
 void loop() {
-   msCur = millis();
-   if ((msCur - msDisp) > 3000) {
-      msDisp = msCur;
+   mtds.ClearDisplay(clrBlack);
 
-      mtds.ClearDisplay(clrBlack);
+   /* Uncomment the following line and assign the test number to itstCur to
+   ** cause a specific test to be repeatedly displayed.
+   */
+   //itstCur = 1;
+   switch (itstCur) {
+   case 1:
+      MtdsTest1();
+      break;
 
-      /* Uncomment the following line and assign the test number to itstCur to
-      ** cause a specific test to be repeatedly displayed.
-      */
-      //itstCur = 1;
-      switch (itstCur) {
-      case 1:
-         MtdsTest1();
-         break;
+   case 2:
+      MtdsTest2();
+      break;
 
-      case 2:
-         MtdsTest2();
-         break;
+   case 3:
+      MtdsTest3();
+      break;
 
-      case 3:
-         MtdsTest3();
-         break;
+   case 4:
+      MtdsTest4();
+      break;
 
-      case 4:
-         MtdsTest4();
-         break;
+   case 5:
+      MtdsTest5();
+      break;
 
-      case 5:
-         MtdsTest5();
-         break;
+   case 6:
+      MtdsTest6();
+      break;
 
-      case 6:
-         MtdsTest6();
-         break;
+   case 7:
+      MtdsTest7();
+      break;
 
-      case 7:
-         MtdsTest7();
-         break;
+   case 8:
+      MtdsTest8();
+      break;
 
-      case 8:
-         MtdsTest8();
-         break;
+   case 9:
+      MtdsTest9();
+      break;
 
-      case 9:
-         MtdsTest9();
-         break;
+   case 10:
+      MtdsTest10();
+      break;
 
-      case 10:
-         MtdsTest10();
-         break;
+   case 11:
+      MtdsTest11();
+      break;
 
-      case 11:
-         MtdsTest11();
-         break;
+   case 12:
+      MtdsTest12();
+      break;
 
-      case 12:
-         MtdsTest12();
-         break;
+   case 13:
+      MtdsTest13();
+      break;
 
-      case 13:
-         MtdsTest13();
-         break;
+   case 14:
+      MtdsTest14();
+      break;
 
-      case 14:
-         MtdsTest14();
-         break;
+   case 15:
+      MtdsTest15();
+      break;
 
-      case 15:
-         MtdsTest15();
-         break;
+   case 16:
+      MtdsTest16();
+      break;
 
-      case 16:
-         MtdsTest16();
-         break;
+   case 17:
+      MtdsTest17();
+      break;
 
-      case 17:
-         MtdsTest17();
-         break;
+   case 18:
+      MtdsTest18();
+      break;
 
-      case 18:
-         MtdsTest18();
-         break;
+   case 19:
+      MtdsTest19();
+      break;
 
-      case 19:
-         MtdsTest19();
-         break;
+   case 20:
+      MtdsTest20();
+      break;
 
-      case 20:
-         MtdsTest20();
-         break;
+   case 21:
+      MtdsTest21();
+      break;
 
-      case 21:
-         MtdsTest21();
-         break;
+   case 22:
+      MtdsTest22();
+      break;
 
-      case 22:
-         MtdsTest22();
-         break;
+   case 23:
+      MtdsTest23();
+      break;
 
-      case 23:
-         MtdsTest23();
-         break;
+   case 24:
+      MtdsTest24();
+      break;
 
-      case 24:
-         MtdsTest24();
-         break;
+   case 25:
+      MtdsTest25();
+      break;
 
-      case 25:
-         MtdsTest25();
-         break;
-
-      case 26:
-         MtdsTest26();
-         break;
-      }
-      itstCur += 1;
-      if (itstCur > itstMax) {
-         itstCur = 1;
-      }
+   case 26:
+      MtdsTest26();
+      break;
    }
+   itstCur += 1;
+   if (itstCur > itstMax) {
+      itstCur = 1;
+   }
+   sleep(3);
 }
 
 /* ------------------------------------------------------------ */

@@ -104,7 +104,7 @@ void UpdateProgressWheel();
 void setup() {
    bool fStat;
 
-   msPwCur = 0;//millis();
+   msPwCur = millis();
 
    /* Initialize the user interface library. It is quite possible that the
    ** display board hasn't completed its power on/reset initialization at this

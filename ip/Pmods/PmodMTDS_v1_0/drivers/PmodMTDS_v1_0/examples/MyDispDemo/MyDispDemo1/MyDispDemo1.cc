@@ -49,9 +49,6 @@ int itstMax = 4;
 
 int itstCur;
 
-uint32_t msCur;
-uint32_t msDisp;
-
 /* ------------------------------------------------------------ */
 /*                Forward Declarations                          */
 /* ------------------------------------------------------------ */
@@ -83,7 +80,6 @@ void setup() {
    bool fStat;
 
    itstCur = 1;
-   msDisp = millis() + 100000;
 
    /* The following initializes the library and the communications interface to
    ** the display board. It is quite possible that the display board hasn't
@@ -97,7 +93,8 @@ void setup() {
       if (fStat) {
          xil_printf("mydisp.begin() succeeded\n\r");
          break;
-      } else {
+      }
+      else {
          xil_printf("mydisp.begin() failed\n\r");
          sleep(1);
       }
@@ -120,41 +117,34 @@ void setup() {
 **      Arduino/MPIDE main sketch function
 */
 void loop() {
-   msCur = millis();
-   if ((msCur - msDisp) > 3000) {
-      /* If it has been at least 3 seconds since the last time we came through
-      ** here go to the next test case.
-      */
-      msDisp = msCur;
+   mydisp.clearDisplay(clrBlack);
 
-      mydisp.clearDisplay(clrBlack);
+   /* Uncomment the following line and assign the test number to itstCur to
+   ** cause a specific test to be repeatedly displayed.
+   */
+   //itstCur = 1;
+   switch (itstCur) {
+   case 1:
+      MyDispTest1();
+      break;
 
-      /* Uncomment the following line and assign the test number to itstCur to
-      ** cause a specific test to be repeatedly displayed.
-      */
-      //itstCur = 1;
-      switch (itstCur) {
-      case 1:
-         MyDispTest1();
-         break;
+   case 2:
+      MyDispTest2();
+      break;
 
-      case 2:
-         MyDispTest2();
-         break;
+   case 3:
+      MyDispTest3();
+      break;
 
-      case 3:
-         MyDispTest3();
-         break;
-
-      case 4:
-         MyDispTest4();
-         break;
-      }
-      itstCur += 1;
-      if (itstCur > itstMax) {
-         itstCur = 1;
-      }
+   case 4:
+      MyDispTest4();
+      break;
    }
+   itstCur += 1;
+   if (itstCur > itstMax) {
+      itstCur = 1;
+   }
+   sleep(3);
 }
 
 /* ------------------------------------------------------------ */

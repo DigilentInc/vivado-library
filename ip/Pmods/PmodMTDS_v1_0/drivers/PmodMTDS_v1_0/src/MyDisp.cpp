@@ -18,6 +18,7 @@
 /*  Revision History:															*/
 /*																				*/
 /*	2016-03-25(GeneA): created.													*/
+/*  12/20/2017(atangzwj): Replaced delay functions with sleep                   */
 /*																				*/
 /********************************************************************************/
 
@@ -36,6 +37,7 @@
 #include	<string.h>
 
 #include	"MyDisp.h"
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*				Local Type Definitions							*/
@@ -158,7 +160,7 @@ bool MYDISP::begin() {
 		}
 
 #if !defined(__SIM__)
-		delay(1000);
+		sleep(1);
 #endif
 	}
 

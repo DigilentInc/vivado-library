@@ -24,6 +24,7 @@
 /*		to make library portable between platforms.	This conditional	*/
 /*		was really to put out debugging information when testing under	*/
 /*		MPIDE															*/
+/* 12/20/2017(atangzwj): Replaced delay functions with sleep            */
 /*																		*/
 /************************************************************************/
 
@@ -39,6 +40,7 @@
 #include	"mtds.h"
 #include	"MtdsCore.h"
 #include	"MtdsHal.h"
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*				Local Type Definitions							*/
@@ -288,7 +290,7 @@ bool MtdsReadRhdr(uint8_t * pb) {
 	*/
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}
 		bRcv = MtdsHalPutSpiByte(chnCmdRead);
@@ -386,7 +388,7 @@ bool MtdsReadDhdr(uint8_t * pb) {
 	*/
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}
 		bRcv = MtdsHalPutSpiByte(chnCmdRead);
@@ -532,7 +534,7 @@ bool MtdsWaitUntilShieldIdle() {
 
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}
 		MtdsHalEnableSlave(true);
@@ -580,7 +582,7 @@ bool MtdsWaitUntilShieldBusy() {
 
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}
 		MtdsHalEnableSlave(true);
@@ -627,7 +629,7 @@ bool MtdsWaitUntilShieldDone() {
 
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}
 		MtdsHalEnableSlave(true);
@@ -681,7 +683,7 @@ uint8_t MtdsWaitUntilShieldReady() {
 
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}		
 		MtdsHalEnableSlave(true);
@@ -734,7 +736,7 @@ bool MtdsWaitUntilShieldSync() {
 
 	tmsStart = MtdsHalTmsElapsed();
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}		
 		MtdsHalEnableSlave(true);
@@ -782,7 +784,7 @@ bool MtdsResumeChannel() {
 	tmsStart = MtdsHalTmsElapsed();
 
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}		
 		MtdsHalEnableSlave(true);
@@ -830,7 +832,7 @@ uint8_t MtdsBeginUpdate() {
 	tmsStart = MtdsHalTmsElapsed();
 
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}		
 		MtdsHalEnableSlave(true);
@@ -880,7 +882,7 @@ uint8_t	MtdsQueryUpdate() {
 	uint8_t		bTmp;
 	uint8_t		sta;
 
-	MtdsHalDelayUs(tusPacketDelay);
+	usleep(tusPacketDelay);
 	while (!MtdsHalSpiReady()) {
 	}		
 	MtdsHalEnableSlave(true);
@@ -902,7 +904,7 @@ uint8_t	MtdsQueryUpdate() {
 		** is doing its reset initialization.
 		*/
 		while (true) {
-			MtdsHalDelayUs(tusPacketDelay);
+			usleep(tusPacketDelay);
 			while (!MtdsHalSpiReady()) {
 			}		
 			MtdsHalEnableSlave(true);

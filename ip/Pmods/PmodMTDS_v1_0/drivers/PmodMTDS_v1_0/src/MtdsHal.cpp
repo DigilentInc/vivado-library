@@ -16,6 +16,7 @@
 /*																		*/
 /*	2016-10-1(TommyK): Created based on MtdsHal.cpp for Arduino			*/
 /*	2016-10-30(SamB): Code/comment cleanup, change Init function name	*/
+/*  12/20/2017(atangzwj): Replaced delay functions with sleep           */
 /*																		*/
 /************************************************************************/
 
@@ -58,6 +59,7 @@ XSpi_Config MTDSSPIConfig =
 #include	"ProtoDefs.h"
 #include	"mtds.h"
 #include	"MtdsHal.h"
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*				Local Type Definitions							*/
@@ -333,27 +335,6 @@ uint32_t MtdsHalTmsElapsed() {
 }
 
 /* ------------------------------------------------------------ */
-/***	MtdsHalDelayMs(tmsDelay)
-**
-**	Parameters:
-**		tmsDelay	- number of milliseconds to delay
-**
-**	Return Values:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Delay the specified number of milliseconds and then return
-*/
-
-void MtdsHalDelayMs(uint32_t tmsDelay) {
-
-	delay(tmsDelay);
-}
-
-/* ------------------------------------------------------------ */
 /***	MtdsHalTusElapsed()
 **
 **	Parameters:
@@ -375,29 +356,6 @@ void MtdsHalDelayMs(uint32_t tmsDelay) {
 uint32_t MtdsHalTusElapsed() {
 
 	return micros();
-}
-
-/* ------------------------------------------------------------ */
-/***	MtdsHalDelayUs(usDelay)
-**
-**	Parameters:
-**		usDelay		- number of microseconds to delay
-**
-**	Return Values:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Delay the specified number of microseconds and then return. The delay time does not
-**		need to be very precise, but must be at least as long as the number of microseconds
-**		requested.
-*/
-
-void MtdsHalDelayUs(uint32_t usDelay) {
-
-	delayMicroseconds(usDelay);
 }
 
 /* ------------------------------------------------------------ */

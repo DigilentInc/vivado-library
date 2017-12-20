@@ -18,6 +18,8 @@
 /*																		*/
 /*	2016-10-01(TommyK): created											*/
 /*	2016-10-30(SamB): Code/comment cleanup, change Init function name	*/
+/*  12/20/2017(atangzwj): Removed delay functions, restored micros      */
+/*                        function                                      */
 /*																		*/
 /************************************************************************/
 
@@ -49,7 +51,6 @@ static uint32_t mil_cnt;
 static uint32_t mic_cnt;
 
 int inline millis(){
-	//return 1;
 	uint32_t c = XTmrCtr_ReadReg(Timer.BaseAddress, 0, XTC_TCR_OFFSET)/100000;
 	if (c<mil_delta){
 		mil_cnt+=0xFFFFFFFF-mil_delta+c;
@@ -59,28 +60,17 @@ int inline millis(){
 	}
 	mil_delta=c;
 	return mil_cnt;
-	//return (XTmrCtr_GetValue(&Timer,0))/(100000);
 }
 int inline micros(){
-	return 1;
-//	u32 c=XTmrCtr_ReadReg(Timer.BaseAddress, 0, XTC_TCR_OFFSET)/100;
-//	if (c<mic_delta){
-//			mic_cnt+=0xFFFFFFFF-mic_delta+c;
-//		}
-//		else{
-//			mic_cnt+=c-mic_delta;
-//		}
-//		mic_delta=c;
-//		return mic_cnt;
-	//return ((u64)XTmrCtr_GetValue(&Timer, 1)<<32|XTmrCtr_GetValue(&Timer,0))/(100000000/1000000);
-}
-void inline delayMicroseconds(int microseconds){
-//	int start=micros();
-//	while(micros()-start<microseconds);
-}
-void inline delay(int milliseconds){
-	int start=millis();
-	while(millis()-start<milliseconds);
+	u32 c=XTmrCtr_ReadReg(Timer.BaseAddress, 0, XTC_TCR_OFFSET)/100;
+	if (c<mic_delta){
+		mic_cnt+=0xFFFFFFFF-mic_delta+c;
+	}
+	else{
+		mic_cnt+=c-mic_delta;
+	}
+	mic_delta=c;
+	return mic_cnt;
 }
 
 #define	pinMtdsSelStd		1				// standard SPI SS pin

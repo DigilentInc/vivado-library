@@ -19,6 +19,7 @@
 /*	2016-09-27(GeneApperson) Changed conditionals from __SIM__ to MPIDE to make	*/
 /*		it more explicit that it was for generating debugging output when being	*/
 /*		built under MPIDE for testing.											*/
+/*  12/20/2017(atangzwj): Replaced delay functions with sleep                   */
 /*																				*/
 /********************************************************************************/
 
@@ -37,6 +38,7 @@
 #include	"mtds.h"
 #include	"MtdsCore.h"
 #include	"MtdsHal.h"
+#include "sleep.h"
 
 /* ------------------------------------------------------------ */
 /*				Local Type Definitions							*/
@@ -175,13 +177,13 @@ bool MTDS::begin(int pinSelInit, uint32_t frqSpi) {
 	MtdsHalInitSpi(_SPI_BASE, frqSpi);
 
 	if (MtdsHalResetDisplay(pinSelInit)) {
-		MtdsHalDelayMs(2000);
+		sleep(2);
 	}
 
 	/* We need to establish communication with the shield. Depending on how quickly
 	** we got called, the shield might still be doing its power on reset processing.
 	*/
-	MtdsHalDelayMs(1);
+	usleep(1000);
 	if (!MtdsSyncChannel()) {
 		return false;
 	}
@@ -196,7 +198,7 @@ bool MTDS::begin(int pinSelInit, uint32_t frqSpi) {
 			if (cntInit < 0) {
 				return false;
 			}
-			MtdsHalDelayMs(1000);
+			sleep(1);
 		}
 	}
 
@@ -301,7 +303,7 @@ bool MTDS::MtdsSyncChannel() {
 	cntSync = 0;
 	cntByte = 0;
 	while (cntSync < cbSyncCount) {
-		MtdsHalDelayUs(tusSyncDelay);
+		usleep(tusSyncDelay);
 		while (!MtdsHalSpiReady()) {
 		}		
 		MtdsHalEnableSlave(true);
@@ -336,7 +338,7 @@ bool MTDS::MtdsSyncChannel() {
 	*/
 	cntStart = 0;
 	while (true) {
-		MtdsHalDelayUs(tusPacketDelay);
+		usleep(tusPacketDelay);
 		while (!MtdsHalSpiReady()) {
 		}		
 		MtdsHalEnableSlave(true);

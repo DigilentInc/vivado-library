@@ -56,7 +56,6 @@ Warnings
 
 2) The demo programs and drivers will fail if the PmodMTDS IP in Vivado is
    is renamed from the default (PmodMTDS_0).
-
 -------------------------------------------------------------------------------
 
 

@@ -23,6 +23,7 @@
 /*    09/28/2016(GeneA):    Adapted from an earlier test program.             */
 /*    02/14/2017(SamB):     Removed Serial references to port to Xilnx SDK    */
 /*    12/19/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/09/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 

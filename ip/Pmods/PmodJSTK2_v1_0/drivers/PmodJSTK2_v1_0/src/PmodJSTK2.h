@@ -16,6 +16,7 @@
 /*   06/01/2016(SamL):     Created                                            */
 /*   08/10/2017(ArtVVB):   Validated for Vivado 2015.4                        */
 /*   11/02/2017(atangzwj): Validated for Vivado 2016.4                        */
+/*   01/24/2018(atangzwj): Validated for Vivado 2017.4                        */
 /*                                                                            */
 /******************************************************************************/
 
@@ -115,7 +116,6 @@
 typedef struct PmodJSTK2 {
    XSpi SpiDevice;
    u32 GpioAddr;
-   u32 ItersPerUSec;
 } PmodJSTK2;
 
 // Data Type
@@ -134,8 +134,7 @@ typedef struct JSTK2_Position {
 
 /************ Function Prototypes ************/
 
-void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address,
-      u32 cpuClockFreqHz);
+void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address);
 void JSTK2_end(PmodJSTK2* InstancePtr);
 int JSTK2_SPIInit(XSpi *SpiInstancePtr);
 

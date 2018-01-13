@@ -16,12 +16,14 @@
 /*   06/01/2016(SamL):     Created                                            */
 /*   08/10/2017(ArtVVB):   Validated for Vivado 2015.4                        */
 /*   11/02/2017(atangzwj): Validated for Vivado 2016.4                        */
+/*   01/13/2018(atangzwj): Validated for Vivado 2017.4                        */
 /*                                                                            */
 /******************************************************************************/
 
 /***************************** Include Files *******************************/
 
 #include "PmodJSTK2.h"
+#include "sleep.h"
 
 /************************** Function Definitions ***************************/
 
@@ -42,15 +44,13 @@ XSpi_Config JSTK2Config =
 
 /* ------------------------------------------------------------ */
 /***    void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address,
-**            u32 GPIO_Address, u32 cpuClockFreqHz)
+**            u32 GPIO_Address)
 **
 **      Parameters:
 **              InstancePtr:    A PmodJSTK2 object to start
 **              SPI_Address:    The base address of the PmodJSTK2 SPI Device
 **              GPIO_Address:   The base address of the PmodJSTK2 Chip-Select
 **                              GPIO Device
-**              cpuClockFreqHz: The clock speed of the processor, used to scale
-**                              JSTK2_delay in microblaze implementations
 **
 **      Return Value:
 **              none
@@ -58,14 +58,12 @@ XSpi_Config JSTK2Config =
 **      Description:
 **              Initialize the JSTK2 IP
 */
-void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address,
-      u32 cpuClockFreqHz) {
+void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address) {
    JSTK2Config.BaseAddress = SPI_Address;
-   InstancePtr->ItersPerUSec = cpuClockFreqHz / 1000000;
    InstancePtr->GpioAddr = GPIO_Address;
    JSTK2_SPIInit(&InstancePtr->SpiDevice);
-   Xil_Out32(InstancePtr->GpioAddr + 4, 0b0);
-   Xil_Out32(InstancePtr->GpioAddr, 0b1);
+   Xil_Out32(InstancePtr->GpioAddr + 4, 0x0);
+   Xil_Out32(InstancePtr->GpioAddr, 0x1);
 }
 
 /* ------------------------------------------------------------ */
@@ -654,46 +652,17 @@ void JSTK2_getData(PmodJSTK2* InstancePtr, u8* recv, u8 nData) {
    // Bring chip select low
    Xil_Out32(InstancePtr->GpioAddr, 0b0);
 
-   JSTK2_delay(InstancePtr, 5); // 15 us delay from cs->low to first byte
+   usleep(5); // 5 us delay from cs->low to first byte
 
    for (i = 0; i < nData; i++) {
-      JSTK2_delay(InstancePtr, 10); // 10 us delay between bytes
+      usleep(10); // 10 us delay between bytes
       XSpi_Transfer(&InstancePtr->SpiDevice, &recv[i], &recv[i], 1);
    }
 
-   JSTK2_delay(InstancePtr, 20); // 20 us delay from last packet to cs->high
+   usleep(20); // 20 us delay from last packet to cs->high
 
    // Bring chip select high
    Xil_Out32(InstancePtr->GpioAddr, 0b1);
 
-   JSTK2_delay(InstancePtr, 25);
-}
-
-/* ------------------------------------------------------------ */
-/***    void JSTK2_delay(PmodJSTK2 *InstancePtr, int micros)
-**
-**      Parameters:
-**              InstancePtr: A PmodJSTK2 device containing the scaling parameter
-**              micros:      Amount of microseconds to delay
-**
-**      Return Value:
-**              none
-**
-**      Errors:
-**              none
-**
-**      Description:
-**              delays for a given amount of microseconds. MicroBlaze variant
-**              adapted from sleep and MB_Sleep
-*/
-void JSTK2_delay(PmodJSTK2 *InstancePtr, int micros) {
-   int i;
-
-#ifdef __MICROBLAZE__
-   for(i = 0; i < (InstancePtr->ItersPerUSec*micros); i++) {
-      asm("");
-   }
-#else
-   usleep(micros);
-#endif
+   usleep(25);
 }

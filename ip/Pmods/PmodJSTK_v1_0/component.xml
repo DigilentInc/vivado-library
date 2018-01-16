@@ -885,7 +885,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>fd42fcca</spirit:value>
+            <spirit:value>6114fc64</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -910,7 +910,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>8ce1d1ff</spirit:value>
+            <spirit:value>964aef1c</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2064,11 +2064,11 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodJSTK_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
+      <xilinx:coreRevision>5</xilinx:coreRevision>
       <xilinx:upgrades>
         <xilinx:canUpgradeFrom>natinst.com:user:PmodJSTK:1.0</xilinx:canUpgradeFrom>
       </xilinx:upgrades>
-      <xilinx:coreCreationDateTime>2018-01-13T19:32:38Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2018-01-16T20:08:43Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodJSTK:1.0_ARCHIVE_LOCATION">c:/Forked-vivLib/ip/Pmods/PmodJSTK_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodJSTK:1.0_ARCHIVE_LOCATION">c:/Forked-vivLib/ip/Pmods/PmodJSTK_v1_0</xilinx:tag>
@@ -2127,7 +2127,7 @@
       <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="000e84e6"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="f7885f86"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="32a0367c"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="77b0a5f0"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="34f77fd8"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="ca5191e7"/>
     </xilinx:packagingInfo>

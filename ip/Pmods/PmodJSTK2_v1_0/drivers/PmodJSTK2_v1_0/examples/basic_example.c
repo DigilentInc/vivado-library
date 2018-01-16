@@ -22,6 +22,7 @@
 /*                                                                            */
 /*    06/27/2016(SamL):     Created                                           */
 /*    11/01/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/13/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 /* Baud Rates:                                                                */
@@ -31,11 +32,10 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include <stdio.h>
-#include "xil_printf.h"
 #include "PmodJSTK2.h"
 #include "sleep.h"
 #include "xil_cache.h"
+#include "xil_printf.h"
 
 #ifdef __MICROBLAZE__
 #define CPU_CLOCK_FREQ_HZ (XPAR_CPU_CORE_CLOCK_FREQ_HZ)
@@ -65,8 +65,7 @@ void DemoInitialize() {
    JSTK2_begin(
       &joystick,
       XPAR_PMODJSTK2_0_AXI_LITE_SPI_BASEADDR,
-      XPAR_PMODJSTK2_0_AXI_LITE_GPIO_BASEADDR,
-      CPU_CLOCK_FREQ_HZ
+      XPAR_PMODJSTK2_0_AXI_LITE_GPIO_BASEADDR
    );
 
    // Set inversion register to invert only the Y axis
@@ -92,7 +91,7 @@ void DemoRun() {
          (rawdata.Jstk != 0) ? "\tJoystick pressed" : "",
          (rawdata.Trigger != 0) ? "\tTrigger pressed" : ""
       );
-      JSTK2_delay(&joystick, 50000);
+      usleep(50000);
 
       // Set led from btns and axis
       if (rawdata.Jstk != 0 || rawdata.Trigger != 0) {

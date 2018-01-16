@@ -15,8 +15,9 @@
 /* Revision History:                                                          */
 /*                                                                            */
 /*    06/09/2016(ABrown):   Created                                           */
-/*    05/08/2017(jPeyron):  updated                                           */
+/*    05/08/2017(jPeyron):  Updated                                           */
 /*    11/10/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/13/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -35,7 +36,7 @@ XIic_Config TMP3_Config =
 };
 
 /* ------------------------------------------------------------ */
-/*** void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address)
+/*** void TMP3_begin(PmodTMP3 *InstancePtr, u32 IIC_Address, u8 Chip_Address)
 **
 **   Parameters:
 **      InstancePtr:  A PmodTMP3 object to start
@@ -51,7 +52,7 @@ XIic_Config TMP3_Config =
 **   Description:
 **      Initialize the PmodTMP3.
 */
-void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address) {
+void TMP3_begin(PmodTMP3 *InstancePtr, u32 IIC_Address, u8 Chip_Address) {
    TMP3_Config.BaseAddress = IIC_Address;
    InstancePtr->chipAddr = Chip_Address;
    TMP3_IICInit(&InstancePtr->TMP3Iic);
@@ -60,7 +61,7 @@ void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address) {
 }
 
 /* ------------------------------------------------------------ */
-/*** void TMP3_end(PmodTMP3* InstancePtr)
+/*** void TMP3_end(PmodTMP3 *InstancePtr)
 **
 **   Parameters:
 **      InstancePtr: PmodTMP3 object to stop
@@ -74,7 +75,7 @@ void TMP3_begin(PmodTMP3* InstancePtr, u32 IIC_Address, u8 Chip_Address) {
 **   Description:
 **      Stops the device
 */
-void TMP3_end(PmodTMP3* InstancePtr) {
+void TMP3_end(PmodTMP3 *InstancePtr) {
    XIic_Stop(&InstancePtr->TMP3Iic);
 }
 
@@ -94,7 +95,7 @@ void TMP3_end(PmodTMP3* InstancePtr) {
 **      Initializes the PmodTMP3 IIC.
 */
 
-int TMP3_IICInit(XIic* IicInstancePtr) {
+int TMP3_IICInit(XIic *IicInstancePtr) {
    int Status;
 
    Status = XIic_CfgInitialize(IicInstancePtr, &TMP3_Config,
@@ -117,12 +118,12 @@ int TMP3_IICInit(XIic* IicInstancePtr) {
 }
 
 /* ------------------------------------------------------------ */
-/*** void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData)
+/*** void TMP3_ReadIIC(PmodTMP3 *InstancePtr, u8 reg, u8 *Data, int nData)
 **
 **   Parameters:
 **      InstancePtr: PmodTMP3 object to initialize
 **      reg:         Register to read from
-**      Data:        Pointer to recieve buffer
+**      Data:        Pointer to receive buffer
 **      nData:       Number of data values to read
 **
 **   Return Value:
@@ -134,7 +135,7 @@ int TMP3_IICInit(XIic* IicInstancePtr) {
 **   Description:
 **      Reads nData data bytes from register reg
 */
-void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData) {
+void TMP3_ReadIIC(PmodTMP3 *InstancePtr, u8 reg, u8 *Data, int nData) {
    int Status;
    Status = XIic_Start(&InstancePtr->TMP3Iic);
    if (Status != XST_SUCCESS) {
@@ -156,7 +157,7 @@ void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData) {
 }
 
 /* ------------------------------------------------------------ */
-/*** void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8* Data, int nData)
+/*** void TMP3_WriteIIC(PmodTMP3 *InstancePtr, u8 reg, u8 *Data, int nData)
 **
 **   Parameters:
 **      InstancePtr: PmodTMP3 object to initialize
@@ -173,7 +174,7 @@ void TMP3_ReadIIC(PmodTMP3* InstancePtr, u8 reg, u8 *Data, int nData) {
 **   Description:
 **      Writes nData data bytes to register reg
 */
-void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8* Data, int nData) {
+void TMP3_WriteIIC(PmodTMP3 *InstancePtr, u8 reg, u8 *Data, int nData) {
    u8 out[10];
    out[0] = reg;
    out[1] = *Data;
@@ -196,7 +197,7 @@ void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8* Data, int nData) {
 }
 
 /* ------------------------------------------------------------ */
-/*** void TMP3_config(PmodTMP3* InstancePtr, u8 configuration)
+/*** void TMP3_config(PmodTMP3 *InstancePtr, u8 configuration)
 **
 **   Parameters:
 **      InstancePtr:   A PmodTMP3 object to start
@@ -212,14 +213,14 @@ void TMP3_WriteIIC(PmodTMP3* InstancePtr, u8 reg, u8* Data, int nData) {
 **   Description:
 **      Configures the PmodTMP3's Microchip TCN75A. Does not need to be called on startup.
 */
-void TMP3_config(PmodTMP3* InstancePtr, u8 configuration) {
+void TMP3_config(PmodTMP3 *InstancePtr, u8 configuration) {
    u8 buf[1];
    buf[0] = configuration;
    TMP3_WriteIIC(InstancePtr, TMP3_REG_CONFIG, buf, 1);
 }
 
 /* ------------------------------------------------------------ */
-/*** double TMP3_getTemp(PmodTMP3* InstancePtr)
+/*** double TMP3_getTemp(PmodTMP3 *InstancePtr)
 **
 **   Parameters:
 **      InstancePtr: A PmodTMP3 object to start
@@ -231,9 +232,9 @@ void TMP3_config(PmodTMP3* InstancePtr, u8 configuration) {
 **      none
 **
 **   Description:
-**      Requests and returns the temperature off of the Pmod TMP3
+**      Requests and returns the temperature off of the PmodTMP3
 */
-double TMP3_getTemp(PmodTMP3* InstancePtr) {
+double TMP3_getTemp(PmodTMP3 *InstancePtr) {
    double tempResult;
    u16 uResult = 0;
    int wResult = 0;
@@ -243,7 +244,7 @@ double TMP3_getTemp(PmodTMP3* InstancePtr) {
    TMP3_ReadIIC(InstancePtr, TMP3_REG_TEMP, buf, 2);
 
    uResult = buf[1] | (buf[0] << 8);
-   if (buf[0] & 0x80 == 0) {
+   if ((buf[0] & 0x80) == 0) {
       // Result is positive
       wResult = (int) uResult;
    } else {

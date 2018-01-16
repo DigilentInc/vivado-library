@@ -16,6 +16,7 @@
 /*	  06/01/2016(SamL):     Created                                           */
 /*	  08/21/2017(ArtVVB):   Validated for Vivado 2015.4                       */
 /*    11/03/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/13/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -65,8 +66,7 @@ typedef struct JSTK_DataPacket {
 
 /************ Function Prototypes ************/
 
-void JSTK_begin(PmodJSTK *InstancePtr, u32 SPI_Address, u32 GPIO_Address,
-      u32 cpuClockFreqHz);
+void JSTK_begin(PmodJSTK *InstancePtr, u32 SPI_Address, u32 GPIO_Address);
 void JSTK_end(PmodJSTK *InstancePtr);
 int JSTK_SPIInit(XSpi *SpiInstancePtr);
 
@@ -76,6 +76,5 @@ JSTK_DataPacket JSTK_getDataPacket(PmodJSTK *InstancePtr);
 
 // Utility functions
 void JSTK_getData(PmodJSTK *InstancePtr, u8* recv, u8 nData);
-void JSTK_delay(PmodJSTK *InstancePtr, int micros);
 
 #endif // PMODJSTK_H

@@ -12,11 +12,12 @@
 /* used with the PmodTMP3 IP core.                                            */
 /*                                                                            */
 /******************************************************************************/
-/*  Revision History:                                                         */
+/* Revision History:                                                          */
 /*                                                                            */
-/*     06/09/2016(ABrown):   Created                                          */
-/*     05/08/2017(jPeyron):  updated                                          */
-/*     11/10/2017(atangzwj): Validated for Vivado 2016.4                      */
+/*    06/09/2016(ABrown):   Created                                           */
+/*    05/08/2017(jPeyron):  Updated                                           */
+/*    11/10/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/13/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -25,12 +26,6 @@
 #include "xil_cache.h"
 #include "xil_printf.h"
 #include "xparameters.h"
-
-#ifdef __MICROBLAZE__
-#define CPU_CLOCK_FREQ_MHZ (XPAR_CPU_CORE_CLOCK_FREQ_HZ / 1000000)
-#else
-#define CPU_CLOCK_FREQ_MHZ (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 1000000)
-#endif
 
 void DemoInitialize();
 void DemoRun();

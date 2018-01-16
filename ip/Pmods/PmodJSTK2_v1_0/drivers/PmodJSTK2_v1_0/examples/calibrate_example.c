@@ -33,15 +33,16 @@
 /*     06/27/2016(SamL):     Created                                          */
 /*     08/09/2017(ArtVVB):   Validated for Vivado 2015.4                      */
 /*     11/02/2017(atangzwj): Validated for Vivado 2016.4                      */
+/*     01/13/2018(atangzwj): Validated for Vivado 2017.4                      */
 /*                                                                            */
 /******************************************************************************/
 
 #include <stdio.h>
-#include "xil_printf.h"
-#include "xil_cache.h"
-#include "xparameters.h"
-#include "sleep.h"
 #include "PmodJSTK2.h"
+#include "sleep.h"
+#include "xil_cache.h"
+#include "xil_printf.h"
+#include "xparameters.h"
 
 #ifdef __MICROBLAZE__
 #define CPU_CLOCK_FREQ_HZ (XPAR_CPU_CORE_CLOCK_FREQ_HZ)
@@ -56,7 +57,6 @@ void DemoRun();
 void DemoCleanup();
 void EnableCaches();
 void DisableCaches();
-void DemoSleep(u32 seconds);
 
 int main() {
    DemoInitialize();
@@ -72,8 +72,7 @@ void DemoInitialize() {
    JSTK2_begin(
       &joystick,
       XPAR_PMODJSTK2_0_AXI_LITE_SPI_BASEADDR,
-      XPAR_PMODJSTK2_0_AXI_LITE_GPIO_BASEADDR,
-      CPU_CLOCK_FREQ_HZ
+      XPAR_PMODJSTK2_0_AXI_LITE_GPIO_BASEADDR
    );
 }
 
@@ -86,7 +85,7 @@ void DemoRun() {
    // the RAM values from the previous run-through.
    xil_printf("Starting up by reloading calibration values from flash memory\r\n");
    JSTK2_startFlashReload(&joystick);
-   JSTK2_delay(&joystick, 100); // Delay for 100 us
+   usleep(100); // Delay for 100 us
    // Check if the reload was successful
    Status = JSTK2_getStatus(&joystick);
    xil_printf("Reload %s\r\n\n",
@@ -108,11 +107,11 @@ void DemoRun() {
    xil_printf("calibrating, rotate the Joystick around in all directions then let it rest for 1 second\r\n");
 
    JSTK2_startCalibration(&joystick);
-   DemoSleep(1);
+   sleep(1);
 
    // Wait until calibration is completed
    while ((JSTK2_getStatus(&joystick) & JSTK2_bitCalibrating) != 0) {
-      JSTK2_delay(&joystick, 100000);
+      usleep(100000);
    }
 
    xil_printf("calibration complete!\r\n");
@@ -122,7 +121,7 @@ void DemoRun() {
    xil_printf("Saving to flash memory....\n\r");
 
    JSTK2_startFlashWrite(&joystick);
-   JSTK2_delay(&joystick, 5000);
+   usleep(5000);
    // Check if the write was successful
    Status = JSTK2_getStatus(&joystick);
    xil_printf("Save %s\n\r",
@@ -163,8 +162,4 @@ void DisableCaches() {
    Xil_ICacheDisable();
 #endif
 #endif
-}
-
-void DemoSleep(u32 seconds) {
-   sleep(seconds);
 }

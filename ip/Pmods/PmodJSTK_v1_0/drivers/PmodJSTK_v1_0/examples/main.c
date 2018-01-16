@@ -23,9 +23,10 @@
 /******************************************************************************/
 /*  Revision History:                                                         */
 /*                                                                            */
-/*  06/27/2016(SamL):    Created                                              */
-/*  08/21/2017(artvvb):  Validated for Vivado 2015.4                          */
-/*  11/03/2017(atangzwj: Validated for Vivado 2016.4                          */
+/*  06/27/2016(SamL):     Created                                             */
+/*  08/21/2017(artvvb):   Validated for Vivado 2015.4                         */
+/*  11/03/2017(atangzwj): Validated for Vivado 2016.4                         */
+/*  01/13/2018(atangzwj): Validated for Vivado 2017.4                         */
 /*                                                                            */
 /******************************************************************************/
 /*  Baud Rates:                                                               */
@@ -66,8 +67,11 @@ void DemoInitialize() {
 
    xil_printf("test\r\n");
    // Initialize the joystick device
-   JSTK_begin(&joystick, XPAR_PMODJSTK_0_AXI_LITE_SPI_BASEADDR,
-         XPAR_PMODJSTK_0_AXI_LITE_GPIO_BASEADDR, CPU_CLOCK_FREQ_HZ);
+   JSTK_begin(
+      &joystick,
+      XPAR_PMODJSTK_0_AXI_LITE_SPI_BASEADDR,
+      XPAR_PMODJSTK_0_AXI_LITE_GPIO_BASEADDR
+   );
 }
 
 void DemoRun() {

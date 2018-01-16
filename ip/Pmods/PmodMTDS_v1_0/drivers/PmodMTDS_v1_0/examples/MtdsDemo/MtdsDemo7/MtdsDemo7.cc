@@ -35,6 +35,7 @@
 /*    10/01/2016(GeneA):    Created                                           */
 /*    02/14/2017(SamB):     Removed Serial references to port to Xilinx SDK   */
 /*    12/19/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/09/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 

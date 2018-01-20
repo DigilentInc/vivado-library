@@ -4,6 +4,8 @@ PmodWIFI IP
 Using the IP in Vivado
 ------------
 A tutorial for using Pmod IP cores in Vivado is available [here](https://reference.digilentinc.com/learn/programmable-logic/tutorials/pmod-ips/start).
+The demo programs for this Pmod IP require interrupts. Be sure to follow the
+section for connecting interrupts in the tutorial above.
 
 Demo Programs in Xilinx SDK
 ------------

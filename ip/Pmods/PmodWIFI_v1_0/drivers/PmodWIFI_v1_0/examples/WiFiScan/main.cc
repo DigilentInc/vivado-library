@@ -41,9 +41,10 @@
 /******************************************************************************/
 /* Revision History:                                                          */
 /*                                                                            */
-/*    05/14/2014 (KeithV):   Created                                          */
-/*    08/09/2016 (TommyK):   Modified to use Microblaze/Zynq                  */
-/*    12/02/2017 (atangzwj): Validated for Vivado 2016.4                      */
+/*    05/14/2014(KeithV):   Created                                           */
+/*    08/09/2016(TommyK):   Modified to use Microblaze/Zynq                   */
+/*    12/02/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/20/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 

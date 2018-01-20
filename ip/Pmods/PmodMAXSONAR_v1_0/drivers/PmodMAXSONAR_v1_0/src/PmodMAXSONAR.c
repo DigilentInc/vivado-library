@@ -14,6 +14,7 @@
 /* Revision History:                                                          */
 /*                                                                            */
 /*    10/18/2017(atangzwj): Created                                           */
+/*    01/20/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -29,15 +30,15 @@
  * void MAXSONAR_begin(PmodMAXSONAR *InstancePtr, u32 GPIO_Addr, u32 clk_freq)
  * -----------------------------------------------------------------------------
  * Parameters:
- *       InstancePtr:  Pointer to a PmodMAXSONAR object to initialize
- *       GPIO_Addr:    Base address of PmodMAXSONAR GPIO register
- *       clk_freq:     Clock frequency of the PmodMAXSONAR IP
+ *    InstancePtr: Pointer to a PmodMAXSONAR object to initialize
+ *    GPIO_Addr:   Base address of PmodMAXSONAR GPIO register
+ *    clk_freq:    Clock frequency of the PmodMAXSONAR IP
  *
  * Return:
- *       void
+ *    void
  *
  * Description:
- *       Initialize the PmodMAXSONAR IP
+ *    Initialize the PmodMAXSONAR IP
  */
 void MAXSONAR_begin(PmodMAXSONAR *InstancePtr, u32 GPIO_Address, u32 clk_freq) {
    InstancePtr->GPIO_addr = GPIO_Address;
@@ -48,14 +49,14 @@ void MAXSONAR_begin(PmodMAXSONAR *InstancePtr, u32 GPIO_Address, u32 clk_freq) {
  * u32 MAXSONAR_getDistance(PmodMAXSONAR *InstancePtr)
  * -----------------------------------------------------------------------------
  * Parameters:
- *       InstancePtr: Pointer to a PmodMAXSONAR object to interact with
+ *    InstancePtr: Pointer to a PmodMAXSONAR object to interact with
  *
  * Return:
- *       Distance to object detected by PmodMAXSONAR (in inches)
+ *    Distance to object detected by PmodMAXSONAR (in inches)
  *
  * Description:
- *       Return distance to object detected by PmodMAXSONAR, rounded to the
- *       nearest integer
+ *    Return distance to object detected by PmodMAXSONAR, rounded to the nearest
+ *    integer
  */
 u32 MAXSONAR_getDistance(PmodMAXSONAR *InstancePtr) {
    u64 clk_edges = (u64) Xil_In32(InstancePtr->GPIO_addr + 4);

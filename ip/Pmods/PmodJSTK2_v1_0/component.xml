@@ -887,7 +887,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>c12ad1cd</spirit:value>
+            <spirit:value>b1a32ab3</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -912,7 +912,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b00dd897</spirit:value>
+            <spirit:value>a9a18738</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -940,7 +940,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>a4a50172</spirit:value>
+            <spirit:value>88c9b485</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2071,8 +2071,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodJSTK2_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>18</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2018-01-16T20:09:13Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>19</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2018-01-20T23:45:47Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodJSTK2:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Desktop/JSTK2_v2</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodJSTK2:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Desktop/JSTK2_v2</xilinx:tag>
@@ -2131,7 +2131,7 @@
       <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="000e84e6"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="e6fb3ebf"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="86158de6"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="3e837a3e"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="34f77fd8"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="d57182df"/>
     </xilinx:packagingInfo>

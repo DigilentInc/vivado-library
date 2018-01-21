@@ -52,7 +52,7 @@ XSpi_Config JSTK2Config =
 **      GPIO_Address: The base address of the PmodJSTK2 Chip-Select GPIO Device
 **
 **   Return Value:
-**      none
+**      None
 **
 **   Description:
 **      Initialize the JSTK2 IP
@@ -72,7 +72,7 @@ void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address) {
 **      InstancePtr: PmodJSTK2 device to stop
 **
 **   Return Value:
-**      none
+**      None
 **
 **   Description:
 **      Clean up the JSTK2
@@ -82,7 +82,7 @@ void JSTK2_end(PmodJSTK2* InstancePtr) {
 }
 
 /* ------------------------------------------------------------ */
-/*** int JSTK2_SPIInit(XSpi *SpiInstancePtr)
+/*** int JSTK2_SPIInit(XSpi* SpiInstancePtr)
 **
 **   Parameters:
 **      SpiInstancePtr: JSTK2 SPI driver device to initialize
@@ -93,7 +93,7 @@ void JSTK2_end(PmodJSTK2* InstancePtr) {
 **   Description:
 **      Initializes the PmodJSTK2 SPI.
 */
-int JSTK2_SPIInit(XSpi *SpiInstancePtr) {
+int JSTK2_SPIInit(XSpi* SpiInstancePtr) {
    int Status;
 
    Status = XSpi_CfgInitialize(SpiInstancePtr, &JSTK2Config,

@@ -136,7 +136,7 @@ typedef struct JSTK2_Position {
 
 void JSTK2_begin(PmodJSTK2* InstancePtr, u32 SPI_Address, u32 GPIO_Address);
 void JSTK2_end(PmodJSTK2* InstancePtr);
-int JSTK2_SPIInit(XSpi *SpiInstancePtr);
+int JSTK2_SPIInit(XSpi* SpiInstancePtr);
 
 void JSTK2_setLedRGB(PmodJSTK2* InstancePtr, u8 red, u8 blue, u8 green);
 
@@ -183,6 +183,6 @@ void JSTK2_setCalYCenMinMax(PmodJSTK2* InstancePtr, u16 YCenMinCal,
 
 // Utility functions
 void JSTK2_getData(PmodJSTK2* InstancePtr, u8* recv, u8 nData);
-void JSTK2_delay(PmodJSTK2 *InstancePtr, int micros);
+void JSTK2_delay(PmodJSTK2* InstancePtr, int micros);
 
 #endif // PMODJSTK2_H

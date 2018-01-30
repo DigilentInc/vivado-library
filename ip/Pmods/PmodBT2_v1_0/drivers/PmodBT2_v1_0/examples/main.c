@@ -1,6 +1,6 @@
 /******************************************************************************/
 /*                                                                            */
-/* main.c -- Example program using the PmodBT2 IP                            */
+/* main.c -- Example program using the PmodBT2 IP                             */
 /*                                                                            */
 /******************************************************************************/
 /* Author: Arthur Brown                                                       */
@@ -14,15 +14,16 @@
 /******************************************************************************/
 /* Revision History:                                                          */
 /*                                                                            */
-/*    10/04/2017(artvvb):  Created                                            */
+/*    10/04/2017(artvvb):   Created                                           */
+/*    01/30/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
+#include "PmodBT2.h"
 #include "xil_cache.h"
 #include "xparameters.h"
-#include "PmodBT2.h"
 
-//required definitions for sending & receiving data over the host board's UART port
+// Required definitions for sending & receiving data over host board's UART port
 #ifdef __MICROBLAZE__
 #include "xuartlite.h"
 typedef XUartLite SysUart;
@@ -48,82 +49,79 @@ void SysUartInit();
 void EnableCaches();
 void DisableCaches();
 
-int main()
-{
-    DemoInitialize();
-    DemoRun();
-    DisableCaches();
-    return XST_SUCCESS;
+int main() {
+   DemoInitialize();
+   DemoRun();
+   DisableCaches();
+   return XST_SUCCESS;
 }
 
-void DemoInitialize()
-{
-    EnableCaches();
-    SysUartInit();
-    BT2_Begin (
-        &myDevice,
-        XPAR_PMODBT2_0_AXI_LITE_GPIO_BASEADDR,
-        XPAR_PMODBT2_0_AXI_LITE_UART_BASEADDR,
-        BT2_UART_AXI_CLOCK_FREQ,
-        115200
-    );
+void DemoInitialize() {
+   EnableCaches();
+   SysUartInit();
+   BT2_Begin (
+      &myDevice,
+      XPAR_PMODBT2_0_AXI_LITE_GPIO_BASEADDR,
+      XPAR_PMODBT2_0_AXI_LITE_UART_BASEADDR,
+      BT2_UART_AXI_CLOCK_FREQ,
+      115200
+   );
 }
 
-void DemoRun()
-{
-    u8 buf[1];
-    int n;
+void DemoRun() {
+   u8 buf[1];
+   int n;
 
-    xil_printf("Initialized PmodBT2 Demo, received data will be echoed here, type to send data\r\n");
+   print("Initialized PmodBT2 Demo\n\r");
+   print("Received data will be echoed here, type to send data\r\n");
 
-    while(1) {
-        //echo all characters received from both BT2 and terminal to terminal
-        //forward all characters received from terminal to BT2
-        n = SysUart_Recv(&myUart, buf, 1);
-        if (n != 0) {
-            SysUart_Send(&myUart, buf, 1);
-            BT2_SendData(&myDevice, buf, 1);
-        }
+   while (1) {
+      // Echo all characters received from both BT2 and terminal to terminal
+      // Forward all characters received from terminal to BT2
+      n = SysUart_Recv(&myUart, buf, 1);
+      if (n != 0) {
+         SysUart_Send(&myUart, buf, 1);
+         BT2_SendData(&myDevice, buf, 1);
+      }
 
-        n = BT2_RecvData(&myDevice, buf, 1);
-        if (n != 0) {
-            SysUart_Send(&myUart, buf, 1);
-        }
-    }
+      n = BT2_RecvData(&myDevice, buf, 1);
+      if (n != 0) {
+         SysUart_Send(&myUart, buf, 1);
+      }
+   }
 }
 
-//initialize the system uart device, AXI uartlite for microblaze, uartps for Zynq
-void SysUartInit()
-{
+// Initialize the system UART device
+void SysUartInit() {
 #ifdef __MICROBLAZE__
-    XUartLite_Initialize(&myUart, SYS_UART_DEVICE_ID);
+   // AXI Uartlite for MicroBlaze
+   XUartLite_Initialize(&myUart, SYS_UART_DEVICE_ID);
 #else
-    XUartPs_Config *myUartCfgPtr;
-    myUartCfgPtr = XUartPs_LookupConfig(SYS_UART_DEVICE_ID);
-    XUartPs_CfgInitialize(&myUart, myUartCfgPtr, myUartCfgPtr->BaseAddress);
+   // Uartps for Zynq
+   XUartPs_Config *myUartCfgPtr;
+   myUartCfgPtr = XUartPs_LookupConfig(SYS_UART_DEVICE_ID);
+   XUartPs_CfgInitialize(&myUart, myUartCfgPtr, myUartCfgPtr->BaseAddress);
 #endif
 }
 
-void EnableCaches()
-{
+void EnableCaches() {
 #ifdef __MICROBLAZE__
 #ifdef XPAR_MICROBLAZE_USE_ICACHE
-    Xil_ICacheEnable();
+   Xil_ICacheEnable();
 #endif
 #ifdef XPAR_MICROBLAZE_USE_DCACHE
-    Xil_DCacheEnable();
+   Xil_DCacheEnable();
 #endif
 #endif
 }
 
-void DisableCaches()
-{
+void DisableCaches() {
 #ifdef __MICROBLAZE__
 #ifdef XPAR_MICROBLAZE_USE_DCACHE
-    Xil_DCacheDisable();
+   Xil_DCacheDisable();
 #endif
 #ifdef XPAR_MICROBLAZE_USE_ICACHE
-    Xil_ICacheDisable();
+   Xil_ICacheDisable();
 #endif
 #endif
 }

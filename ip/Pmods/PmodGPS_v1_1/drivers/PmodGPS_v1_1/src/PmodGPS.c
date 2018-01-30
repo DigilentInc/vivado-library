@@ -86,7 +86,7 @@ void GPS_begin(PmodGPS* InstancePtr, u32 GPIO_Address, u32 UART_Address,
 int GPS_changeBaud(PmodGPS* InstancePtr, int baud) {
    char* message;
 
-   int i = 0;
+   u32 i = 0;
    switch (baud) {
    case 4800:
       message = "$PMTK251,4800*14\r\n";
@@ -143,7 +143,7 @@ int GPS_changeBaud(PmodGPS* InstancePtr, int baud) {
  */
 int GPS_setUpdateRate(PmodGPS* InstancePtr, int milli_interval) {
    char message[20] = {0};
-   int i = 0;
+   u32 i = 0;
    u8 checksum;
    if (milli_interval > 10000 || milli_interval < 100)
       return XST_FAILURE;
@@ -185,7 +185,7 @@ int GPS_setUpdateRate(PmodGPS* InstancePtr, int milli_interval) {
 int GPS_setModes(PmodGPS* InstancePtr, u8 GGA, u8 GLL, u8 GSA, u8 GSV, u8 RMC,
       u8 VTG) {
    char message[52] = {0};
-   int i = 0;
+   u32 i = 0;
    u8 checksum;
    sprintf(message, "$PMTK314,%d,%d,%d,%d,%d,%d,0,0,0,0,0,0,0,0,0,0,0,0,0*",
          GLL, RMC, VTG, GGA, GSA, GSV);

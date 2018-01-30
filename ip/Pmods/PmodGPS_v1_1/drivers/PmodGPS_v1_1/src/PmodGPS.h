@@ -16,6 +16,7 @@
 /*    04/17/2016(tom21091): Created                                           */
 /*    10/13/2017(atangzwj): Validated for Vivado 2015.4                       */
 /*    11/04/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/29/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -26,8 +27,8 @@
 
 #include "xil_types.h"
 #include "xstatus.h"
-#include "xuartns550_l.h"
 #include "xuartns550.h"
+#include "xuartns550_l.h"
 
 
 /************ Macro Definitions ************/
@@ -74,7 +75,7 @@ typedef struct GPS_GGA_DATA_T {
    char CHECKSUM[3]; // Checksum
 } GPS_GGA_DATA;
 
-typedef struct GPS_GLL_DATA_T{
+typedef struct GPS_GLL_DATA_T {
    char LAT[14];     // Latitude
    char NS;          // North or south indicator
    char LONG[15];    // Longitude
@@ -85,7 +86,7 @@ typedef struct GPS_GLL_DATA_T{
    char CHECKSUM[3]; // Checksum
 } GPS_GLL_DATA;
 
-typedef struct GPS_GSA_DATA_T{
+typedef struct GPS_GSA_DATA_T {
    char MODE1; // 'M' for manual- forced to operate in 2D or 3D mode
                // 'A' for 2D automatic- switches automatically b/w 2D/3D
    char MODE2; //  1 - fix not available
@@ -233,52 +234,52 @@ typedef struct PmodGPS {
 /************ Function Prototypes ************/
 
 int GPS_UARTInit(XUartNs550 *UartInstancePtr);
-int GPS_changeBaud(PmodGPS* InstancePtr, int baud);
-u8 GPS_getChecksum(char* message);
-int GPS_setUpdateRate(PmodGPS* InstancePtr, int milli_interval);
-int GPS_setModes(PmodGPS* InstancePtr, u8 GGA, u8 GLL, u8 GSA, u8 GSV, u8 RMC,
+int GPS_changeBaud(PmodGPS *InstancePtr, int baud);
+u8 GPS_getChecksum(char *message);
+int GPS_setUpdateRate(PmodGPS *InstancePtr, int milli_interval);
+int GPS_setModes(PmodGPS *InstancePtr, u8 GGA, u8 GLL, u8 GSA, u8 GSV, u8 RMC,
       u8 VTG);
-GPS_bool GPS_getSentence(PmodGPS* InstancePtr, char* output);
+GPS_bool GPS_getSentence(PmodGPS *InstancePtr, char *output);
 
-void GPS_begin(PmodGPS* InstancePtr, u32 GPIO_Address, u32 UART_Address,
+void GPS_begin(PmodGPS *InstancePtr, u32 GPIO_Address, u32 UART_Address,
       u32 Peripheral_Clk);
-void GPS_HostInit(PmodGPS* InstancePtr);
-int GPS_readPPSpin(PmodGPS* InstancePtr);
-int GPS_read3DFpin(PmodGPS* InstancePtr);
-GPS_bool GPS_getData(PmodGPS* InstancePtr);
-GPS_bool GPS_formatSentence(PmodGPS* InstancePtr);
+void GPS_HostInit(PmodGPS *InstancePtr);
+int GPS_readPPSpin(PmodGPS *InstancePtr);
+int GPS_read3DFpin(PmodGPS *InstancePtr);
+GPS_bool GPS_getData(PmodGPS *InstancePtr);
+GPS_bool GPS_formatSentence(PmodGPS *InstancePtr);
 
-GPS_bool GPS_isFixed(PmodGPS* InstancePtr);
-char* GPS_getLatitude(PmodGPS* InstancePtr);
-char* GPS_getLongitude(PmodGPS* InstancePtr);
-char* GPS_getDate(PmodGPS* InstancePtr);
-double GPS_getAltitude(PmodGPS* InstancePtr);
-char* GPS_getAltitudeString(PmodGPS* InstancePtr);
-double GPS_getTime(PmodGPS* InstancePtr);
-int GPS_getNumSats(PmodGPS* InstancePtr);
-double GPS_getPDOP(PmodGPS* InstancePtr);
-double GPS_getSpeedKnots(PmodGPS* InstancePtr);
-double GPS_getSpeedKM(PmodGPS* InstancePtr);
-double GPS_getHeading(PmodGPS* InstancePtr);
-GPS_SATELLITE* GPS_getSatelliteInfo(PmodGPS* InstancePtr);
+GPS_bool GPS_isFixed(PmodGPS *InstancePtr);
+char *GPS_getLatitude(PmodGPS *InstancePtr);
+char *GPS_getLongitude(PmodGPS *InstancePtr);
+char *GPS_getDate(PmodGPS *InstancePtr);
+double GPS_getAltitude(PmodGPS *InstancePtr);
+char *GPS_getAltitudeString(PmodGPS *InstancePtr);
+double GPS_getTime(PmodGPS *InstancePtr);
+int GPS_getNumSats(PmodGPS *InstancePtr);
+double GPS_getPDOP(PmodGPS *InstancePtr);
+double GPS_getSpeedKnots(PmodGPS *InstancePtr);
+double GPS_getSpeedKM(PmodGPS *InstancePtr);
+double GPS_getHeading(PmodGPS *InstancePtr);
+GPS_SATELLITE *GPS_getSatelliteInfo(PmodGPS *InstancePtr);
 
-GPS_GGA_DATA GPS_getGGA(PmodGPS* InstancePtr);
-GPS_GSA_DATA GPS_getGSA(PmodGPS* InstancePtr);
-GPS_GSV_DATA GPS_getGSV(PmodGPS* InstancePtr);
-GPS_RMC_DATA GPS_getRMC(PmodGPS* InstancePtr);
-GPS_VTG_DATA GPS_getVTG(PmodGPS* InstancePtr);
+GPS_GGA_DATA GPS_getGGA(PmodGPS *InstancePtr);
+GPS_GSA_DATA GPS_getGSA(PmodGPS *InstancePtr);
+GPS_GSV_DATA GPS_getGSV(PmodGPS *InstancePtr);
+GPS_RMC_DATA GPS_getRMC(PmodGPS *InstancePtr);
+GPS_VTG_DATA GPS_getVTG(PmodGPS *InstancePtr);
 
 GPS_NMEA GPS_chooseMode(char recv[GPS_MAX_SIZE]);
-int GPS_formatGGA(PmodGPS* InstancePtr, char* data_array);
-int GPS_formatGLL(PmodGPS* InstancePtr, char* data_array);
-int GPS_formatGSA(PmodGPS* InstancePtr, char* data_array);
-int GPS_formatGSV(PmodGPS* InstancePtr, char* data_array);
-int GPS_formatRMC(PmodGPS* InstancePtr, char* data_array);
-int GPS_formatVTG(PmodGPS* InstancePtr, char* data_array);
-void GPS_formatCOORDS(char* coords);
+int GPS_formatGGA(PmodGPS *InstancePtr, char *data_array);
+int GPS_formatGLL(PmodGPS *InstancePtr, char *data_array);
+int GPS_formatGSA(PmodGPS *InstancePtr, char *data_array);
+int GPS_formatGSV(PmodGPS *InstancePtr, char *data_array);
+int GPS_formatRMC(PmodGPS *InstancePtr, char *data_array);
+int GPS_formatVTG(PmodGPS *InstancePtr, char *data_array);
+void GPS_formatCOORDS(char *coords);
 
-int GPS_SetupInterruptSystem(PmodGPS* InstancePtr, u32 interruptDeviceID,
+int GPS_SetupInterruptSystem(PmodGPS *InstancePtr, u32 interruptDeviceID,
       u32 interruptID);
-void GPS_intHandler(PmodGPS* InstancePtr, u32 Event, unsigned int EventData);
+void GPS_intHandler(PmodGPS *InstancePtr, u32 Event, unsigned int EventData);
 
 #endif // PMODGPS_H

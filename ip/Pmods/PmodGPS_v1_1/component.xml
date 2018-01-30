@@ -940,7 +940,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>a2284447</spirit:value>
+            <spirit:value>1f0f6afd</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2099,8 +2099,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodGPS_v1_1</xilinx:displayName>
-      <xilinx:coreRevision>16</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2018-01-30T04:56:31Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>17</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2018-01-30T05:55:36Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodGPS:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGPS_v1_1</xilinx:tag>
@@ -2163,7 +2163,7 @@
       <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="2f104f5f"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="f527a1b0"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="4e929227"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="15f11e64"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="972a2e0e"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="ee2d8a37"/>
     </xilinx:packagingInfo>

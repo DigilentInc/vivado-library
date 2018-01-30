@@ -16,6 +16,7 @@
 /*    04/17/2016(tom21091): Created                                           */
 /*    10/13/2017(atangzwj): Validated for Vivado 2015.4                       */
 /*    11/04/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/29/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -37,24 +38,24 @@ XUartNs550_Config GPS_Config =
 };
 
 /* ------------------------------------------------------------ */
-/*  GPS_begin(PmodGPS* InstancePtr, u32 GPIO_Address, u32 UART_Address)
+/*  GPS_begin(PmodGPS *InstancePtr, u32 GPIO_Address, u32 UART_Address)
  **
- **     Parameters:
- **             InstancePtr:    A PmodGPS object to start
- **             GPIO_Address:   The Base address of the PmodGPS GPIO
- **             UART_Address:   The Base address of the PmodGPS UART
- **             Peripheral_Clk: Frequency (Hz) of the PmodGPS IP's clock
+ **    Parameters:
+ **       InstancePtr:    A PmodGPS object to start
+ **       GPIO_Address:   The Base address of the PmodGPS GPIO
+ **       UART_Address:   The Base address of the PmodGPS UART
+ **       Peripheral_Clk: Frequency (Hz) of the PmodGPS IP's clock
  **
- **     Return Value:
- **             none
+ **    Return Value:
+ **       none
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Initialize the PmodGPS.
+ **    Description:
+ **       Initialize the PmodGPS.
  */
-void GPS_begin(PmodGPS* InstancePtr, u32 GPIO_Address, u32 UART_Address,
+void GPS_begin(PmodGPS *InstancePtr, u32 GPIO_Address, u32 UART_Address,
       u32 Peripheral_Clk) {
    InstancePtr->periph_clk = Peripheral_Clk;
    InstancePtr->GPIO_addr = GPIO_Address;
@@ -69,22 +70,22 @@ void GPS_begin(PmodGPS* InstancePtr, u32 GPIO_Address, u32 UART_Address,
 /* ------------------------------------------------------------ */
 /*  GPS_changeBaud()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to configure
- **             baud:        Desired baud rate to set the PmodGPS to
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to configure
+ **       baud:        Desired baud rate to set the PmodGPS to
  **
- **     Return Value:
- **             1 if successful, 0 if invalid baud
+ **    Return Value:
+ **       1 if successful, 0 if invalid baud
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Changes the baud rate of the PmodGPS, then the XUartNs550
- **             controller
+ **    Description:
+ **       Changes the baud rate of the PmodGPS, then the XUartNs550
+ **       controller
  */
-int GPS_changeBaud(PmodGPS* InstancePtr, int baud) {
-   char* message;
+int GPS_changeBaud(PmodGPS *InstancePtr, int baud) {
+   char *message;
 
    u32 i = 0;
    switch (baud) {
@@ -127,21 +128,21 @@ int GPS_changeBaud(PmodGPS* InstancePtr, int baud) {
 /* ------------------------------------------------------------ */
 /*  GPS_setUpdateRate()
  **
- **     Parameters:
- **             InstancePtr:    PmodGPS object to configure
- **             milli_interval: Desired millisecond interval to receive messages
+ **    Parameters:
+ **       InstancePtr:    PmodGPS object to configure
+ **       milli_interval: Desired millisecond interval to receive messages
  **
- **     Return Value:
- **             1
+ **    Return Value:
+ **       1
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Sets the frequency that the PmodGPS sends sentences.
- **             100ms - 10seconds
+ **    Description:
+ **       Sets the frequency that the PmodGPS sends sentences.
+ **       100ms - 10seconds
  */
-int GPS_setUpdateRate(PmodGPS* InstancePtr, int milli_interval) {
+int GPS_setUpdateRate(PmodGPS *InstancePtr, int milli_interval) {
    char message[20] = {0};
    u32 i = 0;
    u8 checksum;
@@ -162,27 +163,27 @@ int GPS_setUpdateRate(PmodGPS* InstancePtr, int milli_interval) {
 /* ------------------------------------------------------------ */
 /*  GPS_setModes()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to configure
- **             GLL:         GPS pings per GLL message
- **             RMC:         GPS pings per RMC message
- **             VTG:         GPS pings per VTG message
- **             GGA:         GPS pings per GGA message
- **             GSA:         GPS pings per GSA message
- **             GSV:         GPS pings per GSV message
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to configure
+ **       GLL:         GPS pings per GLL message
+ **       RMC:         GPS pings per RMC message
+ **       VTG:         GPS pings per VTG message
+ **       GGA:         GPS pings per GGA message
+ **       GSA:         GPS pings per GSA message
+ **       GSV:         GPS pings per GSV message
  **
- **     Return Value:
- **             1
+ **    Return Value:
+ **       1
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Configures which messages are sent by the GPS:
- **                1 = Every ping
- **                2 = Every two pings, up to 5
+ **    Description:
+ **       Configures which messages are sent by the GPS:
+ **          1 = Every ping
+ **          2 = Every two pings, up to 5
  */
-int GPS_setModes(PmodGPS* InstancePtr, u8 GGA, u8 GLL, u8 GSA, u8 GSV, u8 RMC,
+int GPS_setModes(PmodGPS *InstancePtr, u8 GGA, u8 GLL, u8 GSA, u8 GSV, u8 RMC,
       u8 VTG) {
    char message[52] = {0};
    u32 i = 0;
@@ -217,20 +218,20 @@ int GPS_setModes(PmodGPS* InstancePtr, u8 GGA, u8 GLL, u8 GSA, u8 GSV, u8 RMC,
 /* ------------------------------------------------------------ */
 /*  GPS_getChecksum()
  **
- **     Parameters:
- **             message: The NMEA sentence to calculate the checksum from
+ **    Parameters:
+ **       message: The NMEA sentence to calculate the checksum from
  **
- **     Return Value:
- **             checksum of the message
+ **    Return Value:
+ **       checksum of the message
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Calculates the checksum for the input sentence
+ **    Description:
+ **       Calculates the checksum for the input sentence
  */
-u8 GPS_getChecksum(char* message) {
-   char* temp = message + 1; // Skip the $
+u8 GPS_getChecksum(char *message) {
+   char *temp = message + 1; // Skip the $
    u8 checksum = 0;
    while (*temp != '*') {
       checksum ^= *temp;
@@ -242,19 +243,18 @@ u8 GPS_getChecksum(char* message) {
 /* ------------------------------------------------------------ */
 /*  GPS_UARTInit
  **
- **     Parameters:
- **             UartInstancePtr: The XUartNs550 object to initialize
+ **    Parameters:
+ **       UartInstancePtr: The XUartNs550 object to initialize
  **
- **     Return Value:
- **             0 if success, 1 if failure
+ **    Return Value:
+ **       0 if success, 1 if failure
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Initializes the PmodGPS UART.
+ **    Description:
+ **       Initializes the PmodGPS UART.
  */
-
 int GPS_UARTInit(XUartNs550 *UartInstancePtr) {
    int Status;
    u16 Options;
@@ -267,11 +267,12 @@ int GPS_UARTInit(XUartNs550 *UartInstancePtr) {
    XUartNs550_SetOptions(UartInstancePtr, Options);
    return XST_SUCCESS;
 }
+
 /* ------------------------------------------------------------ */
 /*  GPS_readPPSpin()
  **
  **  Parameters:
- **	  InstancePtr: PmodGPS object to read from
+ **    InstancePtr: PmodGPS object to read from
  **
  **  Return Value:
  **    PPS input - Ping per second
@@ -282,47 +283,48 @@ int GPS_UARTInit(XUartNs550 *UartInstancePtr) {
  **  Description:
  **    Reads the 3DF pin
  */
-int GPS_readPPSpin(PmodGPS* InstancePtr) {
+int GPS_readPPSpin(PmodGPS *InstancePtr) {
    return Xil_In32(InstancePtr->GPIO_addr) & 0x2;
 }
+
 /* ------------------------------------------------------------ */
 /*  GPS_read3DFpin()
  **
- **  Parameters:
- **	  InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **  Return Value:
- **    3DF input
+ **    Return Value:
+ **       3DF input
  **
- **  Errors:
- **    none
+ **    Errors:
+ **       none
  **
- **  Description:
- **    Reads the 3DF pin
+ **    Description:
+ **       Reads the 3DF pin
  */
-int GPS_read3DFpin(PmodGPS* InstancePtr) {
+int GPS_read3DFpin(PmodGPS *InstancePtr) {
    return Xil_In32(InstancePtr->GPIO_addr) & 0x1;
 }
 
 /* ------------------------------------------------------------ */
 /*  GPS_getData()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to get data from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to get data from
  **
- **     Return Value:
- **             1 if data was received successfully, 0 if not
+ **    Return Value:
+ **       1 if data was received successfully, 0 if not
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             For use in POLLED MODE ONLY
- **             Does a read of data. finishes when a value of decimal
- **             10 (ASCII <LF>) is detected. Checks to see if it is the last
- **             sentence and returns if yes.
+ **    Description:
+ **       For use in POLLED MODE ONLY
+ **       Does a read of data. finishes when a value of decimal 10 (ASCII <LF>)
+ **       is detected. Checks to see if it is the last sentence and returns if
+ **       yes.
  */
-GPS_bool GPS_getData(PmodGPS* InstancePtr) {
+GPS_bool GPS_getData(PmodGPS *InstancePtr) {
    int count = 0;
    GPS_NMEA mode = GPS_INVALID;
    unsigned int ReceivedCount = 0;
@@ -357,20 +359,20 @@ GPS_bool GPS_getData(PmodGPS* InstancePtr) {
 /* ------------------------------------------------------------ */
 /*  GPS_getSentence()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to read from
- **             output:      A pointer to where the string will be stored
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
+ **       output:      A pointer to where the string will be stored
  **
- **     Return Value:
- **             True if sentence received, false if not
+ **    Return Value:
+ **       True if sentence received, false if not
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Attempts to read a single sentence through UART
+ **    Description:
+ **       Attempts to read a single sentence through UART
  */
-GPS_bool GPS_getSentence(PmodGPS* InstancePtr, char* output) {
+GPS_bool GPS_getSentence(PmodGPS *InstancePtr, char *output) {
    int ReceivedCount = 0;
    if (ReceivedCount += XUartNs550_Recv(&InstancePtr->GPSUart,
          (u8*) output + ReceivedCount, 1)) { // If there is a sentence
@@ -386,19 +388,19 @@ GPS_bool GPS_getSentence(PmodGPS* InstancePtr, char* output) {
 /* ------------------------------------------------------------ */
 /*  GPS_formatSentence()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **     Return Value:
- **             bool
+ **    Return Value:
+ **       bool
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Parses the GPS NMEA sentence stored in InstancePtr->recv
+ **    Description:
+ **       Parses the GPS NMEA sentence stored in InstancePtr->recv
  */
-GPS_bool GPS_formatSentence(PmodGPS* InstancePtr) {
+GPS_bool GPS_formatSentence(PmodGPS *InstancePtr) {
    int i = 0;
    GPS_NMEA mode = GPS_INVALID;
    // Reset ping now that we are about to parse the last sentence
@@ -448,19 +450,19 @@ GPS_bool GPS_formatSentence(PmodGPS* InstancePtr) {
 /* ------------------------------------------------------------ */
 /*  GPS_isFixed()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **     Return Value:
- **             bool PFI
+ **    Return Value:
+ **       bool PFI
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Returns a true if PFI is 1, else 0
+ **    Description:
+ **       Returns a true if PFI is 1, else 0
  */
-GPS_bool GPS_isFixed(PmodGPS* InstancePtr) {
+GPS_bool GPS_isFixed(PmodGPS *InstancePtr) {
    return (GPS_bool) ((int) (InstancePtr->GGAdata.PFI - '0') == 1
          || (int) (InstancePtr->GGAdata.PFI - '0') == 2);
 }
@@ -468,42 +470,42 @@ GPS_bool GPS_isFixed(PmodGPS* InstancePtr) {
 /* ------------------------------------------------------------ */
 /*  getLatitude(), getLongitude()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **     Return Value:
- **             A string containing the data requested
+ **    Return Value:
+ **       A string containing the data requested
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Get functions for several data members in string form
+ **    Description:
+ **       Get functions for several data members in string form
  */
-char* GPS_getLatitude(PmodGPS* InstancePtr) {
+char *GPS_getLatitude(PmodGPS *InstancePtr) {
    return InstancePtr->GGAdata.LAT;
 }
 
-char* GPS_getLongitude(PmodGPS* InstancePtr) {
+char *GPS_getLongitude(PmodGPS *InstancePtr) {
    return InstancePtr->GGAdata.LONG;
 }
 
 /* ------------------------------------------------------------ */
 /*  getAltitudeString()
  **
- **     Parameters:
- **	        InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **     Return Value:
- **             A string containing the altitude with appended units
+ **    Return Value:
+ **       A string containing the altitude with appended units
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Gets altitude and returns its value with units in string form
+ **    Description:
+ **       Gets altitude and returns its value with units in string form
  */
-char* GPS_getAltitudeString(PmodGPS* InstancePtr) {
+char *GPS_getAltitudeString(PmodGPS *InstancePtr) {
    static char temp[12];
    sprintf(temp, "%s %c", InstancePtr->GGAdata.ALT, InstancePtr->GGAdata.AUNIT);
    return temp;
@@ -512,19 +514,19 @@ char* GPS_getAltitudeString(PmodGPS* InstancePtr) {
 /* ------------------------------------------------------------ */
 /*  getDate()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **     Return Value:
- **             A string containing the date in correct format
+ **    Return Value:
+ **       A string containing the date in correct format
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats the date and returns it as a char string
+ **    Description:
+ **       Formats the date and returns it as a char string
  */
-char* GPS_getDate(PmodGPS* InstancePtr) {
+char *GPS_getDate(PmodGPS *InstancePtr) {
 
    static char date[8];
    date[0] = InstancePtr->RMCdata.DATE[2];
@@ -541,71 +543,70 @@ char* GPS_getDate(PmodGPS* InstancePtr) {
 
 /* ------------------------------------------------------------ */
 /*  getTime(), getNumSats(), getPDOP(), getAltitude(), getSpeedKnots(),
- **		getSpeedKM(), getHeading()
+ ** getSpeedKM(), getHeading()
  **
- **     Parameters:
- **             none
+ **    Parameters:
+ **       none
  **
- **     Return Value:
- **             The data in the structs in either integer or double form
+ **    Return Value:
+ **       The data in the structs in either integer or double form
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Get functions for several items in the PmodGPS structs. These
- **             values are converted to integers or doubles before being
- **             returned.
+ **    Description:
+ **       Get functions for several items in the PmodGPS structs. These values
+ **       are converted to integers or doubles before being returned.
  */
-double GPS_getTime(PmodGPS* InstancePtr) {
+double GPS_getTime(PmodGPS *InstancePtr) {
    return atof(InstancePtr->GGAdata.UTC);
 }
 
-int GPS_getNumSats(PmodGPS* InstancePtr) {
+int GPS_getNumSats(PmodGPS *InstancePtr) {
    return atoi(InstancePtr->GGAdata.NUMSAT);
 }
 
-double GPS_getPDOP(PmodGPS* InstancePtr) {
+double GPS_getPDOP(PmodGPS *InstancePtr) {
    return atof(InstancePtr->GSAdata.PDOP);
 }
 
-double GPS_getAltitude(PmodGPS* InstancePtr) {
+double GPS_getAltitude(PmodGPS *InstancePtr) {
    return atof(InstancePtr->GGAdata.ALT);
 }
 
-double GPS_getSpeedKnots(PmodGPS* InstancePtr) {
+double GPS_getSpeedKnots(PmodGPS *InstancePtr) {
    return atof(InstancePtr->VTGdata.SPD_N);
 }
 
-double GPS_getSpeedKM(PmodGPS* InstancePtr) {
+double GPS_getSpeedKM(PmodGPS *InstancePtr) {
    return atof(InstancePtr->VTGdata.SPD_KM);
 }
 
-double GPS_getHeading(PmodGPS* InstancePtr) {
+double GPS_getHeading(PmodGPS *InstancePtr) {
    return atof(InstancePtr->VTGdata.COURSE_T);
 }
 
 /* ------------------------------------------------------------ */
 /*  chooseMode()
  **
- **     Parameters:
- **             char recv[GPS_MAX_SIZE]
+ **    Parameters:
+ **       char recv[GPS_MAX_SIZE]
  **
- **     Return Value:
- **             NMEA mode: The format of the sentence, for use in deciding
- **             which struct to format into
+ **    Return Value:
+ **       NMEA mode: The format of the sentence, for use in deciding
+ **       which struct to format into
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Reads the third, fourth, and fifth character in the sentence,
- **             and outputs an NMEA mode.
+ **    Description:
+ **       Reads the third, fourth, and fifth character in the sentence, and
+ **       outputs an NMEA mode.
  */
 GPS_NMEA GPS_chooseMode(char recv[]) {
    GPS_NMEA mode = GPS_INVALID;
    while (recv[0] != '$' && recv[0] != '\0')
-      recv--;	//If not at beginning of sentence, go back
+      recv--; //If not at beginning of sentence, go back
    if (((recv[0]) != '$') || ((recv[1]) != 'G') || ((recv[2]) != 'P'))
       return GPS_INVALID;
    if (((recv[3]) == 'G') && ((recv[4]) == 'G') && (recv[5] == 'A')) {
@@ -627,20 +628,19 @@ GPS_NMEA GPS_chooseMode(char recv[]) {
 /* ------------------------------------------------------------ */
 /*  getSatelliteInfo()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to read from
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to read from
  **
- **     Return Value:
- **             The array of SATELLITE structs in GSVdata
+ **    Return Value:
+ **       The array of SATELLITE structs in GSVdata
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             A get function for the SATELLITE structs containing
- **		satellite info.
+ **    Description:
+ **       A get function for the SATELLITE structs containing satellite info.
  */
-GPS_SATELLITE* GPS_getSatelliteInfo(PmodGPS* InstancePtr) {
+GPS_SATELLITE *GPS_getSatelliteInfo(PmodGPS *InstancePtr) {
    if (InstancePtr->GSVdata.SAT)
       return InstancePtr->GSVdata.SAT;
    else
@@ -650,27 +650,27 @@ GPS_SATELLITE* GPS_getSatelliteInfo(PmodGPS* InstancePtr) {
 /* ------------------------------------------------------------ */
 /*  formatGGA()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to store data into
- **             data_array:  an array to the data to be formatted
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to store data into
+ **       data_array:  an array to the data to be formatted
  **
- **     Return Value:
- **             The offset from the beginning of data_array
+ **    Return Value:
+ **       The offset from the beginning of data_array
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats a mode's data into elements in a struct.
- **		NOTE: ',' will separate all values
+ **    Description:
+ **       Formats a mode's data into elements in a struct.
+ **       NOTE: ',' will separate all values
  */
-int GPS_formatGGA(PmodGPS* InstancePtr, char* data_array) {
+int GPS_formatGGA(PmodGPS *InstancePtr, char *data_array) {
    enum cases {
       UTC, LAT, NS, LONG, EW, PFI, NUMSAT, HDOP, ALT, AUNIT, GSEP, GUNIT, AODC
    };
    enum cases datamember = UTC;
-   char* start_ptr;
-   char* end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
+   char *start_ptr;
+   char *end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
    GPS_bool flag = 1;
    char COORDbuf[14] = {0};
    char checksum[3] = {0};
@@ -693,7 +693,7 @@ int GPS_formatGGA(PmodGPS* InstancePtr, char* data_array) {
       switch (datamember) {
       case UTC:
          memcpy(InstancePtr->GGAdata.UTC, start_ptr, (end_ptr - start_ptr));
-         InstancePtr->GGAdata.UTC[end_ptr - start_ptr] = '\0';	// End null char
+         InstancePtr->GGAdata.UTC[end_ptr - start_ptr] = '\0'; // End null char
          datamember = LAT;
          break;
       case LAT:
@@ -785,27 +785,27 @@ int GPS_formatGGA(PmodGPS* InstancePtr, char* data_array) {
 /* ------------------------------------------------------------ */
 /*  GPS_formatGLL()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to store data into
- **             data_array:  an array to the data to be formatted
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to store data into
+ **       data_array:  an array to the data to be formatted
  **
- **     Return Value:
- **             The offset from the beginning of data_array
+ **    Return Value:
+ **       The offset from the beginning of data_array
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats a mode's data into elements in a struct.
- **             NOTE: ',' will separate all values
+ **    Description:
+ **       Formats a mode's data into elements in a struct.
+ **       NOTE: ',' will separate all values
  */
-int GPS_formatGLL(PmodGPS* InstancePtr, char* data_array) {
+int GPS_formatGLL(PmodGPS *InstancePtr, char *data_array) {
    enum cases {
       LAT, NS, LONG, EW, TIME, ACTIVE, MODE
    };
    enum cases datamember = LAT;
-   char* start_ptr;
-   char* end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
+   char *start_ptr;
+   char *end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
    GPS_bool flag = 1;
    char COORDbuf[14] = {0};
    char checksum[3] = {0};
@@ -892,20 +892,20 @@ int GPS_formatGLL(PmodGPS* InstancePtr, char* data_array) {
 /* ------------------------------------------------------------ */
 /*  GPS_formatGSA()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to store data into
- **             data_array:  an array to the data to be formatted
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to store data into
+ **       data_array:  an array to the data to be formatted
  **
- **     Return Value:
- **             The offset from the beginning of data_array
+ **    Return Value:
+ **       The offset from the beginning of data_array
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats a mode's data into elements in a struct.
+ **    Description:
+ **       Formats a mode's data into elements in a struct.
  */
-int GPS_formatGSA(PmodGPS* InstancePtr, char* data_array) {
+int GPS_formatGSA(PmodGPS *InstancePtr, char *data_array) {
    enum cases {
       MODE1,
       MODE2,
@@ -926,8 +926,8 @@ int GPS_formatGSA(PmodGPS* InstancePtr, char* data_array) {
       VDOP
    };
    enum cases datamember = MODE1;
-   char* start_ptr;
-   char* end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
+   char *start_ptr;
+   char *end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
    GPS_bool flag = 1;
    char checksum[3] = {0};
 
@@ -936,7 +936,7 @@ int GPS_formatGSA(PmodGPS* InstancePtr, char* data_array) {
 
       while (*end_ptr != ',' && (*(end_ptr + 1) != 10) && *end_ptr != '*'
             && *end_ptr != '$')
-         end_ptr++;	// Increment ptr until a comma is found
+         end_ptr++; // Increment ptr until a comma is found
       if (*end_ptr == '$') {
          return end_ptr - data_array;
       }
@@ -1049,20 +1049,20 @@ int GPS_formatGSA(PmodGPS* InstancePtr, char* data_array) {
 /* ------------------------------------------------------------ */
 /*  GPS_formatGSV()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to store data into
- **             data_array:  an array to the data to be formatted
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to store data into
+ **       data_array:  an array to the data to be formatted
  **
- **     Return Value:
- **             The offset from the beginning of data_array
+ **    Return Value:
+ **       The offset from the beginning of data_array
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats GSV messages into their corresponding structs.
+ **    Description:
+ **       Formats GSV messages into their corresponding structs.
  */
-int GPS_formatGSV(PmodGPS* InstancePtr, char* data_array) {
+int GPS_formatGSV(PmodGPS *InstancePtr, char *data_array) {
    enum cases {
       NUMM,
       MESNUM,
@@ -1085,8 +1085,8 @@ int GPS_formatGSV(PmodGPS* InstancePtr, char* data_array) {
       SNR4
    };
    enum cases datamember = NUMM;
-   char* start_ptr;
-   char* end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
+   char *start_ptr;
+   char *end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
    GPS_bool flag = 1;
    char checksum[3] = {0};
    int mesnum = 0;
@@ -1238,26 +1238,26 @@ int GPS_formatGSV(PmodGPS* InstancePtr, char* data_array) {
 /* ------------------------------------------------------------ */
 /*  GPS_formatRMC()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to store data into
- **             data_array:  an array to the data to be formatted
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to store data into
+ **       data_array:  an array to the data to be formatted
  **
- **     Return Value:
- **             The offset from the beginning of data_array
+ **    Return Value:
+ **       The offset from the beginning of data_array
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats a mode's data into elements in a struct.
+ **    Description:
+ **       Formats a mode's data into elements in a struct.
  */
-int GPS_formatRMC(PmodGPS* InstancePtr, char* data_array) {
+int GPS_formatRMC(PmodGPS *InstancePtr, char *data_array) {
    enum cases {
       UTC, STAT, LAT, NS, LONG, EW, SOG, COG, DATE, MVAR, MVARDIR, MODE
    };
    enum cases datamember = UTC;
-   char* start_ptr;
-   char* end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
+   char *start_ptr;
+   char *end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
    GPS_bool flag = 1;
    char checksum[3] = { 0 };
 
@@ -1353,20 +1353,20 @@ int GPS_formatRMC(PmodGPS* InstancePtr, char* data_array) {
 /* ------------------------------------------------------------ */
 /*  GPS_formatVTG()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to store data into
- **             data_array:  an array to the data to be formatted
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to store data into
+ **       data_array:  an array to the data to be formatted
  **
- **     Return Value:
- **             The offset from the beginning of data_array
+ **    Return Value:
+ **       The offset from the beginning of data_array
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats a mode's data into elements in a struct.
+ **    Description:
+ **       Formats a mode's data into elements in a struct.
  */
-int GPS_formatVTG(PmodGPS* InstancePtr, char* data_array) {
+int GPS_formatVTG(PmodGPS *InstancePtr, char *data_array) {
    enum cases {
       COURSE_T,
       REF_T,
@@ -1380,8 +1380,8 @@ int GPS_formatVTG(PmodGPS* InstancePtr, char* data_array) {
       CHECKSUM
    };
    enum cases datamember = COURSE_T;
-   char* start_ptr;
-   char* end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
+   char *start_ptr;
+   char *end_ptr = data_array + 7; // Set end_ptr after message ID ("$GPGGA,")
    GPS_bool flag = 1;
    char checksum[3] = { 0 };
 
@@ -1465,27 +1465,27 @@ int GPS_formatVTG(PmodGPS* InstancePtr, char* data_array) {
 }
 
 /* ------------------------------------------------------------ */
-/*  char* GPS_formatCOORDS()
+/*  char *GPS_formatCOORDS()
  **
- **     Parameters:
- **             coords: the un-formatted decimal representation of latitude or
- **                     longitude
+ **    Parameters:
+ **       coords: the un-formatted decimal representation of latitude or
+ **               longitude
  **
- **     Return Value:
- **             Correctly formatted coordinates in degrees, minutes, and seconds
+ **    Return Value:
+ **       Correctly formatted coordinates in degrees, minutes, and seconds
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             Formats a set of coordinates of the form XXXX.XXXX or XXXXX.XXXX
- **	        into XX[X]°XX'XX.XX"
+ **    Description:
+ **       Formats a set of coordinates of the form XXXX.XXXX or XXXXX.XXXX
+ **       into XX[X]°XX'XX.XX"
  */
-void GPS_formatCOORDS(char* coords) {
+void GPS_formatCOORDS(char *coords) {
    if (!*coords)
       return;
 
-   char* coordsstart = coords;
+   char *coordsstart = coords;
    int degmin = atol(strtok(coords, "."));
    int deg = degmin / 100;
    degmin %= 100;
@@ -1499,23 +1499,23 @@ void GPS_formatCOORDS(char* coords) {
 /* ------------------------------------------------------------ */
 /*  GPS_intHandler()
  **
- **     Parameters:
- **             InstancePtr: PmodGPS object to get data from
- **             Event:       Describes the UART interrupt type
- **             EventData:   Describes how many bytes were sent/received
+ **    Parameters:
+ **       InstancePtr: PmodGPS object to get data from
+ **       Event:       Describes the UART interrupt type
+ **       EventData:   Describes how many bytes were sent/received
  **
- **     Return Value:
- **             none
+ **    Return Value:
+ **       none
  **
- **     Errors:
- **             none
+ **    Errors:
+ **       none
  **
- **     Description:
- **             XUartNs550 Interrupt that receives sentences until the last one
- **             is received
+ **    Description:
+ **       XUartNs550 Interrupt that receives sentences until the last one
+ **       is received
  */
 
-void GPS_intHandler(PmodGPS* InstancePtr, u32 Event, unsigned int EventData) {
+void GPS_intHandler(PmodGPS *InstancePtr, u32 Event, unsigned int EventData) {
    if (Event == XUN_EVENT_RECV_DATA) {
       // Start receiving new sentence
       XUartNs550_Recv(&InstancePtr->GPSUart, (u8*) InstancePtr->recv, 600);

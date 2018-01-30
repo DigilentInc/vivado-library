@@ -17,6 +17,7 @@
 /*    04/17/2016(tom21091): Created                                           */
 /*    10/13/2017(atangzwj): Validated for Vivado 2015.4                       */
 /*    11/04/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    01/29/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -54,7 +55,7 @@ void DemoInitialize();
 
 void DemoRun();
 
-int SetupInterruptSystem(PmodGPS* InstancePtr, u32 interruptDeviceID,
+int SetupInterruptSystem(PmodGPS *InstancePtr, u32 interruptDeviceID,
       u32 interruptID);
 
 void EnableCaches();
@@ -111,7 +112,7 @@ void DemoRun() {
    DisableCaches();
 }
 
-int SetupInterruptSystem(PmodGPS* InstancePtr, u32 interruptDeviceID,
+int SetupInterruptSystem(PmodGPS *InstancePtr, u32 interruptDeviceID,
       u32 interruptID) {
    int Result;
    u16 Options;

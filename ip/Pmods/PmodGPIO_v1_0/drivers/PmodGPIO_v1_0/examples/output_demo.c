@@ -50,7 +50,7 @@ int main()
 void DemoInitialize()
 {
 	EnableCaches();
-    GPIO_begin(&myDevice, XPAR_PMODGPIO_1_AXI_LITE_GPIO_BASEADDR, 0x00);
+    GPIO_begin(&myDevice, XPAR_PMODGPIO_0_AXI_LITE_GPIO_BASEADDR, 0x00);
 }
 
 void DemoRun()

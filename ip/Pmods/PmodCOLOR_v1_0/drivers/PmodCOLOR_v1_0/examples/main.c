@@ -25,7 +25,7 @@
 #include "xparameters.h"
 
 typedef struct {
-   COLOR_Data min, max;//, mid;
+   COLOR_Data min, max;
 } CalibrationData;
 
 void DemoInitialize();
@@ -33,7 +33,6 @@ void DemoRun();
 CalibrationData DemoInitCalibrationData(COLOR_Data firstSample);
 void DemoCalibrate(COLOR_Data newSample, CalibrationData *calib);
 COLOR_Data DemoNormalizeToCalibration(COLOR_Data sample, CalibrationData calib);
-void Demo_usleep(u32 micros);
 void EnableCaches();
 void DisableCaches();
 
@@ -52,10 +51,10 @@ void DemoInitialize() {
          XPAR_PMODCOLOR_0_AXI_LITE_GPIO_BASEADDR, 0x29);
 
    COLOR_SetENABLE(&myDevice, COLOR_REG_ENABLE_PON_MASK);
-   Demo_usleep(2400);
+   usleep(2400);
    COLOR_SetENABLE(&myDevice,
          COLOR_REG_ENABLE_PON_MASK | COLOR_REG_ENABLE_RGBC_INIT_MASK);
-   Demo_usleep(2400);
+   usleep(2400);
 }
 
 void DemoRun() {
@@ -69,14 +68,14 @@ void DemoRun() {
 
    data = COLOR_GetData(&myDevice);
    calib = DemoInitCalibrationData(data);
-   Demo_usleep(2400);
+   usleep(2400);
 
    while (1) {
       data = COLOR_GetData(&myDevice);
       DemoCalibrate(data, &calib);
       data = DemoNormalizeToCalibration(data, calib);
       xil_printf("r=%04x g=%04x b=%04x\n\r", data.r, data.g, data.b);
-      Demo_usleep(2400);
+      usleep(2400);
    }
 }
 
@@ -107,10 +106,6 @@ COLOR_Data DemoNormalizeToCalibration(COLOR_Data sample,
    norm.g = (sample.g - calib.min.g) * (0xFFFF / (calib.max.g - calib.min.g));
    norm.b = (sample.b - calib.min.b) * (0xFFFF / (calib.max.b - calib.min.b));
    return norm;
-}
-
-void Demo_usleep(u32 micros) {
-   usleep(micros);
 }
 
 void EnableCaches() {

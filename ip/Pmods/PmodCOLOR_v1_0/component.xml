@@ -974,7 +974,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>45bc00a7</spirit:value>
+            <spirit:value>b9793109</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2235,8 +2235,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodCOLOR_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>7</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2018-02-03T20:21:56Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>8</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2018-02-03T21:08:47Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
@@ -2297,7 +2297,7 @@
       <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="59c67ce9"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="fd3b3567"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="9751e0a6"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="151bbf87"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="6e1c2093"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="c213062d"/>
     </xilinx:packagingInfo>

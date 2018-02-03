@@ -26,7 +26,6 @@
 #include "xiic.h"
 #include "xiic_l.h"
 #include "xil_types.h"
-#include "xparameters.h"
 #include "xstatus.h"
 
 /**************************** Type Definitions ********************************/

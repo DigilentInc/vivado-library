@@ -915,7 +915,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>c446935b</spirit:value>
+            <spirit:value>d923145a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -946,7 +946,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>c3a7dcc3</spirit:value>
+            <spirit:value>84ee305a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -2235,8 +2235,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodCOLOR_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>5</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2017-11-08T23:33:08Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>6</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2018-02-03T19:51:02Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodCOLOR:1.0_ARCHIVE_LOCATION">C:/Users/arbrown/Documents/GitHub/vivado-library/ip/Pmods/PmodCOLOR_v1_0</xilinx:tag>
@@ -2294,12 +2294,12 @@
       </xilinx:configElementInfos>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2016.4</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="6327becb"/>
-      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="739fd854"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="0b6d06e0"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="8e23b78e"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="c7488f81"/>
+      <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="59c67ce9"/>
+      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="fd3b3567"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="36baacad"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="6e1c2093"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="c213062d"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

@@ -15,6 +15,7 @@
 /*                                                                            */
 /*    10/10/2017(artvvb):   Created                                           */
 /*    11/08/2017(atangzwj): Validated for Vivado 2016.4                       */
+/*    02/03/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -33,7 +34,7 @@ XIic_Config COLOR_IicConfig =
 };
 
 /* ------------------------------------------------------------ */
-/*    void COLOR_Begin(PmodCOLOR* InstancePtr, u32 IicBaseAddr,
+/*    void COLOR_Begin(PmodCOLOR *InstancePtr, u32 IicBaseAddr,
  **         u32 GpioBaseAddr, u8 IicChipAddr)
  **
  **   Parameters:
@@ -51,7 +52,7 @@ XIic_Config COLOR_IicConfig =
  **   Description:
  **      Initialize the PmodCOLOR.
  */
-void COLOR_Begin(PmodCOLOR* InstancePtr, u32 IicBaseAddr, u32 GpioBaseAddr,
+void COLOR_Begin(PmodCOLOR *InstancePtr, u32 IicBaseAddr, u32 GpioBaseAddr,
       u8 IicChipAddr) {
    XStatus Status;
 
@@ -59,8 +60,8 @@ void COLOR_Begin(PmodCOLOR* InstancePtr, u32 IicBaseAddr, u32 GpioBaseAddr,
    InstancePtr->ChipAddr = IicChipAddr;
    InstancePtr->GpioBaseAddr = GpioBaseAddr;
 
-   Xil_Out32((INTPTR) (InstancePtr->GpioBaseAddr + 4), 0b01);
-   Xil_Out32((INTPTR) InstancePtr->GpioBaseAddr, 0b00);
+   Xil_Out32((INTPTR) (InstancePtr->GpioBaseAddr + 4), 0x1);
+   Xil_Out32((INTPTR) InstancePtr->GpioBaseAddr, 0x0);
 
    Status = XIic_CfgInitialize(&InstancePtr->Iic, &COLOR_IicConfig,
          COLOR_IicConfig.BaseAddress);
@@ -74,7 +75,7 @@ void COLOR_Begin(PmodCOLOR* InstancePtr, u32 IicBaseAddr, u32 GpioBaseAddr,
 }
 
 /* ------------------------------------------------------------ */
-/*    void COLOR_ReadIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData)
+/*    void COLOR_ReadIIC(PmodCOLOR *InstancePtr, u8 reg, u8 *Data, int nData)
  **
  **   Parameters:
  **      InstancePtr: A PmodCOLOR object to read from
@@ -92,7 +93,7 @@ void COLOR_Begin(PmodCOLOR* InstancePtr, u32 IicBaseAddr, u32 GpioBaseAddr,
  **        Read data from the PmodCOLOR. Note that in order to read registers,
  **        WriteIIC will need to be called to set up the transaction.
  */
-void COLOR_ReadIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData) {
+void COLOR_ReadIIC(PmodCOLOR *InstancePtr, u8 reg, u8 *Data, int nData) {
    int Status;
    Status = XIic_Start(&InstancePtr->Iic);
    if (Status != XST_SUCCESS) {
@@ -110,7 +111,7 @@ void COLOR_ReadIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData) {
 }
 
 /* ------------------------------------------------------------ */
-/*    void COLOR_WriteIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData)
+/*    void COLOR_WriteIIC(PmodCOLOR *InstancePtr, u8 reg, u8 *Data, int nData)
  **
  **   Parameters:
  **      InstancePtr: A PmodCOLOR object to write to
@@ -127,7 +128,7 @@ void COLOR_ReadIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData) {
  **   Description:
  **      Write data to the PmodCOLOR.
  */
-void COLOR_WriteIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData) {
+void COLOR_WriteIIC(PmodCOLOR *InstancePtr, u8 reg, u8 *Data, int nData) {
    u8 out[nData + 1];
    out[0] = reg;
    int Status, i;
@@ -151,7 +152,7 @@ void COLOR_WriteIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData) {
 }
 
 /* ------------------------------------------------------------ */
-/*    void COLOR_SetLED(PmodCOLOR* InstancePtr, u32 NewState)
+/*    void COLOR_SetLED(PmodCOLOR *InstancePtr, u32 NewState)
  **
  **   Parameters:
  **      InstancePtr: A PmodCOLOR object to start
@@ -166,7 +167,7 @@ void COLOR_WriteIIC(PmodCOLOR* InstancePtr, u8 reg, u8 *Data, int nData) {
  **   Description:
  **      Set the PmodCOLOR LED state
  */
-void COLOR_SetLED(PmodCOLOR* InstancePtr, u32 NewState) {
+void COLOR_SetLED(PmodCOLOR *InstancePtr, u32 NewState) {
    Xil_Out32((INTPTR) InstancePtr->GpioBaseAddr, (NewState & 0x1) << 1);
 }
 

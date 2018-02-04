@@ -14,6 +14,7 @@
 /* Revision History:                                                          */
 /*                                                                            */
 /*    09/13/2017(atangzwj): Created                                           */
+/*    02/03/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -23,7 +24,6 @@
 /************ Include Files ************/
 
 #include "xil_types.h"
-#include "xstatus.h"
 
 
 /************ Type Definitions ************/

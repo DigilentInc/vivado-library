@@ -16,6 +16,7 @@
 /* Revision History:                                                          */
 /*                                                                            */
 /*    09/14/2017(atangzwj): Created                                           */
+/*    02/03/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -78,8 +79,13 @@ int main(void) {
 void DemoInitialize() {
    EnableCaches();
    DHB1_begin(&pmodDHB1, GPIO_BASEADDR, PWM_BASEADDR, CLK_FREQ, PWM_PER);
-   MotorFeedback_init(&motorFeedback, MOTOR_FB_BASEADDR, CLK_FREQ,
-         SENSOR_EDGES_PER_REV, GEARBOX_RATIO);
+   MotorFeedback_init(
+      &motorFeedback,
+      MOTOR_FB_BASEADDR,
+      CLK_FREQ,
+      SENSOR_EDGES_PER_REV,
+      GEARBOX_RATIO
+   );
    DHB1_motorDisable(&pmodDHB1);
 }
 

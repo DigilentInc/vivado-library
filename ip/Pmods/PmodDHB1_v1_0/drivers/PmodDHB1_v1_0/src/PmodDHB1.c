@@ -14,6 +14,7 @@
 /* Revision History:                                                          */
 /*                                                                            */
 /*    09/13/2017(atangzwj): Created                                           */
+/*    02/03/2018(atangzwj): Validated for Vivado 2017.4                       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -36,17 +37,17 @@
  *       u32 Clk_Freq, u32 PWM_Per)
  * -----------------------------------------------------------------------------
  * Parameters:
- *       InstancePtr:  Pointer to a PmodDHB1 object to initialize
- *       GPIO_Address: Base address of PmodDHB1 GPIO registers
- *       PWM_Address:  Base address of PmodDHB1 PWM registers
- *       Clk_Freq:     Clock frequency of the DHB1 IP in Hertz (Hz)
- *       PWM_Per:      Period of DHB1 Enable signal in milliseconds (ms)
+ *    InstancePtr:  Pointer to a PmodDHB1 object to initialize
+ *    GPIO_Address: Base address of PmodDHB1 GPIO registers
+ *    PWM_Address:  Base address of PmodDHB1 PWM registers
+ *    Clk_Freq:     Clock frequency of the DHB1 IP in Hertz (Hz)
+ *    PWM_Per:      Period of DHB1 Enable signal in milliseconds (ms)
  *
  * Return:
- *       void
+ *    void
  *
  * Description:
- *       Initialize the PmodDHB1 IP
+ *    Initialize the PmodDHB1 IP
  */
 void DHB1_begin(PmodDHB1 *InstancePtr, u32 GPIO_Address, u32 PWM_Address,
       u32 Clk_Freq, u32 PWM_Per) {
@@ -63,13 +64,13 @@ void DHB1_begin(PmodDHB1 *InstancePtr, u32 GPIO_Address, u32 PWM_Address,
  * void DHB1_motorDisable(PmodDHB1 *InstancePtr)
  * -----------------------------------------------------------------------------
  * Parameters:
- *       InstancePtr: Pointer to a PmodDHB1 object to enable/disable motors of
+ *    InstancePtr: Pointer to a PmodDHB1 object to enable/disable motors of
  *
  * Return:
- *       void
+ *    void
  *
  * Description:
- *       Enable or disable the motors of the PmodDHB1
+ *    Enable or disable the motors of the PmodDHB1
  */
 void DHB1_motorEnable(PmodDHB1 *InstancePtr) {
    PWM_Enable(InstancePtr->PWM_addr);
@@ -85,19 +86,19 @@ void DHB1_motorDisable(PmodDHB1 *InstancePtr) {
  * void DHB1_setDir2(PmodDHB1 *InstancePtr, u8 dir2)
  * -----------------------------------------------------------------------------
  * Parameters:
- *       InstancePtr: Pointer to a PmodDHB1 object to write motor directions to
- *       dir1:        8-bit value for motor1 direction, LSB determines direction
- *       dir2:        8-bit value for motor2 direction, LSB determines direction
+ *    InstancePtr: Pointer to a PmodDHB1 object to write motor directions to
+ *    dir1:        8-bit value for motor1 direction, LSB determines direction
+ *    dir2:        8-bit value for motor2 direction, LSB determines direction
  *
  * Return:
- *       void
+ *    void
  *
  * Description:
- *       Set direction pins for
- *        - Both motors
- *        - Motor1 only
- *        - Motor2 only
- *       The LSB of dir1 and dir2 determine the value of the DIR1 and DIR2 pins.
+ *    Set direction pins for
+ *     - Both motors
+ *     - Motor1 only
+ *     - Motor2 only
+ *    The LSB of dir1 and dir2 determine the value of the DIR1 and DIR2 pins
  */
 void DHB1_setDirs(PmodDHB1 *InstancePtr, u8 dir1, u8 dir2) {
    DHB1_setDir1(InstancePtr, dir1);
@@ -118,16 +119,16 @@ void DHB1_setDir2(PmodDHB1 *InstancePtr, u8 dir2) {
  * void DHB1_setMotor2Speed(PmodDHB1 *InstancePtr, u8 m2)
  * -----------------------------------------------------------------------------
  * Parameters:
- *       InstancePtr: Pointer to a PmodDHB1 object to set motor speeds for
- *       m1:          8-bit number from 0 to 100 for motor1 speed
- *       m2:          8-bit number from 0 to 100 for motor2 speed
+ *    InstancePtr: Pointer to a PmodDHB1 object to set motor speeds for
+ *    m1:          8-bit number from 0 to 100 for motor1 speed
+ *    m2:          8-bit number from 0 to 100 for motor2 speed
  *
  * Return:
- *       void
+ *    void
  *
  * Description:
- *       Set the duty cycle for one or both motors' enable signals. 0 turns off
- *       the motor(s), 100 for max speed
+ *    Set the duty cycle for one or both motors' enable signals. 0 turns off
+ *    the motor(s), 100 for max speed
  */
 void DHB1_setMotorSpeeds(PmodDHB1 *InstancePtr, u8 m1, u8 m2) {
    DHB1_setMotor1Speed(InstancePtr, m1);

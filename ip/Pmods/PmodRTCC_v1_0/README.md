@@ -38,4 +38,4 @@ UART once per second.
 The demo can be modified to only read the date and time by changing the SET_RTCC
 macro to 0 from 1. The date and time that the RTCC is set to can be changed by
 modifying the values that the elements of RTCC_TIME time are set to in the
-DemoInitialize function. By default, the RTCC is set to Friday 08/07/17 1:00:00 PM.
+DemoInitialize function. By default, the RTCC is set to Tuesday 02/06/18 12:24:36 PM.

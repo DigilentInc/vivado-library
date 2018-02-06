@@ -71,7 +71,6 @@ typedef enum RTCC_AMPM {
 
 void RTCC_begin(PmodRTCC* InstancePtr, u32 IIC_Address, u8 Chip_Address);
 u32  RTCC_IICInit(XIic *IicInstancePtr);
-void RTCC_end(PmodRTCC* InstancePtr);
 void RTCC_ReadIIC(PmodRTCC* InstancePtr, u8 reg, u8 *Data, int nData);
 void RTCC_WriteIIC(PmodRTCC* InstancePtr, u8 reg, u8 *Data, int nData);
 void RTCC_clearPWRFAIL(PmodRTCC *InstancePtr);

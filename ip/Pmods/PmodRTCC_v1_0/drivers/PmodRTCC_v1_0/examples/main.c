@@ -118,19 +118,19 @@ void DemoInitialize(u8 mode)
 	PrintTime(RTCC_TARGET_PWRU);
 	xil_printf("\r\n");
 
-	if(!RTCC_checkVbat(&myDevice) || mode == SET_RTCC)
+	if(!RTCC_checkVbat(&myDevice) || mode)
 	{
-		//set the real time clock to Friday 8/7/17 1:00:00 PM
+		//set the real time clock to Tuesday 2/6/18 1:00:00 PM
 		RTCC_stopClock(&myDevice);
 
-		time.second = 0x20;
-		time.minute = 0x10;
-		time.hour   = 0x02;
+		time.second = 0x36;
+		time.minute = 0x24;
+		time.hour   = 0x12;
 		time.ampm   = RTCC_PM;
 		time.day    = 0x01;
-		time.date   = 0x07;
-		time.month  = 0x08;
-		time.year   = 0x17;
+		time.date   = 0x06;
+		time.month  = 0x02;
+		time.year   = 0x18;
 
 		time = IncrementTime(time, 0);//TEST
 		SetTime(&myDevice, RTCC_TARGET_RTCC, time);

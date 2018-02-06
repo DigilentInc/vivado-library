@@ -62,24 +62,6 @@ void RTCC_begin(PmodRTCC* InstancePtr, u32 IIC_Address, u8 Chip_Address)
 }
 
 /* ------------------------------------------------------------ */
-/***	RTCC_end(void)
-**
-**	Parameters:
-**		InstancePtr		- PmodRTCC device to stop
-**
-**	Return Value:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Stops the device
-*/
-void RTCC_end(PmodRTCC* InstancePtr) {
-}
-
-/* ------------------------------------------------------------ */
 /***	RTCC_IICInit
 **
 **	Parameters:
@@ -963,7 +945,6 @@ void RTCC_setHour12(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value, RTCC_AMPM
 void RTCC_setHour24(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value)
 {
 	u8 rgbHour[2];
-	u8 data;
 
 	//validate hour 0x00-0x23
 	if (value > 0x23)
@@ -1103,7 +1084,6 @@ void RTCC_setMonth(PmodRTCC *InstancePtr, RTCC_Target dest, u8 value)
 	//validate month 0x01-0x12
     if (value > 0x12 || value < 0x01)
     	return;
-
 	//Set address of the month register depending on the destination
 	switch(dest)
 	{

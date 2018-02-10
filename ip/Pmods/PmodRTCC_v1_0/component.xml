@@ -652,7 +652,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>156d9378</spirit:value>
+            <spirit:value>bbf98081</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1545,8 +1545,8 @@
         <xilinx:taxonomy>/UserIP</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>PmodRTCC_v1_0</xilinx:displayName>
-      <xilinx:coreRevision>7</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2018-02-06T21:17:12Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>8</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2018-02-10T20:22:07Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="natinst.com:user:PmodRTCC:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGeneric/IIC_Template</xilinx:tag>
         <xilinx:tag xilinx:name="digilentinc.com:user:PmodRTCC:1.0_ARCHIVE_LOCATION">C:/Tommywork/PmodGeneric/IIC_Template</xilinx:tag>
@@ -1584,7 +1584,7 @@
       <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="aa7a223c"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="f28872a2"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="727194a0"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="d2df1bd1"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="1f9f5410"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="a954bd33"/>
     </xilinx:packagingInfo>

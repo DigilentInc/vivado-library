@@ -14,6 +14,6 @@ The demo program continuously drives the Pmod AMP2 at regular time intervals wit
 a triangle wave alternating between 440 (the A above middle C) and 587 (the D
 above middle C) Hertz.
 
-Be sure to connect a speaker or pair of headphones to the 15mm jack (J2) to hear
-the tones produced. These tones can be fairly loud, so it is not recommended to
-wear headphones that are connected to the demo.
+Be sure to connect a speaker or pair of headphones to the 3.5mm jack (J2) to
+hear the tones produced. These tones can be fairly loud, so it is not
+recommended to wear headphones that are connected to the demo.

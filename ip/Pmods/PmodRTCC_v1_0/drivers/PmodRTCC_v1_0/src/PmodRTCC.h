@@ -13,6 +13,7 @@
 /*                                                                            */
 /******************************************************************************/
 /* Revision History:                                                          */
+/*                                                                            */
 /*    12/08/2016(lengland): Created                                           */
 /*    08/07/2017(artvvb):   Validated for Vivado 2015.4                       */
 /*    02/10/2018(atangzwj): Validated for Vivado 2017.4                       */
@@ -26,10 +27,10 @@
 /*                  Include Files                               */
 /* ------------------------------------------------------------ */
 
+#include "xiic.h"
+#include "xiic_l.h"
 #include "xil_types.h"
 #include "xstatus.h"
-#include "xiic_l.h"
-#include "xiic.h"
 
 /* ------------------------------------------------------------ */
 /*                  Definitions                                 */

@@ -25,6 +25,7 @@
 /*                                                                            */
 /******************************************************************************/
 /* Revision History:                                                          */
+/*                                                                            */
 /*    12/08/2016(lengland): Created                                           */
 /*    08/07/2017(artvvb):   Validated for Vivado 2015.4                       */
 /*    11/02/2017(artvvb):   2016.4 Maintenance                                */
@@ -35,9 +36,9 @@
 /***************************** Include Files *******************************/
 
 #include "PmodRTCC.h"
-#include "xparameters.h"
-#include "xil_cache.h"
 #include "sleep.h"
+#include "xil_cache.h"
+#include "xparameters.h"
 
 /*************************** Type Declarations *****************************/
 

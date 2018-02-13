@@ -17,6 +17,7 @@
 /*    06/15/2016(MikelSkreen): Created                                        */
 /*    08/17/2017(jPeyron):     Updated                                        */
 /*    11/03/2017(artvvb):      2016.4 Maintenance                             */
+/*    02/12/2018(atangzwj):    Validated for Vivado 2017.4                    */
 /*                                                                            */
 /******************************************************************************/
 
@@ -189,7 +190,8 @@ int CLS_SPIInit(XSpi *SpiInstancePtr) {
       return XST_FAILURE;
    }
 
-   Status = XSpi_SetOptions(SpiInstancePtr, (XSP_MASTER_OPTION /*| XSP_CLK_ACTIVE_LOW_OPTION | XSP_CLK_PHASE_1_OPTION*/) | XSP_MANUAL_SSELECT_OPTION);
+   u32 options = XSP_MASTER_OPTION | XSP_MANUAL_SSELECT_OPTION;
+   Status = XSpi_SetOptions(SpiInstancePtr, options);
    if (Status != XST_SUCCESS) {
       return XST_FAILURE;
    }
@@ -284,8 +286,7 @@ void CLS_WriteSpi(PmodCLS *InstancePtr, u8 *wData, int nData) {
 **     strLn   - the string to be written
 **
 **  Return Value:
-**     u8
-**        - CLS_LCDS_ERR_SUCCESS - The action completed successfully
+**     u8 - CLS_LCDS_ERR_SUCCESS - The action completed successfully
 **        - a combination of the following errors(OR-ed):
 **        - CLS_LCDS_ERR_ARG_COL_RANGE - The argument is not within 0, 39 range
 **        - CLS_LCDS_ERR_ARG_ROW_RANGE - The argument is not within 0, 2 range
@@ -301,10 +302,10 @@ u8 CLS_WriteStringAtPos(PmodCLS *InstancePtr, uint8_t idxRow, uint8_t idxCol,
       char *strLn) {
 
    uint8_t bResult = CLS_LCDS_ERR_SUCCESS;
-   if (idxRow < 0 || idxRow > 2) {
+   if (idxRow > 2) {
       bResult |= CLS_LCDS_ERR_ARG_ROW_RANGE;
    }
-   if (idxCol < 0 || idxCol > 39) {
+   if (idxCol > 39) {
       bResult |= CLS_LCDS_ERR_ARG_COL_RANGE;
    }
    if (bResult == CLS_LCDS_ERR_SUCCESS) {
@@ -321,8 +322,8 @@ u8 CLS_WriteStringAtPos(PmodCLS *InstancePtr, uint8_t idxRow, uint8_t idxCol,
          // If it's greater than the positions number of a line
          length = 40 - idxCol;
       }
-      CLS_WriteSpi(InstancePtr, stringToSend, 7);
-      CLS_WriteSpi(InstancePtr, strLn, length);
+      CLS_WriteSpi(InstancePtr, (u8*) stringToSend, 7);
+      CLS_WriteSpi(InstancePtr, (u8*) strLn, length);
    }
    return bResult;
 }

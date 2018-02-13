@@ -20,6 +20,7 @@
 /*    06/15/2016(MikelSkreen): Created                                        */
 /*    08/17/2017(jPeyron):     Updated                                        */
 /*    11/03/2017(artvvb):      2016.4 Maintenance                             */
+/*    02/12/2018(atangzwj):    Validated for Vivado 2017.4                    */
 /*                                                                            */
 /******************************************************************************/
 /* Baud Rates:                                                                */
